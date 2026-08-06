@@ -5,16 +5,55 @@ import { CATEGORIES, CALCULATORS } from '../data/calculators';
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
   canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
   showQuickTools?: boolean;
+  jsonLd?: object | object[];
 }
 
+const DEFAULT_KEYWORDS = "Converter, Calculator, all in one calculator, online converter tools, unit converter online, currency converter, live currency converter, real time forex rates, money converter, loan calculator, loan emi calculator, mortgage calculator, mortgage interest calculator, amortization schedule calculator, sip return calculator, investment calculator, compound interest calculator, gst tax calculator, tip splitter online, discount calculator, bmi calculator online, bmr calculator, tdee calculator, calorie calculator, daily water intake calculator, exact age calculator, length converter, weight converter, temperature converter, volume converter, area converter, speed converter, data storage converter, pressure converter, energy converter, percentage calculator, binary converter, hex converter, number base converter, fraction to decimal converter, prime number checker, date difference calculator, unix timestamp converter, recipe scaler, cooking measurement converter, fuel trip cost calculator, electricity bill estimator, word counter online, color code converter, text case converter";
+
 const {
-  title = "All Calc Kit — One Website for All Daily Calculations & Conversions",
-  description = "Fast, clean, ad-free suite of unit converters, currency rates, loan EMI, BMI health trackers, date tools, cooking scaling & developer text utilities.",
+  title = "All Calc Kit — All in One Calculator & Online Converter Tools",
+  description = "Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 35+ free utilities.",
+  keywords = DEFAULT_KEYWORDS,
   canonicalUrl = "https://allcalckit.com/",
-  showQuickTools = false
+  ogImage = "https://allcalckit.com/logo-curved.png",
+  ogType = "website",
+  showQuickTools = false,
+  jsonLd
 } = Astro.props;
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "All Calc Kit",
+  "alternateName": ["CalcKit", "AllCalcKit", "All Calc Kit Converter", "All Calc Kit Calculator"],
+  "url": "https://allcalckit.com/",
+  "description": description,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://allcalckit.com/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
+
+const webAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": title,
+  "url": canonicalUrl,
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": description
+};
 ---
 
 <!doctype html>
@@ -35,22 +74,36 @@ const {
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="all calc kit, converter, unit converter, currency converter, emi calculator, bmi calculator, date difference, fast calculator, precision calculation tools" />
+    <meta name="keywords" content={keywords} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="All Calc Kit" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="All Calc Kit - All in One Calculator and Online Converter Tools" />
     <meta property="og:site_name" content="All Calc Kit" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter -->
+    <!-- Twitter Card Meta Tags -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalUrl} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
 
-    <!-- Fonts: Inter & Geist Mono -->
+    <!-- JSON-LD Structured Data for Search Engine Crawlers -->
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <!-- Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -78,7 +131,6 @@ const {
           </div>
           <div class="flex items-center gap-2">
             <span class="font-bold tracking-tight text-base sm:text-lg group-hover:opacity-80 transition-opacity">All Calc Kit</span>
-            <span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">v1.0</span>
           </div>
         </a>
 
@@ -86,7 +138,7 @@ const {
         <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-64 justify-between">
           <div class="flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <span>Search 50+ tools…</span>
+            <span>Search 35+ tools…</span>
           </div>
           <kbd class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
         </button>
@@ -129,9 +181,10 @@ const {
                 <img src="/logo-curved.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
               </div>
               <span class="font-bold text-base tracking-tight">All Calc Kit</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">v1.0</span>
             </div>
             <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-sm">
-              The high-performance, ad-free suite for everyday calculations and conversions. Instant calculation, mobile responsiveness, live currency rates, and Vercel-grade minimalist UI.
+              The high-performance suite for everyday calculations and conversions. Instant real-time calculation, mobile responsiveness, live currency rates, and minimalist UI.
             </p>
             <div class="mt-4 flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -161,7 +214,7 @@ const {
             <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Domain</h4>
             <p class="text-xs font-mono text-neutral-600 dark:text-neutral-300 font-semibold mb-2">allcalckit.com</p>
             <p class="text-[11px] text-neutral-500 dark:text-neutral-500">
-              Built with Astro JS & Tailwind CSS v4. Designed for ultimate speed and mobile efficiency.
+              Designed for ultimate speed, precision, and mobile efficiency.
             </p>
           </div>
         </div>
@@ -169,9 +222,9 @@ const {
         <div class="pt-8 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-500">
           <p>© {new Date().getFullYear()} All Calc Kit. All rights reserved.</p>
           <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
-            <span>No Ads</span>
+            <span>Fast & Free</span>
             <span>•</span>
-            <span>No Tracking</span>
+            <span>Privacy First</span>
             <span>•</span>
             <span>Instant Calculations</span>
           </div>

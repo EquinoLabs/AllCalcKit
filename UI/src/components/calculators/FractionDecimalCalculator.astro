@@ -16,38 +16,40 @@
     <div class="space-y-4">
       <div>
         <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Decimal Value</label>
-        <input id="frac-dec" type="number" value="0.75" step="any" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
+        <input id="frac-dec" type="number" value="3.14" step="any" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
       </div>
 
       <div class="pt-2 border-t border-neutral-200 dark:border-neutral-800">
         <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Or Enter Fraction (Numerator / Denominator)</label>
         <div class="flex items-center gap-2">
-          <input id="frac-num" type="number" value="3" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
-          <span class="font-bold text-lg font-mono">/</span>
-          <input id="frac-den" type="number" value="4" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
+          <input id="frac-num" type="number" value="157" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
+          <span class="font-bold text-lg font-mono text-neutral-400">/</span>
+          <input id="frac-den" type="number" value="50" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
         </div>
       </div>
     </div>
 
-    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between space-y-4">
       <div>
         <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1 font-semibold">Simplified Fraction</div>
-        <div id="frac-result" class="text-3xl sm:text-4xl font-black text-amber-600 dark:text-amber-400 tabular-nums">3 / 4</div>
+        <div id="frac-result" class="text-3xl sm:text-4xl font-black text-amber-600 dark:text-amber-400 tabular-nums">157 / 50</div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
+      <div class="grid grid-cols-2 gap-4 py-3 border-y border-neutral-200 dark:border-neutral-800 text-xs font-mono">
         <div>
           <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Mixed Number</span>
-          <span id="frac-mixed" class="font-bold text-black dark:text-white tabular-nums">0 3/4</span>
+          <span id="frac-mixed" class="font-bold text-black dark:text-white tabular-nums">3 7/50</span>
         </div>
         <div>
-          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Decimal Value</span>
-          <span id="frac-dec-val" class="font-bold text-amber-600 dark:text-amber-400 tabular-nums">0.75</span>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Decimal Result</span>
+          <span id="frac-dec-val" class="font-bold text-amber-600 dark:text-amber-400 tabular-nums">3.14</span>
         </div>
       </div>
 
-      <div class="text-xs font-mono text-neutral-500 leading-relaxed">
-        Calculates Greatest Common Divisor (GCD) to reduce fractions to lowest terms.
+      <!-- Step-by-Step Mathematical Explanation -->
+      <div class="text-xs font-mono bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 space-y-1">
+        <span class="font-bold text-black dark:text-white block uppercase text-[10px] tracking-wider">Conversion Logic:</span>
+        <div id="frac-explanation" class="leading-relaxed font-medium">3.14 = 314/100. Divided by GCD (2) → 157/50 = 3 7/50</div>
       </div>
     </div>
   </div>
@@ -62,6 +64,7 @@
     const resEl = document.getElementById('frac-result');
     const mixedEl = document.getElementById('frac-mixed');
     const decValEl = document.getElementById('frac-dec-val');
+    const expEl = document.getElementById('frac-explanation');
 
     function gcd(a, b) {
       return b === 0 ? a : gcd(b, a % b);
@@ -71,8 +74,9 @@
       const dec = parseFloat(decInp.value);
       if (isNaN(dec)) return;
 
-      const len = (dec.toString().split('.')[1] || '').length;
-      const den = Math.pow(10, len);
+      const decStr = dec.toString();
+      const decimals = (decStr.split('.')[1] || '').length;
+      const den = Math.pow(10, decimals);
       const num = Math.round(dec * den);
 
       const divisor = Math.abs(gcd(num, den));
@@ -82,7 +86,7 @@
       numInp.value = simpleNum;
       denInp.value = simpleDen;
 
-      renderResults(simpleNum, simpleDen, dec);
+      renderResults(simpleNum, simpleDen, dec, num, den, divisor);
     }
 
     function updateFromFrac() {
@@ -94,20 +98,30 @@
       decInp.value = dec.toFixed(4).replace(/\.?0+$/, '');
 
       const divisor = Math.abs(gcd(num, den));
-      renderResults(num / divisor, den / divisor, dec);
+      renderResults(num / divisor, den / divisor, dec, num, den, divisor);
     }
 
-    function renderResults(num, den, dec) {
-      if (resEl) resEl.textContent = `${num} / ${den}`;
+    function renderResults(num, den, dec, rawNum, rawDen, divisor) {
+      if (resEl) resEl.textContent = den === 1 ? `${num}` : `${num} / ${den}`;
       if (decValEl) decValEl.textContent = dec.toString();
 
       const whole = Math.floor(Math.abs(num) / den);
       const rem = Math.abs(num) % den;
-      let mixed = `${num} / ${den}`;
+      let mixed = den === 1 ? `${num}` : `${num} / ${den}`;
       if (whole > 0 && rem > 0) {
         mixed = `${num < 0 ? '-' : ''}${whole} ${rem}/${den}`;
       }
       if (mixedEl) mixedEl.textContent = mixed;
+
+      if (expEl) {
+        if (den === 1) {
+          expEl.textContent = `${rawNum || num} ÷ ${rawDen || 1} = ${dec} (Exact Integer)`;
+        } else if (rawNum && rawDen && divisor > 1) {
+          expEl.textContent = `${dec} = ${rawNum}/${rawDen}. Reduced by GCD (${divisor}) → ${num}/${den}${whole > 0 ? ' = ' + mixed : ''}`;
+        } else {
+          expEl.textContent = `${num}/${den} = ${dec} (Decimal Quotient)`;
+        }
+      }
     }
 
     decInp.addEventListener('input', updateFromDec);

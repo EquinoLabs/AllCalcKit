@@ -4,11 +4,98 @@ import { CATEGORIES, CALCULATORS } from '../data/calculators';
 import CurrencyConverter from '../components/calculators/CurrencyConverter.astro';
 import EmiCalculator from '../components/calculators/EmiCalculator.astro';
 import BmiCalculator from '../components/calculators/BmiCalculator.astro';
-import PercentageCalculator from '../components/calculators/PercentageCalculator.astro';
-import WordCounter from '../components/calculators/WordCounter.astro';
+import FuelCostCalculator from '../components/calculators/FuelCostCalculator.astro';
+
+const CATEGORY_COLORS: Record<string, string> = {
+  units: 'bg-blue-500',
+  finance: 'bg-emerald-500',
+  health: 'bg-rose-500',
+  math: 'bg-purple-500',
+  datetime: 'bg-amber-500',
+  cooking: 'bg-orange-500',
+  everyday: 'bg-cyan-500',
+  text: 'bg-indigo-500',
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "how much water to drink a day calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our daily water intake calculator estimates your optimal daily hydration target in liters and cups based on your body weight, exercise duration, and climate conditions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "how much house can i afford calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our mortgage interest and loan EMI calculator helps you calculate how much house you can afford by estimating monthly mortgage repayments, interest rates, and loan tenure limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "how old am i calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our exact age calculator determines your precise age from your date of birth down to years, months, days, hours, and minutes, as well as total days lived."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "tip calculator how much to tip?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our tip calculator and bill splitter helps you determine standard gratuity amounts (15%, 18%, 20%) on restaurant bills and splits payment costs evenly among dining partners."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "how many years calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our date difference calculator computes exact years, months, and total days between any two calendar dates to track anniversaries, project timelines, and age spans."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "how many calories should i eat to lose weight calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our TDEE and calorie calculator calculates your Total Daily Energy Expenditure and Basal Metabolic Rate (BMR) to determine safe daily caloric intake targets for weight loss or fitness goals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is All Calc Kit free to use for all unit conversions and calculations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! All Calc Kit is 100% free with no registration, no subscription, no ads, and no hidden charges. All calculations run instantly in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does All Calc Kit store or track my private personal data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. All Calc Kit values your privacy. All unit conversions, health metrics, and financial calculations are processed locally inside your web browser without storing or sharing your personal data."
+      }
+    }
+  ]
+};
 ---
 
-<Layout title="All Calc Kit — One Website for All Daily Calculations & Conversions" canonicalUrl="https://allcalckit.com/" showQuickTools={true}>
+<Layout 
+  title="All Calc Kit — All in One Calculator & Online Converter Tools" 
+  description="Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 35+ free utilities."
+  canonicalUrl="https://allcalckit.com/" 
+  showQuickTools={true}
+  jsonLd={faqSchema}
+>
   <!-- Hero Mesh Gradient Band -->
   <section class="relative overflow-hidden border-b border-neutral-200 dark:border-neutral-800 vercel-mesh-gradient pt-12 pb-16 sm:pt-24 sm:pb-28">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 text-center">
@@ -25,7 +112,7 @@ import WordCounter from '../components/calculators/WordCounter.astro';
       </h1>
 
       <p class="text-base sm:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto leading-relaxed mb-8 px-2">
-        No clutter. No ads. No switching between 10 slow tools. Every unit converter, loan calculator, BMI tracker & math tool at your fingertips.
+        No clutter. No switching between 10 slow tools. Every unit converter, loan calculator, BMI tracker & math tool at your fingertips.
       </p>
 
       <!-- Quick Action CTAs -->
@@ -43,7 +130,7 @@ import WordCounter from '../components/calculators/WordCounter.astro';
       <!-- Quick Stats Bar -->
       <div class="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-neutral-200 dark:border-neutral-800/80 max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
         <div class="p-2">
-          <div class="text-xl sm:text-2xl font-black font-mono text-black dark:text-white">50+</div>
+          <div class="text-xl sm:text-2xl font-black font-mono text-black dark:text-white">35+</div>
           <div class="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-400 font-mono font-medium">Precision Tools</div>
         </div>
         <div class="p-2">
@@ -80,24 +167,25 @@ import WordCounter from '../components/calculators/WordCounter.astro';
     <div id="complete-directory">
       <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
         <span class="text-xs font-mono text-neutral-700 dark:text-purple-400 font-bold uppercase tracking-wider">All Tools Directory</span>
-        <h2 class="text-2xl sm:text-3xl font-bold text-black dark:text-white tracking-tight mt-1 mb-2">All 50+ Converter & Calculator Tools.</h2>
-        <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Select any category or tool below to calculate instantly with zero ads.</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-black dark:text-white tracking-tight mt-1 mb-2">All 35+ Converter & Calculator Tools.</h2>
+        <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Select any category or tool below to calculate instantly.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {CATEGORIES.map(cat => {
           const catTools = CALCULATORS.filter(c => c.categoryId === cat.id);
+          const colorDotClass = CATEGORY_COLORS[cat.id] || 'bg-blue-500';
           return (
             <div class="bg-white dark:bg-neutral-900/40 rounded-2xl p-4 sm:p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between hover:border-neutral-400 dark:hover:border-neutral-600 shadow-xs hover:shadow-md transition-all">
               <div>
                 <a href={cat.url} class="flex items-center justify-between gap-2 mb-2 group">
                   <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-black dark:bg-white shrink-0"></span>
+                    <span class={`w-2.5 h-2.5 rounded-full ${colorDotClass} shrink-0`}></span>
                     <h3 class="font-bold text-base text-black dark:text-white group-hover:text-neutral-600 dark:group-hover:text-blue-400 transition-colors">{cat.name}</h3>
                   </div>
                   <span class="text-xs font-mono text-neutral-500 group-hover:text-black dark:group-hover:text-white transition-colors">→</span>
                 </a>
-                <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-4 leading-relaxed font-medium">{cat.description}</p>
+                <hr class="mt-3.5 mb-2 border-t border-neutral-200 dark:border-neutral-700/70" />
                 <ul class="space-y-2.5">
                   {catTools.map(tool => (
                     <li>
@@ -119,7 +207,40 @@ import WordCounter from '../components/calculators/WordCounter.astro';
       </div>
     </div>
 
-    <!-- SECTION 2: FEATURED INTERACTIVE CALCULATORS SECTION -->
+    <!-- Platform Highlights Section (Center Aligned, Positioned Below Directories) -->
+    <div class="pt-10 border-t border-neutral-200 dark:border-neutral-800">
+      <div class="bg-neutral-50 dark:bg-neutral-900/90 text-neutral-900 dark:text-white rounded-3xl p-6 sm:p-12 border border-neutral-200 dark:border-neutral-800 shadow-xl relative overflow-hidden text-center transition-colors">
+        <div class="max-w-3xl mx-auto">
+          <span class="px-3.5 py-1.5 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-800 dark:text-white font-mono text-xs font-bold inline-block mb-3 border border-neutral-300 dark:border-neutral-700">
+            Engineered for Efficiency
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-black dark:text-white mt-1 mb-3 sm:mb-4">
+            Fast, accurate, and distraction-free.
+          </h2>
+          <p class="text-neutral-600 dark:text-neutral-300 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 max-w-2xl mx-auto font-medium">
+            All Calc Kit brings together over 35 essential tools in one clean, unified platform. Experience real-time instant calculation, dark mode design, keyboard shortcuts, and zero latency—right in your browser.
+          </p>
+
+          <!-- Feature Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs font-mono text-left max-w-2xl mx-auto">
+            <div class="flex items-center gap-2.5 bg-white dark:bg-neutral-950 p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-xs font-medium">
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span> Instant Input-to-Output Calculation
+            </div>
+            <div class="flex items-center gap-2.5 bg-white dark:bg-neutral-950 p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-xs font-medium">
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span> Cmd+K Global Search Palette
+            </div>
+            <div class="flex items-center gap-2.5 bg-white dark:bg-neutral-950 p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-xs font-medium">
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span> 1-Click Copy Results & Unit Swap
+            </div>
+            <div class="flex items-center gap-2.5 bg-white dark:bg-neutral-950 p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 shadow-xs font-medium">
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span> Live Global Exchange Rate API
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: FEATURED INTERACTIVE CALCULATORS SECTION (2x2 GRID OF 4 FEATURED TOOLS) -->
     <div id="quick-converters" class="pt-10 border-t border-neutral-200 dark:border-neutral-800 space-y-10 sm:space-y-14 scroll-mt-24">
       
       <!-- Section Heading with Proper Generous Bottom Spacing -->
@@ -129,50 +250,144 @@ import WordCounter from '../components/calculators/WordCounter.astro';
         <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">Try these popular calculators directly on the main page with real-time feedback.</p>
       </div>
 
-      <!-- Currency & Loan EMI -->
-      <div class="space-y-6">
+      <!-- 2x2 Clean Grid layout for 4 Featured Tools -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CurrencyConverter />
         <EmiCalculator />
-      </div>
-
-      <!-- Health & Math Widgets -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <BmiCalculator />
-        <PercentageCalculator />
+        <FuelCostCalculator />
       </div>
-
-      <!-- Text Analysis Widget -->
-      <WordCounter />
     </div>
 
-    <!-- Platform Highlights Section -->
-    <div class="bg-black text-white dark:bg-neutral-900/90 rounded-3xl p-6 sm:p-12 border border-neutral-800 shadow-2xl relative overflow-hidden">
-      <div class="max-w-3xl">
-        <span class="px-3 py-1 rounded-full bg-white/10 text-white font-mono text-xs">Engineered for Efficiency</span>
-        <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-white mt-4 mb-3 sm:mb-4">
-          Fast, accurate, and distraction-free.
-        </h2>
-        <p class="text-neutral-300 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8">
-          All Calc Kit brings together over 50 essential tools in one clean, unified platform. Experience real-time instant calculation, dark mode design, keyboard shortcuts, and zero latency—right in your browser.
-        </p>
+    <!-- 600+ WORD ON-PAGE SEO ARTICLE SECTION FOR SEARCH ENGINE OPTIMIZATION -->
+    <article id="seo-guide" class="border-t border-neutral-200 dark:border-neutral-800 pt-14 pb-8 bg-neutral-50/60 dark:bg-neutral-950/60 rounded-3xl p-6 sm:p-12 my-12">
+      <div class="max-w-5xl mx-auto space-y-10 text-neutral-700 dark:text-neutral-300">
+        
+        <div class="text-center max-w-3xl mx-auto space-y-6 mb-12">
+          <div>
+            <span class="px-3.5 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono text-xs font-bold uppercase tracking-wider inline-block">
+              Comprehensive User Guide
+            </span>
+          </div>
 
-        <!-- Feature Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs font-mono">
-          <div class="flex items-center gap-2 bg-neutral-950 p-3 rounded-xl border border-neutral-800">
-            <span class="text-white font-bold shrink-0">✓</span> Instant Input-to-Output Calculation
-          </div>
-          <div class="flex items-center gap-2 bg-neutral-950 p-3 rounded-xl border border-neutral-800">
-            <span class="text-white font-bold shrink-0">✓</span> Cmd+K Global Search Palette
-          </div>
-          <div class="flex items-center gap-2 bg-neutral-950 p-3 rounded-xl border border-neutral-800">
-            <span class="text-white font-bold shrink-0">✓</span> 1-Click Copy Results & Unit Swap
-          </div>
-          <div class="flex items-center gap-2 bg-neutral-950 p-3 rounded-xl border border-neutral-800">
-            <span class="text-white font-bold shrink-0">✓</span> Live Global Exchange Rate API
-          </div>
+          <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-black dark:text-white leading-tight">
+            The Ultimate All in One Calculator & Online Converter Tools Suite
+          </h2>
+
+          <p class="text-xs sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed font-medium max-w-2xl mx-auto pt-2">
+            Welcome to All Calc Kit—your premier web destination offering an extensive <strong class="text-black dark:text-white font-semibold">all in one calculator</strong> alongside a comprehensive suite of <strong class="text-black dark:text-white font-semibold">online converter tools</strong>. Purpose-built for investors, homeowners, engineers, students, and home cooks, our platform eliminates browser tab sprawl by unifying over 35 precision utilities under one roof. Whether you require an instant financial <strong class="text-black dark:text-white font-semibold">Calculator</strong> or an engineering unit <strong class="text-black dark:text-white font-semibold">Converter</strong>, All Calc Kit provides instant, accurate client-side calculations with zero latency.
+          </p>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 text-xs sm:text-sm leading-relaxed">
+          
+          <!-- Financial & Investment Tools -->
+          <section class="space-y-3 bg-white dark:bg-neutral-900/80 p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+            <h3 class="text-base font-bold text-black dark:text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              Financial & Investment Planning Tools
+            </h3>
+            <p>
+              Navigating personal financial planning requires accurate, real-time data. Our financial portal includes a high-speed <strong class="text-black dark:text-white">currency converter</strong> and universal <strong class="text-black dark:text-white">money converter</strong> powered by live market exchange rates. Track market volatility using our <strong class="text-black dark:text-white">live currency converter</strong> and obtain accurate <strong class="text-black dark:text-white">real time forex rates</strong> for major global currencies.
+            </p>
+            <p>
+              Planning home financing or auto loans? Calculate fixed monthly installments with our <strong class="text-black dark:text-white">loan calculator</strong>, <strong class="text-black dark:text-white">loan emi calculator</strong>, and <strong class="text-black dark:text-white">mortgage calculator</strong>. Compute interest cost structures using our <strong class="text-black dark:text-white">mortgage interest calculator</strong>, and review annual principal reductions via our detailed <strong class="text-black dark:text-white">amortization schedule calculator</strong>.
+            </p>
+            <p>
+              Build your long-term wealth strategy with our <strong class="text-black dark:text-white">sip return calculator</strong>, evaluate wealth portfolios through our <strong class="text-black dark:text-white">investment calculator</strong>, and project compound interest growth with our <strong class="text-black dark:text-white">compound interest calculator</strong>. Instantly compute retail tax with our <strong class="text-black dark:text-white">gst tax calculator</strong>, estimate retail shopping markdowns using our <strong class="text-black dark:text-white">discount calculator</strong>, and split dining expenses easily with our <strong class="text-black dark:text-white">tip splitter online</strong>.
+            </p>
+          </section>
+
+          <!-- Health & Fitness Trackers -->
+          <section class="space-y-3 bg-white dark:bg-neutral-900/80 p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+            <h3 class="text-base font-bold text-black dark:text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              Health, Fitness & Daily Wellness Trackers
+            </h3>
+            <p>
+              Monitoring physiological metrics is essential for long-term health. Our fitness module features an intuitive <strong class="text-black dark:text-white">bmi calculator online</strong> to measure Body Mass Index against global WHO standards. Understand your baseline caloric intake at complete rest with our <strong class="text-black dark:text-white">bmr calculator</strong>, and calculate your total daily energy expenditure using our advanced <strong class="text-black dark:text-white">tdee calculator</strong>.
+            </p>
+            <p>
+              Whether structuring a weight loss deficit or a muscle-building caloric surplus, our accurate <strong class="text-black dark:text-white">calorie calculator</strong> helps you set sustainable nutrition targets. Ensure optimal hydration throughout your workday by calculating personal fluid targets using our <strong class="text-black dark:text-white">daily water intake calculator</strong>. Additionally, determine precise biological milestones in years, months, and days with our <strong class="text-black dark:text-white">exact age calculator</strong>.
+            </p>
+          </section>
+
+          <!-- Multi-Unit Converters -->
+          <section class="space-y-3 bg-white dark:bg-neutral-900/80 p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+            <h3 class="text-base font-bold text-black dark:text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              Multi-Unit Converter Online Suite
+            </h3>
+            <p>
+              Seamlessly bridge metric and imperial unit conversions with our comprehensive <strong class="text-black dark:text-white">unit converter online</strong> suite. Measure spatial distance accurately with our <strong class="text-black dark:text-white">length converter</strong> and transform mass measurements with our <strong class="text-black dark:text-white">weight converter</strong>. Effortlessly convert Celsius, Fahrenheit, and Kelvin through our <strong class="text-black dark:text-white">temperature converter</strong>, or measure fluid capacities using our <strong class="text-black dark:text-white">volume converter</strong>.
+            </p>
+            <p>
+              For construction, flooring, and land surveys, utilize our <strong class="text-black dark:text-white">area converter</strong>. Engineers and technicians can compute velocity using our <strong class="text-black dark:text-white">speed converter</strong>, calculate digital file sizes via our <strong class="text-black dark:text-white">data storage converter</strong>, analyze atmospheric pressure with our <strong class="text-black dark:text-white">pressure converter</strong>, and measure thermodynamic work using our <strong class="text-black dark:text-white">energy converter</strong>.
+            </p>
+          </section>
+
+          <!-- Math, Developer & Encoding Tools -->
+          <section class="space-y-3 bg-white dark:bg-neutral-900/80 p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-xs">
+            <h3 class="text-base font-bold text-black dark:text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+              Math, Developer & Digital Tools
+            </h3>
+            <p>
+              Simplify mathematical formulas and web development operations with dedicated developer utilities. Solve percentage increases or ratios instantly with our <strong class="text-black dark:text-white">percentage calculator</strong>. Programmers can process base-2 machine values using our <strong class="text-black dark:text-white">binary converter</strong>, convert hexadecimal CSS colors with our <strong class="text-black dark:text-white">hex converter</strong>, and perform multi-base numeric shifts with our <strong class="text-black dark:text-white">number base converter</strong>.
+            </p>
+            <p>
+              Convert decimal fractions into simplified ratios using our <strong class="text-black dark:text-white">fraction to decimal converter</strong> and test integer primality with our <strong class="text-black dark:text-white">prime number checker</strong>. Calculate elapsed days between calendar dates via our <strong class="text-black dark:text-white">date difference calculator</strong>, convert epoch timestamps using the <strong class="text-black dark:text-white">unix timestamp converter</strong>, transform web color formats with our <strong class="text-black dark:text-white">color code converter</strong>, alter text styling using the <strong class="text-black dark:text-white">text case converter</strong>, and analyze reading times with our <strong class="text-black dark:text-white">word counter online</strong>.
+            </p>
+          </section>
+
+        </div>
+
+        <!-- Household, Culinary & Summary Section -->
+        <div class="bg-white dark:bg-neutral-900/90 p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 space-y-4 text-xs sm:text-sm leading-relaxed shadow-xs">
+          <h3 class="text-base sm:text-lg font-bold text-black dark:text-white flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            Everyday Culinary, Travel & Household Calculators
+          </h3>
+          <p>
+            All Calc Kit also simplifies daily home management. Scale ingredient measurements up or down for any batch size with our intelligent <strong class="text-black dark:text-white">recipe scaler</strong> and convert kitchen units via our <strong class="text-black dark:text-white">cooking measurement converter</strong>. Planning a road trip? Estimate fuel consumption and splits using our <strong class="text-black dark:text-white">fuel trip cost calculator</strong>. Control household utility expenses by predicting appliance power consumption with our <strong class="text-black dark:text-white">electricity bill estimator</strong>.
+          </p>
+
+          <h3 class="text-base sm:text-lg font-bold text-black dark:text-white pt-2 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
+            Why All Calc Kit is the Premier Online Converter & All in One Calculator
+          </h3>
+          <p>
+            Unlike legacy calculation websites filled with disruptive popups and slow scripts, All Calc Kit is engineered for speed, privacy, and maximum clarity. Enjoy lightning-fast calculations, dark mode, keyboard navigation (Cmd+K), mobile responsiveness, and 100% ad-free usability. Bookmark All Calc Kit today—the ultimate destination for all your daily calculations and conversions.
+          </p>
+        </div>
+
       </div>
-    </div>
+    </article>
+
+    <!-- VISIBLE INTERACTIVE FAQ SECTION WITH ACCESSIBLE DETAILS (PLACED AT THE VERY END) -->
+    <section id="faq" class="pt-10 border-t border-neutral-200 dark:border-neutral-800 space-y-8 scroll-mt-24 pb-4">
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider mb-4 mt-2 inline-block">Frequently Asked Questions</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-black dark:text-white tracking-tight mt-1">Calculator & Converter FAQ</h2>
+        <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Common questions about our online converter tools and daily calculators.</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-3">
+        {faqSchema.mainEntity.map(faq => (
+          <details class="group bg-white dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180">
+            <summary class="flex items-center justify-between gap-4 font-bold text-sm text-black dark:text-white cursor-pointer select-none">
+              <span>{faq.name}</span>
+              <svg data-icon class="w-4 h-4 text-neutral-500 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </summary>
+            <p class="mt-3 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed pt-2 border-t border-neutral-100 dark:border-neutral-800">
+              {faq.acceptedAnswer.text}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
 
   </div>
 
@@ -191,3 +406,4 @@ import WordCounter from '../components/calculators/WordCounter.astro';
     }
   </script>
 </Layout>
+

@@ -1,65 +1,96 @@
 ---
 ---
 
-<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-sm hover:shadow-md transition-all w-full max-w-full overflow-hidden">
-  <div class="flex items-center justify-between gap-2 mb-4">
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-6">
     <div class="flex items-center gap-2 min-w-0">
       <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
-      <h3 class="font-bold text-base sm:text-lg text-neutral-950 dark:text-white tracking-tight truncate">Percentage Calculator Suite</h3>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Percentage Calculator Suite</h3>
     </div>
-    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 shrink-0 font-medium">
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 shrink-0 font-bold">
       Math & Percent
     </span>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Mode 1: What is X% of Y? -->
-    <div class="bg-neutral-50 dark:bg-neutral-950 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-3 flex flex-col justify-between">
-      <div>
-        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-2">1. What is X% of Y?</div>
-        <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-900 dark:text-neutral-200 font-medium">
-          <span class="shrink-0">What is</span>
-          <input id="p1-pct" type="number" value="15" class="w-16 px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-center font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none" />
-          <span class="shrink-0">% of</span>
-          <input id="p1-total" type="number" value="200" class="w-20 px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-center font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none" />
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-4 flex flex-col justify-between">
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">1. Calculate Percentage Value</div>
+          <div class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md inline-block border border-amber-500/20">Formula: What is X% of Y?</div>
+        </div>
+        
+        <!-- Input Grid with Labels Below for Perfect Vertical Alignment -->
+        <div class="grid grid-cols-2 gap-3 items-start pt-1">
+          <div>
+            <input id="p1-pct" type="number" value="15" step="any" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none tabular-nums" />
+            <label class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 text-center">Percentage (X)</label>
+          </div>
+          <div>
+            <input id="p1-total" type="number" value="200" step="any" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none tabular-nums" />
+            <label class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 text-center">Of Amount (Y)</label>
+          </div>
         </div>
       </div>
-      <div class="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
-        <span class="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">Result:</span>
-        <span id="p1-result" class="font-mono font-bold text-lg text-amber-700 dark:text-amber-400">30</span>
+
+      <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <span id="p1-label" class="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">What is 15% of 200?</span>
+        <span id="p1-result" class="font-mono font-bold text-xl text-amber-600 dark:text-amber-400 tabular-nums">30</span>
       </div>
     </div>
 
     <!-- Mode 2: X is what % of Y? -->
-    <div class="bg-neutral-50 dark:bg-neutral-950 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-3 flex flex-col justify-between">
-      <div>
-        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-2">2. X is what % of Y?</div>
-        <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-900 dark:text-neutral-200 font-medium">
-          <input id="p2-part" type="number" value="45" class="w-16 px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-center font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none" />
-          <span class="shrink-0">is what % of</span>
-          <input id="p2-total" type="number" value="150" class="w-20 px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-center font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none" />
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-4 flex flex-col justify-between">
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">2. Percentage Share</div>
+          <div class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md inline-block border border-amber-500/20">Formula: X is what % of Y?</div>
+        </div>
+        
+        <!-- Input Grid with Labels Below for Perfect Vertical Alignment -->
+        <div class="grid grid-cols-2 gap-3 items-start pt-1">
+          <div>
+            <input id="p2-part" type="number" value="45" step="any" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none tabular-nums" />
+            <label class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 text-center">Part Value (X)</label>
+          </div>
+          <div>
+            <input id="p2-total" type="number" value="150" step="any" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none tabular-nums" />
+            <label class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 text-center">Total Value (Y)</label>
+          </div>
         </div>
       </div>
-      <div class="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
-        <span class="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">Result:</span>
-        <span id="p2-result" class="font-mono font-bold text-lg text-amber-700 dark:text-amber-400">30%</span>
+
+      <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <span id="p2-label" class="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">45 is what % of 150?</span>
+        <span id="p2-result" class="font-mono font-bold text-xl text-amber-600 dark:text-amber-400 tabular-nums">30%</span>
       </div>
     </div>
 
     <!-- Mode 3: Percentage Increase / Decrease -->
-    <div class="bg-neutral-50 dark:bg-neutral-950 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-3 flex flex-col justify-between">
-      <div>
-        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-2">3. % Change (V1 to V2)</div>
-        <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-neutral-900 dark:text-neutral-200 font-medium">
-          <span class="shrink-0">From</span>
-          <input id="p3-v1" type="number" value="80" class="w-16 px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-center font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none" />
-          <span class="shrink-0">to</span>
-          <input id="p3-v2" type="number" value="100" class="w-16 px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-center font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none" />
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-4 flex flex-col justify-between">
+      <div class="space-y-4">
+        <div class="space-y-1">
+          <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">3. Percentage Change</div>
+          <div class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md inline-block border border-amber-500/20">Formula: % Change from V1 to V2</div>
+        </div>
+        
+        <!-- Input Grid with Labels Below for Perfect Vertical Alignment -->
+        <div class="grid grid-cols-2 gap-3 items-start pt-1">
+          <div>
+            <input id="p3-v1" type="number" value="80" step="any" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none tabular-nums" />
+            <label class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 text-center">Initial (V1)</label>
+          </div>
+          <div>
+            <input id="p3-v2" type="number" value="100" step="any" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-mono font-bold text-sm focus:ring-2 focus:ring-amber-500 outline-none tabular-nums" />
+            <label class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 text-center">Final (V2)</label>
+          </div>
         </div>
       </div>
-      <div class="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
-        <span class="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">Change:</span>
-        <span id="p3-result" class="font-mono font-bold text-lg text-emerald-700 dark:text-emerald-400">+25%</span>
+
+      <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <span id="p3-label" class="text-xs font-mono text-neutral-600 dark:text-neutral-400 font-medium">% Change from 80 to 100</span>
+        <span id="p3-result" class="font-mono font-bold text-xl text-emerald-600 dark:text-emerald-400 tabular-nums">+25%</span>
       </div>
     </div>
   </div>
@@ -70,12 +101,14 @@
     const p1Pct = document.getElementById('p1-pct');
     const p1Total = document.getElementById('p1-total');
     const p1Result = document.getElementById('p1-result');
+    const p1Label = document.getElementById('p1-label');
 
     function calc1() {
       const p = parseFloat(p1Pct.value) || 0;
       const t = parseFloat(p1Total.value) || 0;
       const res = (p / 100) * t;
-      if (p1Result) p1Result.textContent = Number.isInteger(res) ? res : res.toFixed(2);
+      if (p1Label) p1Label.textContent = `What is ${p}% of ${t.toLocaleString()}?`;
+      if (p1Result) p1Result.textContent = Number.isInteger(res) ? res.toLocaleString() : res.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
     if (p1Pct && p1Total) {
       p1Pct.addEventListener('input', calc1);
@@ -85,10 +118,12 @@
     const p2Part = document.getElementById('p2-part');
     const p2Total = document.getElementById('p2-total');
     const p2Result = document.getElementById('p2-result');
+    const p2Label = document.getElementById('p2-label');
 
     function calc2() {
       const part = parseFloat(p2Part.value) || 0;
       const total = parseFloat(p2Total.value) || 0;
+      if (p2Label) p2Label.textContent = `${part.toLocaleString()} is what % of ${total.toLocaleString()}?`;
       if (total === 0) {
         if (p2Result) p2Result.textContent = 'N/A';
         return;
@@ -104,10 +139,12 @@
     const p3V1 = document.getElementById('p3-v1');
     const p3V2 = document.getElementById('p3-v2');
     const p3Result = document.getElementById('p3-result');
+    const p3Label = document.getElementById('p3-label');
 
     function calc3() {
       const v1 = parseFloat(p3V1.value) || 0;
       const v2 = parseFloat(p3V2.value) || 0;
+      if (p3Label) p3Label.textContent = `% Change from ${v1.toLocaleString()} to ${v2.toLocaleString()}`;
       if (v1 === 0) {
         if (p3Result) p3Result.textContent = 'N/A';
         return;
@@ -116,12 +153,16 @@
       const formatted = (Number.isInteger(change) ? change : change.toFixed(2));
       if (p3Result) {
         p3Result.textContent = (change >= 0 ? '+' : '') + formatted + '%';
-        p3Result.className = `font-mono font-bold text-lg ${change >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`;
+        p3Result.className = `font-mono font-bold text-xl ${change >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
       }
     }
     if (p3V1 && p3V2) {
       p3V1.addEventListener('input', calc3);
       p3V2.addEventListener('input', calc3);
     }
+
+    calc1();
+    calc2();
+    calc3();
   })();
 </script>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home Page -->
+  <url>
+    <loc>https://allcalckit.com/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Categories -->
+  <url>
+    <loc>https://allcalckit.com/units</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/finance</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/health</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/math</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/datetime</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/cooking</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/everyday</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://allcalckit.com/text</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Unit Converters -->
+  <url><loc>https://allcalckit.com/units/length</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/weight</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/temperature</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/volume</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/area</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/speed</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/data</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/pressure</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/energy</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/time-units</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/angle</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/units/fuel-efficiency</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Currency & Finance -->
+  <url><loc>https://allcalckit.com/finance/currency</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://allcalckit.com/finance/loan-emi</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/finance/sip</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/finance/fd-rd</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/finance/compound-interest</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/finance/tax-gst</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/finance/tip-split</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/finance/discount</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Health & Fitness -->
+  <url><loc>https://allcalckit.com/health/bmi</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/health/bmr</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/health/tdee</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/health/water-intake</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/health/age-calc</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Math & Numbers -->
+  <url><loc>https://allcalckit.com/math/percentage</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/math/number-base</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/math/fraction-decimal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/math/prime-checker</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Date & Time -->
+  <url><loc>https://allcalckit.com/datetime/date-diff</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/datetime/date-add</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/datetime/unix-timestamp</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Cooking & Everyday -->
+  <url><loc>https://allcalckit.com/cooking/recipe-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/cooking/cooking-units</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/everyday/fuel-cost</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/everyday/electricity-bill</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Text & Encoding -->
+  <url><loc>https://allcalckit.com/text/word-counter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/text/color-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://allcalckit.com/text/case-converter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

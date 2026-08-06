@@ -24,16 +24,18 @@ const categoryTools = CALCULATORS.filter(c => c.categoryId === cat.id);
     </nav>
 
     <!-- Header Banner -->
-    <div class="mb-10 pb-8 border-b border-neutral-200 dark:border-neutral-800">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black font-mono text-xs mb-3 font-bold">
+    <div class="mb-10 pb-8 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-6">
+      <div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-black dark:text-white mb-3">
+          {cat.name}.
+        </h1>
+        <p class="text-neutral-600 dark:text-neutral-300 text-sm font-medium">
+          {cat.description}. Select any tool below to calculate instantly.
+        </p>
+      </div>
+      <div class="inline-flex self-start sm:self-auto items-center gap-2 px-3 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black font-mono text-xs font-bold">
         <span>{categoryTools.length} Precision Tools</span>
       </div>
-      <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-black dark:text-white mb-3">
-        {cat.name}.
-      </h1>
-      <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 max-w-2xl leading-relaxed font-medium">
-        {cat.description}. Select any tool below to calculate instantly with zero ads.
-      </p>
     </div>
 
     <!-- Grid of All Feature Cards in this Category -->
