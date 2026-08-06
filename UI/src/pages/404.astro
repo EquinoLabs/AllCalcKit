@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { CALCULATORS } from '../data/calculators';
+
+const popularTools = CALCULATORS.filter(c => c.popular).slice(0, 6);
+---
+
+<Layout 
+  title="404 - Page Not Found | All Calc Kit" 
+  description="The requested page or calculator URL could not be found on All Calc Kit. Search our 35+ free online converters and calculators."
+  canonicalUrl="https://allcalckit.com/404"
+>
+  <section class="min-h-[70vh] flex items-center justify-center py-16 px-4">
+    <div class="max-w-2xl mx-auto text-center space-y-8">
+      
+      <!-- 404 Glitch / Big Badge -->
+      <div class="relative inline-block">
+        <span class="text-7xl sm:text-9xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-rose-600 dark:from-blue-400 dark:via-purple-400 dark:to-rose-400 select-none">
+          404
+        </span>
+        <div class="absolute -top-3 -right-3 px-3 py-1 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-black font-mono text-xs font-bold shadow-md">
+          Page Not Found
+        </div>
+      </div>
+
+      <!-- Main Headline & Explanation -->
+      <div class="space-y-3 max-w-lg mx-auto">
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-black dark:text-white">
+          Looks like this page got miscalculated.
+        </h1>
+        <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium">
+          The tool or link you are looking for might have been moved, renamed, or doesn't exist. Don't worry—you can search our entire tool suite below.
+        </p>
+      </div>
+
+      <!-- Quick Action CTAs & Search Palette Trigger -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+        <a 
+          href="/" 
+          class="w-full sm:w-auto px-6 py-3 rounded-full bg-black hover:bg-neutral-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs active:scale-98 transition-all shadow-md flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Back to Homepage</span>
+        </a>
+
+        <button 
+          id="error-404-search-btn"
+          type="button" 
+          class="w-full sm:w-auto px-6 py-3 rounded-full bg-neutral-100 dark:bg-neutral-900 text-black dark:text-neutral-200 border border-neutral-300 dark:border-neutral-800 font-semibold text-xs hover:bg-neutral-200 dark:hover:bg-neutral-800 active:scale-98 transition-all flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Search 35+ Tools</span>
+          <kbd class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
+        </button>
+      </div>
+
+      <!-- Popular Tools Fallback Grid -->
+      <div class="pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
+        <h2 class="font-mono text-xs text-neutral-500 uppercase tracking-wider font-bold">Popular Calculators You Might Be Looking For</h2>
+        <div class="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto">
+          {popularTools.map(tool => (
+            <a 
+              href={tool.url}
+              class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border border-neutral-200 dark:border-neutral-800 text-xs font-semibold transition-all"
+            >
+              {tool.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchBtn = document.getElementById('error-404-search-btn');
+      const globalSearchBtn = document.getElementById('open-search-btn');
+      if (searchBtn && globalSearchBtn) {
+        searchBtn.addEventListener('click', () => {
+          globalSearchBtn.click();
+        });
+      }
+    });
+  </script>
+</Layout>
