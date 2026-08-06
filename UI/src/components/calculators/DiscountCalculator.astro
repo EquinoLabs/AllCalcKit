@@ -41,11 +41,11 @@
       <div>
         <span class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mb-1.5">Quick Presets:</span>
         <div class="flex flex-wrap gap-2">
-          <button type="button" data-disc="10" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white active:scale-95 transition-all duration-150 shadow-2xs">10% OFF</button>
-          <button type="button" data-disc="20" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white active:scale-95 transition-all duration-150 shadow-2xs">20% OFF</button>
-          <button type="button" data-disc="25" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white active:scale-95 transition-all duration-150 shadow-2xs">25% OFF</button>
-          <button type="button" data-disc="33" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white active:scale-95 transition-all duration-150 shadow-2xs">33% OFF</button>
-          <button type="button" data-disc="50" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-black hover:text-white hover:border-black dark:hover:bg-white dark:hover:text-black dark:hover:border-white active:scale-95 transition-all duration-150 shadow-2xs">50% OFF</button>
+          <button type="button" data-disc="10" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">10% OFF</button>
+          <button type="button" data-disc="20" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">20% OFF</button>
+          <button type="button" data-disc="25" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">25% OFF</button>
+          <button type="button" data-disc="33" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">33% OFF</button>
+          <button type="button" data-disc="50" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">50% OFF</button>
         </div>
       </div>
     </div>
@@ -107,11 +107,11 @@
     function updateActivePresets(currentVal) {
       presets.forEach(p => {
         if (parseFloat(p.getAttribute('data-disc')) === parseFloat(currentVal)) {
-          p.classList.add('bg-black', 'text-white', 'border-black', 'dark:bg-white', 'dark:text-black', 'dark:border-white');
-          p.classList.remove('bg-neutral-100', 'dark:bg-neutral-800');
+          p.classList.add('bg-black', 'text-white', 'border-black', 'dark:bg-neutral-700', 'dark:text-white', 'dark:border-neutral-500');
+          p.classList.remove('bg-neutral-100', 'dark:bg-neutral-800', 'text-black', 'dark:text-neutral-300');
         } else {
-          p.classList.remove('bg-black', 'text-white', 'border-black', 'dark:bg-white', 'dark:text-black', 'dark:border-white');
-          p.classList.add('bg-neutral-100', 'dark:bg-neutral-800');
+          p.classList.remove('bg-black', 'text-white', 'border-black', 'dark:bg-neutral-700', 'dark:text-white', 'dark:border-neutral-500');
+          p.classList.add('bg-neutral-100', 'dark:bg-neutral-800', 'text-black', 'dark:text-neutral-300');
         }
       });
     }
