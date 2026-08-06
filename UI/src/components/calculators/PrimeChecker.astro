@@ -1,0 +1,117 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Prime Number Checker & Factorizer</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0 font-bold">
+      Number Theory
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Enter Any Integer</label>
+        <input id="prime-input" type="number" value="97" min="1" max="999999999" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums" />
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1 font-semibold">Status</div>
+        <div id="prime-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-base font-bold font-mono bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+          ✓ 97 is a Prime Number!
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Prime Factors</span>
+          <span id="prime-factors" class="font-bold text-black dark:text-white tabular-nums">97</span>
+        </div>
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Next Prime</span>
+          <span id="prime-next" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">101</span>
+        </div>
+      </div>
+
+      <div class="text-xs font-mono text-neutral-500 leading-relaxed">
+        Checks primality in O(√N) time and outputs prime factor decomposition.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const input = document.getElementById('prime-input');
+    const badge = document.getElementById('prime-badge');
+    const factorsEl = document.getElementById('prime-factors');
+    const nextEl = document.getElementById('prime-next');
+
+    function isPrime(n) {
+      if (n <= 1) return false;
+      if (n <= 3) return true;
+      if (n % 2 === 0 || n % 3 === 0) return false;
+      for (let i = 5; i * i <= n; i += 6) {
+        if (n % i === 0 || n % (i + 2) === 0) return false;
+      }
+      return true;
+    }
+
+    function getFactors(n) {
+      const factors = [];
+      let d = 2;
+      while (n >= 2) {
+        if (n % d === 0) {
+          factors.push(d);
+          n /= d;
+        } else {
+          d++;
+          if (d * d > n) {
+            if (n > 1) factors.push(n);
+            break;
+          }
+        }
+      }
+      return factors;
+    }
+
+    function findNextPrime(n) {
+      let p = n + 1;
+      while (!isPrime(p)) p++;
+      return p;
+    }
+
+    function check() {
+      if (!input) return;
+      const n = parseInt(input.value);
+      if (isNaN(n) || n < 1) {
+        if (badge) badge.textContent = 'Enter a positive integer';
+        return;
+      }
+
+      const prime = isPrime(n);
+      if (badge) {
+        if (prime) {
+          badge.textContent = `✓ ${n} is a PRIME Number!`;
+          badge.className = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm sm:text-base font-bold font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+        } else {
+          badge.textContent = `✕ ${n} is COMPOSITE (Not Prime)`;
+          badge.className = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm sm:text-base font-bold font-mono bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+        }
+      }
+
+      const factors = getFactors(n);
+      if (factorsEl) factorsEl.textContent = factors.join(' × ') || 'None';
+      if (nextEl) nextEl.textContent = findNextPrime(n);
+    }
+
+    input.addEventListener('input', check);
+    check();
+  })();
+</script>

@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --canvas: #ffffff;
+    --canvas-card: #ffffff;
+    --canvas-soft: #f8f9fa;
+    --canvas-soft-2: #f1f3f5;
+    --ink: #000000;           /* Pure Black */
+    --body: #495057;          /* Dark Charcoal Grey */
+    --mute: #6c757d;          /* Medium Grey */
+    --hairline: #e9ecef;
+    --hairline-strong: #adb5bd;
+    --accent-blue: #000000;
+    --card-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05), 0px 2px 6px rgba(0, 0, 0, 0.04);
+    --card-hover-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark {
+    color-scheme: dark;
+    --canvas: #09090b;
+    --canvas-card: #121215;
+    --canvas-soft: #18181b;
+    --canvas-soft-2: #27272a;
+    --ink: #f4f4f5;
+    --body: #a1a1aa;
+    --mute: #71717a;
+    --hairline: #27272a;
+    --hairline-strong: #52525b;
+    --accent-blue: #0070f3;
+    --card-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4), 0px 2px 4px rgba(0, 0, 0, 0.3);
+    --card-hover-shadow: 0px 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: Geist, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+  }
+
+  /* Form Control Dark Mode Overrides */
+  select {
+    background-color: #f1f3f5;
+    color: #000000;
+  }
+
+  .dark select {
+    background-color: #27272a !important;
+    color: #f4f4f5 !important;
+  }
+
+  select option {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  .dark select option,
+  .dark option {
+    background-color: #18181b !important;
+    color: #f4f4f5 !important;
+  }
+
+  /* Mono font utility */
+  .font-mono {
+    font-family: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Vercel Mesh Gradient Background */
+.vercel-mesh-gradient {
+  background: radial-gradient(at 0% 0%, rgba(0, 0, 0, 0.04) 0px, transparent 50%),
+              radial-gradient(at 50% 0%, rgba(100, 100, 100, 0.05) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(150, 150, 150, 0.04) 0px, transparent 50%);
+}
+
+.dark .vercel-mesh-gradient {
+  background: radial-gradient(at 0% 0%, rgba(0, 124, 240, 0.25) 0px, transparent 50%),
+              radial-gradient(at 50% 0%, rgba(121, 40, 202, 0.25) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(255, 0, 128, 0.2) 0px, transparent 50%),
+              radial-gradient(at 50% 50%, rgba(80, 227, 194, 0.15) 0px, transparent 50%);
+}
+
+/* Tabular Numbers for precise math layout */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scrollbar Hiding Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hairline-strong);
+  border-radius: 9999px;
+}

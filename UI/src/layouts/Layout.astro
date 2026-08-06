@@ -1,0 +1,293 @@
+---
+import '../styles/global.css';
+import { CATEGORIES, CALCULATORS } from '../data/calculators';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  showQuickTools?: boolean;
+}
+
+const {
+  title = "All Calc Kit — One Website for All Daily Calculations & Conversions",
+  description = "Fast, clean, ad-free suite of unit converters, currency rates, loan EMI, BMI health trackers, date tools, cooking scaling & developer text utilities.",
+  canonicalUrl = "https://allcalckit.com/",
+  showQuickTools = false
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="CalcKit" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content="all calc kit, converter, unit converter, currency converter, emi calculator, bmi calculator, date difference, fast calculator, precision calculation tools" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="All Calc Kit" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+
+    <!-- Fonts: Inter & Geist Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Zero-FOUC Theme Script -->
+    <script is:inline>
+      (function() {
+        const storedTheme = localStorage.getItem('ack_theme');
+        if (storedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-[var(--canvas)] text-[var(--ink)] flex flex-col antialiased selection:bg-neutral-800 selection:text-white dark:selection:bg-white dark:selection:text-black">
+    <!-- Header Nav -->
+    <header class="sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-800/80 bg-white/80 dark:bg-black/80 backdrop-blur-md transition-colors">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center bg-white border border-neutral-200 dark:border-neutral-800">
+            <img src="/logo-curved.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold tracking-tight text-base sm:text-lg group-hover:opacity-80 transition-opacity">All Calc Kit</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">v1.0</span>
+          </div>
+        </a>
+
+        <!-- Global Search Trigger (Cmd + K) -->
+        <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-64 justify-between">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span>Search 50+ tools…</span>
+          </div>
+          <kbd class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
+        </button>
+
+        <!-- Right Action Cluster -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Mobile Search Button -->
+          <button id="open-search-mobile" type="button" aria-label="Search" class="md:hidden p-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" type="button" aria-label="Toggle light or dark theme" class="p-2 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
+            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+
+          <!-- Quick Tools CTA button (Only visible on Homepage) -->
+          {showQuickTools && (
+            <a href="#quick-converters" class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity shadow-sm">
+              Quick Tools
+            </a>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer with Working Links -->
+    <footer class="border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 py-12 transition-colors">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+          <div class="col-span-2">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-6 h-6 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800">
+                <img src="/logo-curved.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+              </div>
+              <span class="font-bold text-base tracking-tight">All Calc Kit</span>
+            </div>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-sm">
+              The high-performance, ad-free suite for everyday calculations and conversions. Instant calculation, mobile responsiveness, live currency rates, and Vercel-grade minimalist UI.
+            </p>
+            <div class="mt-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">Status: All Systems Operational</span>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Categories</h4>
+            <ul class="space-y-2 text-xs text-neutral-500 dark:text-neutral-400">
+              {CATEGORIES.slice(0, 4).map(cat => (
+                <li><a href={cat.url} class="hover:text-black dark:hover:text-white transition-colors">{cat.name}</a></li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">More Categories</h4>
+            <ul class="space-y-2 text-xs text-neutral-500 dark:text-neutral-400">
+              {CATEGORIES.slice(4).map(cat => (
+                <li><a href={cat.url} class="hover:text-black dark:hover:text-white transition-colors">{cat.name}</a></li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="col-span-2 md:col-span-1">
+            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Domain</h4>
+            <p class="text-xs font-mono text-neutral-600 dark:text-neutral-300 font-semibold mb-2">allcalckit.com</p>
+            <p class="text-[11px] text-neutral-500 dark:text-neutral-500">
+              Built with Astro JS & Tailwind CSS v4. Designed for ultimate speed and mobile efficiency.
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-8 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-500">
+          <p>© {new Date().getFullYear()} All Calc Kit. All rights reserved.</p>
+          <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
+            <span>No Ads</span>
+            <span>•</span>
+            <span>No Tracking</span>
+            <span>•</span>
+            <span>Instant Calculations</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Command Palette Modal -->
+    <div id="search-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-start justify-center pt-16 sm:pt-24 px-4 transition-opacity">
+      <div class="w-full max-w-xl bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col transform transition-all scale-98">
+        <div class="p-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
+          <svg class="w-5 h-5 text-neutral-400 ml-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="search-input" type="text" placeholder="Type a calculator name or unit (e.g. BMI, Currency, Length, EMI)..." class="w-full bg-transparent border-none outline-none text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 font-medium py-1" autocomplete="off" />
+          <kbd class="font-mono text-xs px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border border-neutral-200 dark:border-neutral-700 shrink-0">ESC</kbd>
+        </div>
+        <div id="search-results" class="max-h-96 overflow-y-auto p-2 space-y-1">
+        </div>
+        <div class="p-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 flex items-center justify-between text-[11px] text-neutral-500">
+          <div class="flex items-center gap-3">
+            <span><kbd class="font-mono px-1 py-0.5 bg-neutral-200 dark:bg-neutral-800 rounded">↑↓</kbd> Navigate</span>
+            <span><kbd class="font-mono px-1 py-0.5 bg-neutral-200 dark:bg-neutral-800 rounded">↵</kbd> Select</span>
+          </div>
+          <span class="font-mono">All Calc Kit Search</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script is:inline define:vars={{ CALCULATORS }}>
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.toggle('dark');
+          localStorage.setItem('ack_theme', isDark ? 'dark' : 'light');
+        });
+      }
+
+      const modal = document.getElementById('search-modal');
+      const searchInput = document.getElementById('search-input');
+      const searchResults = document.getElementById('search-results');
+      const openBtnDesktop = document.getElementById('open-search-btn');
+      const openBtnMobile = document.getElementById('open-search-mobile');
+
+      function openModal() {
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        if (searchInput) {
+          searchInput.value = '';
+          renderResults(CALCULATORS);
+          setTimeout(() => searchInput.focus(), 50);
+        }
+      }
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      if (openBtnDesktop) openBtnDesktop.addEventListener('click', openModal);
+      if (openBtnMobile) openBtnMobile.addEventListener('click', openModal);
+
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeModal();
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          if (modal?.classList.contains('hidden')) openModal();
+          else closeModal();
+        }
+        if (e.key === 'Escape') closeModal();
+      });
+
+      function renderResults(list) {
+        if (!searchResults) return;
+        if (list.length === 0) {
+          searchResults.innerHTML = `<div class="p-6 text-center text-xs text-neutral-500 font-mono">No calculators match your query.</div>`;
+          return;
+        }
+        searchResults.innerHTML = list.map(item => `
+          <a href="${item.url}" class="flex items-center justify-between p-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-8 h-8 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 flex items-center justify-center font-mono text-xs font-bold border border-neutral-200 dark:border-neutral-700 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors shrink-0">
+                ${item.name[0]}
+              </div>
+              <div class="min-w-0">
+                <div class="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">${item.name}</div>
+                <div class="text-xs text-neutral-500 dark:text-neutral-400 truncate">${item.description}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border border-neutral-200 dark:border-neutral-700 shrink-0 ml-2">${item.category}</span>
+          </a>
+        `).join('');
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          if (!query) {
+            renderResults(CALCULATORS);
+            return;
+          }
+          const filtered = CALCULATORS.filter(c => 
+            c.name.toLowerCase().includes(query) || 
+            c.description.toLowerCase().includes(query) || 
+            c.category.toLowerCase().includes(query) ||
+            c.tags.some(t => t.toLowerCase().includes(query))
+          );
+          renderResults(filtered);
+        });
+      }
+    </script>
+  </body>
+</html>

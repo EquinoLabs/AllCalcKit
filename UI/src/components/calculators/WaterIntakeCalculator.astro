@@ -1,0 +1,92 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Daily Water Intake Hydration Calculator</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 shrink-0 font-bold">
+      Hydration Target
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Body Weight (kg)</label>
+        <input id="water-weight" type="number" value="70" min="20" max="250" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-cyan-500 tabular-nums" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Daily Exercise Duration (Minutes)</label>
+        <input id="water-exercise" type="number" value="30" min="0" max="300" step="15" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-cyan-500 tabular-nums" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Climate Type</label>
+        <select id="water-climate" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-xs font-bold outline-none cursor-pointer">
+          <option value="0" selected>Normal / Moderate</option>
+          <option value="0.5">Hot / Humid (+0.5 L)</option>
+          <option value="-0.2">Cold / Indoor AC (-0.2 L)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1 font-semibold">Daily Recommended Water</div>
+        <div id="water-liters" class="text-3xl sm:text-4xl font-black text-cyan-600 dark:text-cyan-400 tabular-nums">0 <span class="text-base font-normal">Liters / day</span></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">8 oz Glasses (250ml)</span>
+          <span id="water-glasses" class="font-bold text-black dark:text-white tabular-nums">0 Glasses</span>
+        </div>
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Fluid Ounces (fl oz)</span>
+          <span id="water-oz" class="font-bold text-cyan-600 dark:text-cyan-400 tabular-nums">0 fl oz</span>
+        </div>
+      </div>
+
+      <div class="text-xs font-mono text-neutral-500 leading-relaxed">
+        Stay properly hydrated throughout the day for optimal energy, metabolism, and mental focus.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const wInp = document.getElementById('water-weight');
+    const exInp = document.getElementById('water-exercise');
+    const clInp = document.getElementById('water-climate');
+
+    const litEl = document.getElementById('water-liters');
+    const glassEl = document.getElementById('water-glasses');
+    const ozEl = document.getElementById('water-oz');
+
+    function calcWater() {
+      if (!wInp || !exInp || !clInp) return;
+      const w = parseFloat(wInp.value) || 0;
+      const ex = parseFloat(exInp.value) || 0;
+      const climate = parseFloat(clInp.value) || 0;
+
+      // Base: 35ml per kg of body weight
+      let liters = (w * 0.035) + (ex / 30 * 0.35) + climate;
+      if (liters < 1) liters = 1;
+
+      const glasses = Math.round(liters * 1000 / 250);
+      const oz = Math.round(liters * 33.814);
+
+      if (litEl) litEl.innerHTML = `${liters.toFixed(2)} <span class="text-base font-normal">Liters / day</span>`;
+      if (glassEl) glassEl.textContent = `${glasses} Glasses`;
+      if (ozEl) ozEl.textContent = `${oz} fl oz`;
+    }
+
+    [wInp, exInp, clInp].forEach(el => el.addEventListener('input', calcWater));
+    calcWater();
+  })();
+</script>

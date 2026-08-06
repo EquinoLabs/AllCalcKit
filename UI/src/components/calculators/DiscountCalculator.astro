@@ -1,0 +1,157 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Discount & Savings Calculator</h3>
+    </div>
+    
+    <!-- Currency Selector -->
+    <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs shrink-0">
+      <select class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
+        <option value="USD">USD ($)</option>
+        <option value="INR">INR (₹)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Original Price</label>
+        <input id="disc-price" type="number" value="250" min="0" step="5" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-rose-500 tabular-nums" />
+      </div>
+
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Discount Off (%)</label>
+          <span id="disc-pct-val" class="font-mono font-bold text-black dark:text-white">25% OFF</span>
+        </div>
+        <input id="disc-pct" type="range" min="0" max="90" step="5" value="25" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-rose-600" />
+      </div>
+
+      <!-- Quick Preset Buttons -->
+      <div>
+        <span class="block text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mb-1.5">Quick Presets:</span>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-disc="10" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-rose-500 hover:text-white hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:border-rose-500 active:scale-95 transition-all duration-150 shadow-2xs">10% OFF</button>
+          <button type="button" data-disc="20" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-rose-500 hover:text-white hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:border-rose-500 active:scale-95 transition-all duration-150 shadow-2xs">20% OFF</button>
+          <button type="button" data-disc="25" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-rose-500 hover:text-white hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:border-rose-500 active:scale-95 transition-all duration-150 shadow-2xs">25% OFF</button>
+          <button type="button" data-disc="30" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-rose-500 hover:text-white hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:border-rose-500 active:scale-95 transition-all duration-150 shadow-2xs">30% OFF</button>
+          <button type="button" data-disc="50" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-white border border-neutral-300 dark:border-neutral-700 hover:bg-rose-500 hover:text-white hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:border-rose-500 active:scale-95 transition-all duration-150 shadow-2xs">50% OFF</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1 font-semibold">Final Discounted Price</div>
+        <div id="disc-final-price" class="text-3xl sm:text-4xl font-black text-rose-600 dark:text-rose-400 tabular-nums">$0</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Savings</span>
+          <span id="disc-savings" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$0</span>
+        </div>
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Original Price</span>
+          <span id="disc-orig" class="font-bold text-black dark:text-white tabular-nums">$0</span>
+        </div>
+      </div>
+
+      <div class="text-xs font-mono text-neutral-500 leading-relaxed">
+        Calculates exact deal savings for smart shopping.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const priceInp = document.getElementById('disc-price');
+    const pctInp = document.getElementById('disc-pct');
+
+    const pctVal = document.getElementById('disc-pct-val');
+    const finalPriceEl = document.getElementById('disc-final-price');
+    const savingsEl = document.getElementById('disc-savings');
+    const origEl = document.getElementById('disc-orig');
+
+    const presets = document.querySelectorAll('.disc-preset-btn');
+
+    const CURRENCY_CONFIGS = {
+      USD: { symbol: '$', locale: 'en-US' },
+      INR: { symbol: '₹', locale: 'en-IN' },
+      EUR: { symbol: '€', locale: 'en-IE' },
+      GBP: { symbol: '£', locale: 'en-GB' }
+    };
+
+    function getCurrency() {
+      return localStorage.getItem('ack_currency') || 'USD';
+    }
+
+    function formatMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      const formatted = num.toLocaleString(cfg.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return `${cfg.symbol}${formatted}`;
+    }
+
+    function updateActivePresets() {
+      const val = pctInp.value;
+      presets.forEach(p => {
+        if (p.getAttribute('data-disc') === val) {
+          p.classList.add('bg-rose-600', 'text-white', 'border-rose-600', 'dark:bg-rose-600', 'dark:border-rose-600');
+          p.classList.remove('bg-neutral-100', 'dark:bg-neutral-800');
+        } else {
+          p.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'dark:bg-rose-600', 'dark:border-rose-600');
+          p.classList.add('bg-neutral-100', 'dark:bg-neutral-800');
+        }
+      });
+    }
+
+    function calcDisc() {
+      if (!priceInp || !pctInp) return;
+      const price = parseFloat(priceInp.value) || 0;
+      const pct = parseFloat(pctInp.value) || 0;
+
+      if (pctVal) pctVal.textContent = pct + '% OFF';
+
+      const savings = price * (pct / 100);
+      const finalPrice = price - savings;
+
+      if (finalPriceEl) finalPriceEl.textContent = formatMoney(finalPrice);
+      if (savingsEl) savingsEl.textContent = formatMoney(savings);
+      if (origEl) origEl.textContent = formatMoney(price);
+
+      updateActivePresets();
+    }
+
+    presets.forEach(p => p.addEventListener('click', () => {
+      pctInp.value = p.getAttribute('data-disc');
+      calcDisc();
+    }));
+
+    const selects = document.querySelectorAll('.ack-currency-select');
+    selects.forEach(sel => {
+      sel.value = getCurrency();
+      sel.addEventListener('change', (e) => {
+        const val = e.target.value;
+        localStorage.setItem('ack_currency', val);
+        window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
+      });
+    });
+
+    window.addEventListener('ack_currency_change', (e) => {
+      selects.forEach(sel => sel.value = e.detail);
+      calcDisc();
+    });
+
+    [priceInp, pctInp].forEach(el => el.addEventListener('input', calcDisc));
+    calcDisc();
+  })();
+</script>

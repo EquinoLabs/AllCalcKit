@@ -1,0 +1,69 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Text Case Converter Suite</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 shrink-0 font-bold">
+      String Manipulation
+    </span>
+  </div>
+
+  <div class="space-y-4">
+    <textarea id="case-input" rows="4" placeholder="Type or paste your text here to transform cases instantly..." class="w-full p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-sm focus:ring-2 focus:ring-cyan-500 outline-none transition-all font-mono leading-relaxed"></textarea>
+
+    <!-- Transform Buttons -->
+    <div class="flex flex-wrap gap-2 font-mono text-xs">
+      <button type="button" data-case="upper" class="case-btn px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-neutral-300 dark:border-neutral-700">UPPERCASE</button>
+      <button type="button" data-case="lower" class="case-btn px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-neutral-300 dark:border-neutral-700">lowercase</button>
+      <button type="button" data-case="title" class="case-btn px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-neutral-300 dark:border-neutral-700">Title Case</button>
+      <button type="button" data-case="camel" class="case-btn px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-neutral-300 dark:border-neutral-700">camelCase</button>
+      <button type="button" data-case="kebab" class="case-btn px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-neutral-300 dark:border-neutral-700">kebab-case</button>
+      <button type="button" data-case="snake" class="case-btn px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-bold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors border border-neutral-300 dark:border-neutral-700">snake_case</button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const input = document.getElementById('case-input');
+    const btns = document.querySelectorAll('.case-btn');
+
+    function transform(type) {
+      if (!input) return;
+      let text = input.value;
+      if (!text) return;
+
+      switch (type) {
+        case 'upper':
+          text = text.toUpperCase();
+          break;
+        case 'lower':
+          text = text.toLowerCase();
+          break;
+        case 'title':
+          text = text.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase());
+          break;
+        case 'camel':
+          text = text.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+          break;
+        case 'kebab':
+          text = text.toLowerCase().trim().replace(/[\s_]+/g, '-').replace(/[^a-z0-9-]/g, '');
+          break;
+        case 'snake':
+          text = text.toLowerCase().trim().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '');
+          break;
+      }
+      input.value = text;
+    }
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        transform(btn.getAttribute('data-case'));
+      });
+    });
+  })();
+</script>

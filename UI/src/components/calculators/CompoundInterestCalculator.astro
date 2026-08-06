@@ -1,0 +1,137 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Compound Interest Calculator</h3>
+    </div>
+    
+    <!-- Currency Selector -->
+    <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs shrink-0">
+      <select class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
+        <option value="USD">USD ($)</option>
+        <option value="INR">INR (₹)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Initial Principal</label>
+        <input id="ci-principal" type="number" value="10000" min="0" step="100" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-blue-500 tabular-nums" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Annual Interest Rate (% p.a.)</label>
+        <input id="ci-rate" type="number" value="7" min="0.1" max="50" step="0.1" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-blue-500 tabular-nums" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Time Period (Years)</label>
+          <input id="ci-years" type="number" value="5" min="1" max="50" step="1" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-blue-500 tabular-nums" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Compounding Frequency</label>
+          <select id="ci-freq" class="w-full px-3 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-xs font-bold outline-none cursor-pointer">
+            <option value="12" selected>Monthly (n=12)</option>
+            <option value="4">Quarterly (n=4)</option>
+            <option value="1">Annually (n=1)</option>
+            <option value="365">Daily (n=365)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1">Final Future Balance</div>
+        <div id="ci-balance-val" class="text-3xl sm:text-4xl font-black text-blue-600 dark:text-blue-400 tabular-nums">$0</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Principal</span>
+          <span id="ci-principal-val" class="font-bold text-black dark:text-white tabular-nums">$0</span>
+        </div>
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Interest</span>
+          <span id="ci-interest-val" class="font-bold text-blue-600 dark:text-blue-400 tabular-nums">$0</span>
+        </div>
+      </div>
+
+      <div class="text-xs font-mono text-neutral-500 leading-relaxed">
+        Formula: <span class="font-bold">A = P(1 + r/n)^(nt)</span>. Money grows exponentially as interest earns interest.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const pInp = document.getElementById('ci-principal');
+    const rInp = document.getElementById('ci-rate');
+    const tInp = document.getElementById('ci-years');
+    const fInp = document.getElementById('ci-freq');
+
+    const balEl = document.getElementById('ci-balance-val');
+    const prinEl = document.getElementById('ci-principal-val');
+    const intEl = document.getElementById('ci-interest-val');
+
+    const CURRENCY_CONFIGS = {
+      USD: { symbol: '$', locale: 'en-US' },
+      INR: { symbol: '₹', locale: 'en-IN' },
+      EUR: { symbol: '€', locale: 'en-IE' },
+      GBP: { symbol: '£', locale: 'en-GB' }
+    };
+
+    function getCurrency() {
+      return localStorage.getItem('ack_currency') || 'USD';
+    }
+
+    function formatMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      const formatted = Math.round(num).toLocaleString(cfg.locale);
+      return `${cfg.symbol}${formatted}`;
+    }
+
+    function calcCI() {
+      if (!pInp || !rInp || !tInp || !fInp) return;
+      const P = parseFloat(pInp.value) || 0;
+      const r = (parseFloat(rInp.value) || 0) / 100;
+      const t = parseFloat(tInp.value) || 0;
+      const n = parseFloat(fInp.value) || 12;
+
+      const A = P * Math.pow(1 + (r / n), n * t);
+      const interest = A - P;
+
+      if (balEl) balEl.textContent = formatMoney(A);
+      if (prinEl) prinEl.textContent = formatMoney(P);
+      if (intEl) intEl.textContent = formatMoney(interest);
+    }
+
+    const selects = document.querySelectorAll('.ack-currency-select');
+    selects.forEach(sel => {
+      sel.value = getCurrency();
+      sel.addEventListener('change', (e) => {
+        const val = e.target.value;
+        localStorage.setItem('ack_currency', val);
+        window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
+      });
+    });
+
+    window.addEventListener('ack_currency_change', (e) => {
+      selects.forEach(sel => sel.value = e.detail);
+      calcCI();
+    });
+
+    [pInp, rInp, tInp, fInp].forEach(el => el.addEventListener('input', calcCI));
+    calcCI();
+  })();
+</script>

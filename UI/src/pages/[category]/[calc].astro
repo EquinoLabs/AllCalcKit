@@ -1,0 +1,188 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { CALCULATORS, CATEGORIES } from '../../data/calculators';
+import UnitConverter from '../../components/calculators/UnitConverter.astro';
+import CurrencyConverter from '../../components/calculators/CurrencyConverter.astro';
+import EmiCalculator from '../../components/calculators/EmiCalculator.astro';
+import BmiCalculator from '../../components/calculators/BmiCalculator.astro';
+import PercentageCalculator from '../../components/calculators/PercentageCalculator.astro';
+import WordCounter from '../../components/calculators/WordCounter.astro';
+
+import SipCalculator from '../../components/calculators/SipCalculator.astro';
+import FdRdCalculator from '../../components/calculators/FdRdCalculator.astro';
+import CompoundInterestCalculator from '../../components/calculators/CompoundInterestCalculator.astro';
+import TaxGstCalculator from '../../components/calculators/TaxGstCalculator.astro';
+import TipSplitCalculator from '../../components/calculators/TipSplitCalculator.astro';
+import DiscountCalculator from '../../components/calculators/DiscountCalculator.astro';
+
+import BmrCalculator from '../../components/calculators/BmrCalculator.astro';
+import TdeeCalculator from '../../components/calculators/TdeeCalculator.astro';
+import WaterIntakeCalculator from '../../components/calculators/WaterIntakeCalculator.astro';
+import AgeCalculator from '../../components/calculators/AgeCalculator.astro';
+
+import NumberBaseConverter from '../../components/calculators/NumberBaseConverter.astro';
+import FractionDecimalCalculator from '../../components/calculators/FractionDecimalCalculator.astro';
+import PrimeChecker from '../../components/calculators/PrimeChecker.astro';
+import ColorConverter from '../../components/calculators/ColorConverter.astro';
+import CaseConverter from '../../components/calculators/CaseConverter.astro';
+
+import DateDiffCalculator from '../../components/calculators/DateDiffCalculator.astro';
+import DateAddCalculator from '../../components/calculators/DateAddCalculator.astro';
+import UnixTimestampCalculator from '../../components/calculators/UnixTimestampCalculator.astro';
+
+import RecipeScaler from '../../components/calculators/RecipeScaler.astro';
+import FuelCostCalculator from '../../components/calculators/FuelCostCalculator.astro';
+import ElectricityBillCalculator from '../../components/calculators/ElectricityBillCalculator.astro';
+
+import { 
+  SPEED_UNITS, 
+  DATA_UNITS, 
+  PRESSURE_UNITS, 
+  ENERGY_UNITS, 
+  TIME_UNITS, 
+  ANGLE_UNITS, 
+  FUEL_EFFICIENCY_UNITS, 
+  COOKING_UNITS,
+  AREA_UNITS
+} from '../../data/units';
+
+export function getStaticPaths() {
+  return CALCULATORS.map(calc => ({
+    params: { 
+      category: calc.categoryId,
+      calc: calc.id
+    },
+    props: { calc }
+  }));
+}
+
+const { calc } = Astro.props;
+const categoryObj = CATEGORIES.find(c => c.id === calc.categoryId) || { name: calc.category, url: `/${calc.categoryId}` };
+
+const lengthUnits = [
+  { id: 'm', name: 'Meters (m)', ratio: 1 },
+  { id: 'km', name: 'Kilometers (km)', ratio: 1000 },
+  { id: 'cm', name: 'Centimeters (cm)', ratio: 0.01 },
+  { id: 'mm', name: 'Millimeters (mm)', ratio: 0.001 },
+  { id: 'in', name: 'Inches (in)', ratio: 0.0254 },
+  { id: 'ft', name: 'Feet (ft)', ratio: 0.3048 },
+  { id: 'yd', name: 'Yards (yd)', ratio: 0.9144 },
+  { id: 'mi', name: 'Miles (mi)', ratio: 1609.344 }
+];
+
+const weightUnits = [
+  { id: 'kg', name: 'Kilograms (kg)', ratio: 1 },
+  { id: 'g', name: 'Grams (g)', ratio: 0.001 },
+  { id: 'mg', name: 'Milligrams (mg)', ratio: 0.000001 },
+  { id: 'lb', name: 'Pounds (lbs)', ratio: 0.453592 },
+  { id: 'oz', name: 'Ounces (oz)', ratio: 0.0283495 },
+  { id: 'ton', name: 'Metric Ton (t)', ratio: 1000 }
+];
+
+const tempUnits = [
+  { id: 'c', name: 'Celsius (°C)', ratio: 1 },
+  { id: 'f', name: 'Fahrenheit (°F)', ratio: 1 },
+  { id: 'k', name: 'Kelvin (K)', ratio: 1 }
+];
+
+const volumeUnits = [
+  { id: 'l', name: 'Liters (L)', ratio: 1 },
+  { id: 'ml', name: 'Milliliters (mL)', ratio: 0.001 },
+  { id: 'cup', name: 'Cups (US)', ratio: 0.24 },
+  { id: 'gal', name: 'Gallons (US)', ratio: 3.78541 },
+  { id: 'floz', name: 'Fluid Ounces (fl oz)', ratio: 0.0295735 }
+];
+---
+
+<Layout title={`${calc.name} — All Calc Kit`} description={calc.description} canonicalUrl={`https://allcalckit.com${calc.url}`} showQuickTools={false}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    
+    <!-- Breadcrumb: Home / [Category] / [Calc Name] -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-neutral-500 mb-6">
+      <a href="/" class="hover:text-black dark:hover:text-white transition-colors">Home</a>
+      <span>/</span>
+      <a href={categoryObj.url} class="hover:text-black dark:hover:text-white transition-colors">{calc.category}</a>
+      <span>/</span>
+      <span class="text-black dark:text-white font-bold">{calc.name}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <a href={categoryObj.url} class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 dark:bg-blue-500/10 text-black dark:text-blue-400 font-mono text-xs mb-3 border border-neutral-300 dark:border-blue-500/20 hover:bg-neutral-200 dark:hover:bg-blue-500/20 transition-colors font-bold">
+        <span>{calc.category} ←</span>
+      </a>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-black dark:text-white mb-2">
+        {calc.name}
+      </h1>
+      <p class="text-neutral-600 dark:text-neutral-300 text-sm font-medium">
+        {calc.description}. Instant real-time calculation with zero ads.
+      </p>
+    </div>
+
+    <!-- Active Calculator Widget -->
+    <div class="mb-12">
+      {calc.id === 'currency' && <CurrencyConverter />}
+      {calc.id === 'loan-emi' && <EmiCalculator />}
+      {calc.id === 'bmi' && <BmiCalculator />}
+      {calc.id === 'percentage' && <PercentageCalculator />}
+      {calc.id === 'word-counter' && <WordCounter />}
+      
+      {calc.id === 'length' && <UnitConverter title="Length & Distance" category="Unit Converters" units={lengthUnits} defaultFrom="m" defaultTo="ft" />}
+      {calc.id === 'weight' && <UnitConverter title="Weight & Mass" category="Unit Converters" units={weightUnits} defaultFrom="kg" defaultTo="lb" />}
+      {calc.id === 'temperature' && <UnitConverter title="Temperature" category="Unit Converters" units={tempUnits} defaultFrom="c" defaultTo="f" />}
+      {calc.id === 'volume' && <UnitConverter title="Volume & Liquids" category="Unit Converters" units={volumeUnits} defaultFrom="l" defaultTo="gal" />}
+      {calc.id === 'area' && <UnitConverter title="Area & Surface" category="Unit Converters" units={AREA_UNITS} defaultFrom="sqm" defaultTo="sqft" />}
+
+      {calc.id === 'speed' && <UnitConverter title="Speed & Velocity" category="Unit Converters" units={SPEED_UNITS} defaultFrom="kmh" defaultTo="mph" />}
+      {calc.id === 'data' && <UnitConverter title="Data Storage" category="Unit Converters" units={DATA_UNITS} defaultFrom="mb" defaultTo="gb" />}
+      {calc.id === 'pressure' && <UnitConverter title="Pressure" category="Unit Converters" units={PRESSURE_UNITS} defaultFrom="bar" defaultTo="psi" />}
+      {calc.id === 'energy' && <UnitConverter title="Energy & Work" category="Unit Converters" units={ENERGY_UNITS} defaultFrom="kj" defaultTo="kcal" />}
+      {calc.id === 'time-units' && <UnitConverter title="Time Units" category="Unit Converters" units={TIME_UNITS} defaultFrom="hr" defaultTo="min" />}
+      {calc.id === 'angle' && <UnitConverter title="Angles" category="Unit Converters" units={ANGLE_UNITS} defaultFrom="deg" defaultTo="rad" />}
+      {calc.id === 'fuel-efficiency' && <UnitConverter title="Fuel Efficiency" category="Unit Converters" units={FUEL_EFFICIENCY_UNITS} defaultFrom="kml" defaultTo="mpg_us" />}
+      {calc.id === 'cooking-units' && <UnitConverter title="Cooking Measurements" category="Culinary" units={COOKING_UNITS} defaultFrom="cup" defaultTo="ml" />}
+
+      {calc.id === 'sip' && <SipCalculator />}
+      {calc.id === 'fd-rd' && <FdRdCalculator />}
+      {calc.id === 'compound-interest' && <CompoundInterestCalculator />}
+      {calc.id === 'tax-gst' && <TaxGstCalculator />}
+      {calc.id === 'tip-split' && <TipSplitCalculator />}
+      {calc.id === 'discount' && <DiscountCalculator />}
+
+      {calc.id === 'bmr' && <BmrCalculator />}
+      {calc.id === 'tdee' && <TdeeCalculator />}
+      {calc.id === 'water-intake' && <WaterIntakeCalculator />}
+      {calc.id === 'age-calc' && <AgeCalculator />}
+
+      {calc.id === 'number-base' && <NumberBaseConverter />}
+      {calc.id === 'fraction-decimal' && <FractionDecimalCalculator />}
+      {calc.id === 'prime-checker' && <PrimeChecker />}
+      {calc.id === 'color-converter' && <ColorConverter />}
+      {calc.id === 'case-converter' && <CaseConverter />}
+
+      {calc.id === 'date-diff' && <DateDiffCalculator />}
+      {calc.id === 'date-add' && <DateAddCalculator />}
+      {calc.id === 'unix-timestamp' && <UnixTimestampCalculator />}
+
+      {calc.id === 'recipe-converter' && <RecipeScaler />}
+      {calc.id === 'fuel-cost' && <FuelCostCalculator />}
+      {calc.id === 'electricity-bill' && <ElectricityBillCalculator />}
+    </div>
+
+    <!-- Usage & Formula Guide -->
+    <div class="bg-white dark:bg-neutral-900/50 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-800 space-y-4 text-xs font-mono shadow-xs">
+      <h3 class="font-bold text-sm text-black dark:text-white uppercase tracking-wider">How to use {calc.name}</h3>
+      <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium">
+        1. Enter your starting values into the input fields above.<br/>
+        2. Results recalculate automatically as you type.<br/>
+        3. Click "Copy Result" to save the calculation string directly to your clipboard or adjust parameters instantly.
+      </p>
+      <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <a href={categoryObj.url} class="text-black dark:text-blue-400 hover:underline flex items-center gap-1 font-bold underline">
+          ← Back to {calc.category}
+        </a>
+        <span class="text-neutral-500 dark:text-neutral-400">URL: allcalckit.com{calc.url}</span>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,182 @@
+---
+const CURRENCIES = [
+  { code: 'USD', name: 'US Dollar ($)', rate: 1.0 },
+  { code: 'EUR', name: 'Euro (€)', rate: 0.92 },
+  { code: 'GBP', name: 'British Pound (£)', rate: 0.78 },
+  { code: 'INR', name: 'Indian Rupee (₹)', rate: 83.85 },
+  { code: 'JPY', name: 'Japanese Yen (¥)', rate: 147.2 },
+  { code: 'CAD', name: 'Canadian Dollar (C$)', rate: 1.37 },
+  { code: 'AUD', name: 'Australian Dollar (A$)', rate: 1.52 },
+  { code: 'KES', name: 'Kenyan Shilling (KSh)', rate: 129.5 },
+  { code: 'TZS', name: 'Tanzanian Shilling (TSh)', rate: 2680.0 },
+  { code: 'AED', name: 'UAE Dirham (AED)', rate: 3.67 },
+  { code: 'CHF', name: 'Swiss Franc (CHF)', rate: 0.86 },
+  { code: 'SGD', name: 'Singapore Dollar (S$)', rate: 1.33 }
+];
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-black dark:bg-emerald-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Live Currency Converter</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-emerald-500/10 text-black dark:text-emerald-400 border border-neutral-300 dark:border-emerald-500/20 shrink-0 font-bold">
+      Real-Time Rates
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-7 gap-4 items-center">
+    <!-- Amount & From -->
+    <div class="lg:col-span-3 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">From Base</label>
+        <select 
+          id="curr-from"
+          class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-200 text-xs font-bold outline-none cursor-pointer shrink-0 max-w-[60%]"
+        >
+          {CURRENCIES.map(c => (
+            <option value={c.code} selected={c.code === 'USD'}>{c.code} — {c.name}</option>
+          ))}
+        </select>
+      </div>
+      <input 
+        type="number" 
+        id="curr-amount" 
+        value="100" 
+        min="0"
+        step="any"
+        class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-lg font-bold focus:ring-2 focus:ring-black dark:focus:ring-emerald-500 outline-none transition-all tabular-nums"
+      />
+    </div>
+
+    <!-- Swap -->
+    <div class="flex justify-center py-1 lg:py-0 lg:pt-6">
+      <button 
+        type="button" 
+        id="curr-swap-btn"
+        aria-label="Swap currencies"
+        class="w-11 h-11 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:scale-95 transition-all flex items-center justify-center shrink-0 shadow-xs"
+      >
+        <svg class="w-5 h-5 rotate-90 lg:rotate-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+      </button>
+    </div>
+
+    <!-- Target Currency & Output -->
+    <div class="lg:col-span-3 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">Converted Target</label>
+        <select 
+          id="curr-to"
+          class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-200 text-xs font-bold outline-none cursor-pointer shrink-0 max-w-[60%]"
+        >
+          {CURRENCIES.map(c => (
+            <option value={c.code} selected={c.code === 'EUR'}>{c.code} — {c.name}</option>
+          ))}
+        </select>
+      </div>
+      <input 
+        type="text" 
+        id="curr-result" 
+        readonly 
+        class="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-black dark:text-emerald-400 text-lg font-black outline-none tabular-nums"
+      />
+    </div>
+  </div>
+
+  <!-- Footnote Rate Info & Quick Presets -->
+  <div class="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+    <div class="flex items-center gap-2 font-mono text-neutral-700 dark:text-neutral-400 font-semibold">
+      <span id="curr-rate-info">1 USD = 0.92 EUR</span>
+    </div>
+    <div class="flex items-center gap-1.5 flex-wrap w-full sm:w-auto">
+      <span class="text-neutral-500 dark:text-neutral-400 text-[11px] font-mono shrink-0">Popular:</span>
+      <button type="button" data-pair="USD,EUR" class="preset-btn px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 active:scale-95 transition-colors font-mono text-[11px] font-bold">USD→EUR</button>
+      <button type="button" data-pair="USD,INR" class="preset-btn px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 active:scale-95 transition-colors font-mono text-[11px] font-bold">USD→INR</button>
+      <button type="button" data-pair="USD,TZS" class="preset-btn px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 active:scale-95 transition-colors font-mono text-[11px] font-bold">USD→TZS</button>
+      <button type="button" data-pair="GBP,USD" class="preset-btn px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 active:scale-95 transition-colors font-mono text-[11px] font-bold">GBP→USD</button>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ initialCurrencies: CURRENCIES }}>
+  (function() {
+    const amountInput = document.getElementById('curr-amount');
+    const fromSelect = document.getElementById('curr-from');
+    const toSelect = document.getElementById('curr-to');
+    const resultInput = document.getElementById('curr-result');
+    const rateInfo = document.getElementById('curr-rate-info');
+    const swapBtn = document.getElementById('curr-swap-btn');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+
+    let rates = {};
+    initialCurrencies.forEach(c => rates[c.code] = c.rate);
+
+    async function fetchRates() {
+      try {
+        const res = await fetch('https://open.er-api.com/v6/latest/USD');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.rates) {
+            rates = { ...rates, ...data.rates };
+          }
+        }
+      } catch (e) {
+        console.log('Using baseline exchange rates fallback');
+      }
+      calcCurrency();
+    }
+
+    function calcCurrency() {
+      if (!amountInput || !fromSelect || !toSelect || !resultInput) return;
+      const amt = parseFloat(amountInput.value);
+      if (isNaN(amt)) {
+        resultInput.value = '';
+        return;
+      }
+
+      const fromCode = fromSelect.value;
+      const toCode = toSelect.value;
+
+      const rateFromUSD = rates[fromCode] || 1;
+      const rateToUSD = rates[toCode] || 1;
+
+      const inUSD = amt / rateFromUSD;
+      const converted = inUSD * rateToUSD;
+
+      const singleRate = rateToUSD / rateFromUSD;
+
+      resultInput.value = converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (rateInfo) {
+        rateInfo.textContent = `1 ${fromCode} = ${singleRate.toFixed(4)} ${toCode}`;
+      }
+    }
+
+    amountInput.addEventListener('input', calcCurrency);
+    fromSelect.addEventListener('change', calcCurrency);
+    toSelect.addEventListener('change', calcCurrency);
+
+    if (swapBtn) {
+      swapBtn.addEventListener('click', () => {
+        const temp = fromSelect.value;
+        fromSelect.value = toSelect.value;
+        toSelect.value = temp;
+        calcCurrency();
+      });
+    }
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pair = btn.getAttribute('data-pair');
+        if (pair) {
+          const [f, t] = pair.split(',');
+          fromSelect.value = f;
+          toSelect.value = t;
+          calcCurrency();
+        }
+      });
+    });
+
+    fetchRates();
+  })();
+</script>

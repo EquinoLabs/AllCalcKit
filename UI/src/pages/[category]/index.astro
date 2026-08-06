@@ -1,0 +1,96 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { CATEGORIES, CALCULATORS } from '../../data/calculators';
+
+export function getStaticPaths() {
+  return CATEGORIES.map(cat => ({
+    params: { category: cat.id },
+    props: { cat }
+  }));
+}
+
+const { cat } = Astro.props;
+const categoryTools = CALCULATORS.filter(c => c.categoryId === cat.id);
+---
+
+<Layout title={`${cat.name} — All Calc Kit`} description={cat.description} canonicalUrl={`https://allcalckit.com${cat.url}`} showQuickTools={false}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    
+    <!-- Breadcrumbs: Home / [Category] -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-neutral-500 mb-6">
+      <a href="/" class="hover:text-black dark:hover:text-white transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-black dark:text-white font-bold">{cat.name}</span>
+    </nav>
+
+    <!-- Header Banner -->
+    <div class="mb-10 pb-8 border-b border-neutral-200 dark:border-neutral-800">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black font-mono text-xs mb-3 font-bold">
+        <span>{categoryTools.length} Precision Tools</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-black dark:text-white mb-3">
+        {cat.name}.
+      </h1>
+      <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 max-w-2xl leading-relaxed font-medium">
+        {cat.description}. Select any tool below to calculate instantly with zero ads.
+      </p>
+    </div>
+
+    <!-- Grid of All Feature Cards in this Category -->
+    <div class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-black dark:text-white tracking-tight">
+          All {cat.name} Calculators
+        </h2>
+        <span class="text-xs font-mono text-neutral-500 dark:text-neutral-400 font-medium">{categoryTools.length} Tools</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {categoryTools.map(tool => (
+          <div class="bg-white dark:bg-neutral-900/50 rounded-2xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between hover:border-neutral-400 dark:hover:border-neutral-600 transition-all shadow-xs hover:shadow-md group">
+            <div>
+              <!-- Clickable Feature Header -->
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <a href={tool.url} class="font-bold text-base text-black dark:text-white group-hover:text-neutral-600 dark:group-hover:text-blue-400 transition-colors">
+                  {tool.name}
+                </a>
+                {tool.popular && (
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-neutral-100 text-black dark:bg-amber-500/10 dark:text-amber-400 border border-neutral-300 dark:border-amber-500/20 shrink-0">
+                    Popular
+                  </span>
+                )}
+              </div>
+              <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4 font-medium">
+                {tool.description}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1">
+                {tool.tags.slice(0, 2).map(tag => (
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">#{tag}</span>
+                ))}
+              </div>
+              <a 
+                href={tool.url} 
+                class="inline-flex items-center gap-1 text-xs font-bold text-black dark:text-blue-400 underline hover:opacity-80 transition-all"
+              >
+                <span>Open Tool</span>
+                <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Back Navigation Footer -->
+    <div class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+      <a href="/" class="text-black dark:text-blue-400 font-bold underline flex items-center gap-1">
+        ← Back to Home
+      </a>
+      <span class="font-mono text-neutral-500 dark:text-neutral-400">allcalckit.com{cat.url}</span>
+    </div>
+
+  </div>
+</Layout>

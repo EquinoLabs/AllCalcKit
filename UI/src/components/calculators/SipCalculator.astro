@@ -1,0 +1,174 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">SIP Investment Calculator</h3>
+    </div>
+    
+    <!-- Currency & Locale Selector Pill -->
+    <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs shrink-0">
+      <span class="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold hidden sm:inline">Unit:</span>
+      <select class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
+        <option value="USD">USD ($)</option>
+        <option value="INR">INR (₹)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Sliders -->
+    <div class="space-y-4">
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Monthly Investment</label>
+          <span id="sip-monthly-val" class="font-mono font-bold text-black dark:text-white">5,000</span>
+        </div>
+        <input id="sip-monthly" type="range" min="500" max="100000" step="500" value="5000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+      </div>
+
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Expected Return Rate (% p.a.)</label>
+          <span id="sip-rate-val" class="font-mono font-bold text-black dark:text-white">12%</span>
+        </div>
+        <input id="sip-rate" type="range" min="1" max="30" step="0.5" value="12" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+      </div>
+
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Time Period (Years)</label>
+          <span id="sip-years-val" class="font-mono font-bold text-black dark:text-white">10 Years</span>
+        </div>
+        <input id="sip-years" type="range" min="1" max="40" step="1" value="10" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+      </div>
+    </div>
+
+    <!-- Output Box -->
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1">Expected Total Value</div>
+        <div id="sip-total-val" class="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">
+          $0
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Invested Amount</span>
+          <span id="sip-invested" class="font-bold text-black dark:text-white tabular-nums">$0</span>
+        </div>
+        <div>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Est. Returns</span>
+          <span id="sip-returns" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$0</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex justify-between text-[11px] font-mono text-neutral-700 dark:text-neutral-400 mb-1 font-bold">
+          <span>Invested (<span id="sip-inv-pct">0%</span>)</span>
+          <span>Returns (<span id="sip-ret-pct">0%</span>)</span>
+        </div>
+        <div class="w-full h-3 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex">
+          <div id="sip-inv-bar" class="h-full bg-black dark:bg-neutral-400 transition-all duration-300" style="width: 50%"></div>
+          <div id="sip-ret-bar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 50%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const monthlyInp = document.getElementById('sip-monthly');
+    const rateInp = document.getElementById('sip-rate');
+    const yearsInp = document.getElementById('sip-years');
+
+    const monthlyVal = document.getElementById('sip-monthly-val');
+    const rateVal = document.getElementById('sip-rate-val');
+    const yearsVal = document.getElementById('sip-years-val');
+
+    const totalValEl = document.getElementById('sip-total-val');
+    const investedEl = document.getElementById('sip-invested');
+    const returnsEl = document.getElementById('sip-returns');
+
+    const invPctEl = document.getElementById('sip-inv-pct');
+    const retPctEl = document.getElementById('sip-ret-pct');
+    const invBar = document.getElementById('sip-inv-bar');
+    const retBar = document.getElementById('sip-ret-bar');
+
+    const CURRENCY_CONFIGS = {
+      USD: { symbol: '$', locale: 'en-US' },
+      INR: { symbol: '₹', locale: 'en-IN' },
+      EUR: { symbol: '€', locale: 'en-IE' },
+      GBP: { symbol: '£', locale: 'en-GB' }
+    };
+
+    function getCurrency() {
+      return localStorage.getItem('ack_currency') || 'USD';
+    }
+
+    function formatMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      const formatted = Math.round(num).toLocaleString(cfg.locale);
+      return `${cfg.symbol}${formatted}`;
+    }
+
+    function calcSIP() {
+      if (!monthlyInp || !rateInp || !yearsInp) return;
+
+      const P = parseFloat(monthlyInp.value);
+      const i = parseFloat(rateInp.value) / 12 / 100;
+      const n = parseFloat(yearsInp.value) * 12;
+
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+
+      if (monthlyVal) monthlyVal.textContent = Math.round(P).toLocaleString(cfg.locale);
+      if (rateVal) rateVal.textContent = rateInp.value + '%';
+      if (yearsVal) yearsVal.textContent = yearsInp.value + (yearsInp.value === '1' ? ' Year' : ' Years');
+
+      const totalInvested = P * n;
+      const totalValue = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+      const estReturns = totalValue - totalInvested;
+
+      if (totalValEl) totalValEl.textContent = formatMoney(totalValue);
+      if (investedEl) investedEl.textContent = formatMoney(totalInvested);
+      if (returnsEl) returnsEl.textContent = formatMoney(estReturns);
+
+      const invPct = Math.round((totalInvested / totalValue) * 100);
+      const retPct = 100 - invPct;
+
+      if (invPctEl) invPctEl.textContent = invPct + '%';
+      if (retPctEl) retPctEl.textContent = retPct + '%';
+      if (invBar) invBar.style.width = invPct + '%';
+      if (retBar) retBar.style.width = retPct + '%';
+    }
+
+    const selects = document.querySelectorAll('.ack-currency-select');
+    selects.forEach(sel => {
+      sel.value = getCurrency();
+      sel.addEventListener('change', (e) => {
+        const val = e.target.value;
+        localStorage.setItem('ack_currency', val);
+        window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
+      });
+    });
+
+    window.addEventListener('ack_currency_change', (e) => {
+      selects.forEach(sel => sel.value = e.detail);
+      calcSIP();
+    });
+
+    monthlyInp.addEventListener('input', calcSIP);
+    rateInp.addEventListener('input', calcSIP);
+    yearsInp.addEventListener('input', calcSIP);
+
+    calcSIP();
+  })();
+</script>

@@ -1,0 +1,177 @@
+---
+interface Unit {
+  id: string;
+  name: string;
+  ratio: number;
+  offset?: number;
+}
+
+interface Props {
+  title: string;
+  category: string;
+  units: Unit[];
+  defaultFrom?: string;
+  defaultTo?: string;
+}
+
+const { title, category, units, defaultFrom = units[0]?.id, defaultTo = units[1]?.id } = Astro.props;
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-black dark:bg-blue-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">{title}</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 shrink-0 font-bold">
+      {category}
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-7 gap-4 items-center">
+    <!-- From Input -->
+    <div class="lg:col-span-3 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">From Unit</label>
+        <select 
+          id={`unit-from-${title.toLowerCase().replace(/\s+/g, '-')}`}
+          class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-200 text-xs font-bold outline-none cursor-pointer shrink-0 max-w-[65%]"
+        >
+          {units.map(u => (
+            <option value={u.id} selected={u.id === defaultFrom}>{u.name}</option>
+          ))}
+        </select>
+      </div>
+      <input 
+        type="number" 
+        id={`val-from-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        value="1" 
+        step="any"
+        class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-lg font-bold focus:ring-2 focus:ring-black dark:focus:ring-blue-500 outline-none transition-all tabular-nums"
+      />
+    </div>
+
+    <!-- Swap Button -->
+    <div class="flex justify-center py-1 lg:py-0 lg:pt-6">
+      <button 
+        type="button"
+        id={`swap-btn-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        aria-label="Swap units"
+        class="w-11 h-11 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-300 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:scale-95 transition-all flex items-center justify-center shrink-0 shadow-xs"
+      >
+        <svg class="w-5 h-5 rotate-90 lg:rotate-0 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+      </button>
+    </div>
+
+    <!-- To Input / Result -->
+    <div class="lg:col-span-3 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">To Target</label>
+        <select 
+          id={`unit-to-${title.toLowerCase().replace(/\s+/g, '-')}`}
+          class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-200 text-xs font-bold outline-none cursor-pointer shrink-0 max-w-[65%]"
+        >
+          {units.map(u => (
+            <option value={u.id} selected={u.id === defaultTo}>{u.name}</option>
+          ))}
+        </select>
+      </div>
+      <input 
+        type="text" 
+        id={`val-to-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        readonly 
+        class="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-black dark:text-blue-400 text-lg font-black outline-none tabular-nums"
+      />
+    </div>
+  </div>
+
+  <!-- Formula & Copy Action Bar -->
+  <div class="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+    <span id={`formula-${title.toLowerCase().replace(/\s+/g, '-')}`} class="font-mono text-neutral-700 dark:text-neutral-400 break-all leading-relaxed font-semibold">
+      Calculation formula preview…
+    </span>
+    <button 
+      type="button" 
+      id={`copy-btn-${title.toLowerCase().replace(/\s+/g, '-')}`}
+      class="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 font-bold hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-colors shrink-0 border border-neutral-300 dark:border-neutral-700"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      <span>Copy Result</span>
+    </button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ unitsKey: title.toLowerCase().replace(/\s+/g, '-'), unitsData: units }}>
+  (function() {
+    const fromInput = document.getElementById(`val-from-${unitsKey}`);
+    const toInput = document.getElementById(`val-to-${unitsKey}`);
+    const fromSelect = document.getElementById(`unit-from-${unitsKey}`);
+    const toSelect = document.getElementById(`unit-to-${unitsKey}`);
+    const swapBtn = document.getElementById(`swap-btn-${unitsKey}`);
+    const formulaEl = document.getElementById(`formula-${unitsKey}`);
+    const copyBtn = document.getElementById(`copy-btn-${unitsKey}`);
+
+    if (!fromInput || !toInput || !fromSelect || !toSelect) return;
+
+    function convert() {
+      const val = parseFloat(fromInput.value);
+      if (isNaN(val)) {
+        toInput.value = '';
+        if (formulaEl) formulaEl.textContent = 'Enter a valid numeric value';
+        return;
+      }
+
+      const fromUnit = unitsData.find(u => u.id === fromSelect.value);
+      const toUnit = unitsData.find(u => u.id === toSelect.value);
+
+      if (!fromUnit || !toUnit) return;
+
+      let result = 0;
+      if (unitsKey.includes('temp')) {
+        let celsius = val;
+        if (fromUnit.id === 'f') celsius = (val - 32) * (5 / 9);
+        else if (fromUnit.id === 'k') celsius = val - 273.15;
+
+        if (toUnit.id === 'c') result = celsius;
+        else if (toUnit.id === 'f') result = (celsius * 9 / 5) + 32;
+        else if (toUnit.id === 'k') result = celsius + 273.15;
+      } else {
+        const inBase = val * fromUnit.ratio;
+        result = inBase / toUnit.ratio;
+      }
+
+      const formatted = Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(6)).toString();
+      toInput.value = formatted;
+
+      if (formulaEl) {
+        formulaEl.textContent = `${val} ${fromUnit.name} = ${formatted} ${toUnit.name}`;
+      }
+    }
+
+    fromInput.addEventListener('input', convert);
+    fromSelect.addEventListener('change', convert);
+    toSelect.addEventListener('change', convert);
+
+    if (swapBtn) {
+      swapBtn.addEventListener('click', () => {
+        const temp = fromSelect.value;
+        fromSelect.value = toSelect.value;
+        toSelect.value = temp;
+        convert();
+      });
+    }
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        if (!toInput.value) return;
+        const text = `${fromInput.value} ${fromSelect.options[fromSelect.selectedIndex].text} = ${toInput.value} ${toSelect.options[toSelect.selectedIndex].text}`;
+        navigator.clipboard.writeText(text);
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = `<span class="text-black dark:text-emerald-400 font-bold">Copied!</span>`;
+        setTimeout(() => copyBtn.innerHTML = originalText, 1500);
+      });
+    }
+
+    convert();
+  })();
+</script>

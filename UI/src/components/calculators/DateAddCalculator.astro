@@ -1,0 +1,113 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Date Add / Subtract Calculator</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/20 shrink-0 font-bold">
+      Date Math
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Start Date</label>
+        <input id="da-start" type="date" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-purple-500" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Operation</label>
+        <div class="flex bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs">
+          <button id="da-op-add" type="button" class="flex-1 py-2 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs">+ Add Time</button>
+          <button id="da-op-sub" type="button" class="flex-1 py-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors">- Subtract Time</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Years</label>
+          <input id="da-years" type="number" value="0" min="0" max="100" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-purple-500 tabular-nums" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Months</label>
+          <input id="da-months" type="number" value="1" min="0" max="120" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-purple-500 tabular-nums" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Days</label>
+          <input id="da-days" type="number" value="15" min="0" max="1000" class="w-full px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-center text-sm outline-none focus:ring-2 focus:ring-purple-500 tabular-nums" />
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1 font-semibold">Calculated Result Date</div>
+        <div id="da-result" class="text-2xl sm:text-3xl font-black text-purple-600 dark:text-purple-400 tabular-nums">Select date</div>
+      </div>
+
+      <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs font-mono text-neutral-500 leading-relaxed">
+        Calculates exact target date accounting for leap years and varying month lengths.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    let op = 'add';
+    const startInp = document.getElementById('da-start');
+    const yInp = document.getElementById('da-years');
+    const mInp = document.getElementById('da-months');
+    const dInp = document.getElementById('da-days');
+
+    const btnAdd = document.getElementById('da-op-add');
+    const btnSub = document.getElementById('da-op-sub');
+    const resEl = document.getElementById('da-result');
+
+    if (startInp) {
+      startInp.value = new Date().toISOString().split('T')[0];
+    }
+
+    function calcDA() {
+      if (!startInp) return;
+      const start = new Date(startInp.value);
+      if (isNaN(start.getTime())) return;
+
+      const y = parseInt(yInp.value) || 0;
+      const m = parseInt(mInp.value) || 0;
+      const d = parseInt(dInp.value) || 0;
+
+      const factor = op === 'add' ? 1 : -1;
+
+      const result = new Date(start);
+      result.setFullYear(result.getFullYear() + (y * factor));
+      result.setMonth(result.getMonth() + (m * factor));
+      result.setDate(result.getDate() + (d * factor));
+
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      if (resEl) resEl.textContent = result.toLocaleDateString(undefined, options);
+    }
+
+    if (btnAdd && btnSub) {
+      btnAdd.addEventListener('click', () => {
+        op = 'add';
+        btnAdd.className = 'flex-1 py-2 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs';
+        btnSub.className = 'flex-1 py-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors';
+        calcDA();
+      });
+      btnSub.addEventListener('click', () => {
+        op = 'sub';
+        btnSub.className = 'flex-1 py-2 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs';
+        btnAdd.className = 'flex-1 py-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors';
+        calcDA();
+      });
+    }
+
+    [startInp, yInp, mInp, dInp].forEach(el => el.addEventListener('input', calcDA));
+    calcDA();
+  })();
+</script>

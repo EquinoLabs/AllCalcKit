@@ -1,0 +1,73 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-sm hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex items-center justify-between gap-2 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-neutral-950 dark:text-white tracking-tight truncate">Word & Character Counter</h3>
+    </div>
+    <span class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 shrink-0 font-medium">
+      Text Utility
+    </span>
+  </div>
+
+  <textarea 
+    id="word-counter-input" 
+    placeholder="Type or paste your text here to count words, characters, sentences & reading time instantly..."
+    rows="5"
+    class="w-full p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-950 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500 outline-none transition-all font-mono leading-relaxed placeholder-neutral-400 font-medium"
+  ></textarea>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 text-center">
+      <div id="cnt-words" class="text-2xl font-black text-cyan-700 dark:text-cyan-400 font-mono">0</div>
+      <div class="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">Words</div>
+    </div>
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 text-center">
+      <div id="cnt-chars" class="text-2xl font-black text-cyan-700 dark:text-cyan-400 font-mono">0</div>
+      <div class="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">Characters</div>
+    </div>
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 text-center">
+      <div id="cnt-sentences" class="text-2xl font-black text-cyan-700 dark:text-cyan-400 font-mono">0</div>
+      <div class="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">Sentences</div>
+    </div>
+    <div class="bg-neutral-50 dark:bg-neutral-950 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 text-center">
+      <div id="cnt-readtime" class="text-2xl font-black text-cyan-700 dark:text-cyan-400 font-mono">0s</div>
+      <div class="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">Reading Time</div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const textInput = document.getElementById('word-counter-input');
+    const cntWords = document.getElementById('cnt-words');
+    const cntChars = document.getElementById('cnt-chars');
+    const cntSentences = document.getElementById('cnt-sentences');
+    const cntReadtime = document.getElementById('cnt-readtime');
+
+    function updateCount() {
+      if (!textInput) return;
+      const val = textInput.value;
+
+      const chars = val.length;
+      const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+      const sentences = val.trim() ? val.split(/[.!?]+/).filter(Boolean).length : 0;
+      
+      const readSeconds = Math.ceil((words / 200) * 60);
+
+      if (cntChars) cntChars.textContent = chars.toLocaleString();
+      if (cntWords) cntWords.textContent = words.toLocaleString();
+      if (cntSentences) cntSentences.textContent = sentences.toLocaleString();
+      if (cntReadtime) {
+        if (readSeconds < 60) cntReadtime.textContent = `${readSeconds}s`;
+        else cntReadtime.textContent = `${Math.ceil(readSeconds / 60)}m`;
+      }
+    }
+
+    if (textInput) {
+      textInput.addEventListener('input', updateCount);
+    }
+  })();
+</script>

@@ -1,0 +1,195 @@
+---
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-sm hover:shadow-md transition-all w-full max-w-full overflow-hidden">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
+      <h3 class="font-bold text-base sm:text-lg text-neutral-900 dark:text-white tracking-tight truncate">BMI & Weight Health Tracker</h3>
+    </div>
+    <!-- Unit System Toggle -->
+    <div class="flex bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl border border-neutral-200 dark:border-neutral-700 text-[11px] sm:text-xs font-mono self-start sm:self-auto">
+      <button id="bmi-unit-metric" type="button" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs">Metric (cm/kg)</button>
+      <button id="bmi-unit-imperial" type="button" class="px-2.5 py-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors">Imperial (ft/lbs)</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+    <!-- Form Inputs -->
+    <div class="space-y-4">
+      <!-- Metric Fields -->
+      <div id="bmi-metric-fields" class="space-y-4">
+        <div>
+          <label class="block text-xs font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Height (cm)</label>
+          <input id="bmi-height-cm" type="number" value="175" min="50" max="250" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white text-base font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition-all tabular-nums" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Weight (kg)</label>
+          <input id="bmi-weight-kg" type="number" value="70" min="20" max="300" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white text-base font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition-all tabular-nums" />
+        </div>
+      </div>
+
+      <!-- Imperial Fields (hidden by default) -->
+      <div id="bmi-imperial-fields" class="space-y-4 hidden">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Height (ft)</label>
+            <input id="bmi-height-ft" type="number" value="5" min="2" max="8" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white text-base font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition-all tabular-nums" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Height (in)</label>
+            <input id="bmi-height-in" type="number" value="9" min="0" max="11" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white text-base font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition-all tabular-nums" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1">Weight (lbs)</label>
+          <input id="bmi-weight-lbs" type="number" value="154" min="40" max="600" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-white text-base font-semibold focus:ring-2 focus:ring-rose-500 outline-none transition-all tabular-nums" />
+        </div>
+      </div>
+    </div>
+
+    <!-- BMI Result Card -->
+    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-4 sm:p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between h-full">
+      <div>
+        <div class="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-1">Body Mass Index (BMI)</div>
+        <div class="flex items-baseline gap-3 flex-wrap">
+          <span id="bmi-score" class="text-3xl sm:text-4xl font-black text-rose-600 dark:text-rose-400 tabular-nums">22.9</span>
+          <span id="bmi-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Normal Weight</span>
+        </div>
+      </div>
+
+      <!-- Health Bar Gauge -->
+      <div class="my-4">
+        <div class="flex justify-between text-[9px] sm:text-[10px] font-mono text-neutral-400 mb-1">
+          <span>&lt;18.5 Under</span>
+          <span>18.5–24.9 Normal</span>
+          <span>25–29.9 Over</span>
+          <span>30+ Obese</span>
+        </div>
+        <div class="w-full h-3 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex relative">
+          <div class="h-full bg-blue-400 w-1/4"></div>
+          <div class="h-full bg-emerald-500 w-1/4"></div>
+          <div class="h-full bg-amber-500 w-1/4"></div>
+          <div class="h-full bg-rose-500 w-1/4"></div>
+          <div id="bmi-pointer" class="absolute top-0 bottom-0 w-1 bg-black dark:bg-white shadow-lg transition-all duration-300 transform -translate-x-1/2" style="left: 44%"></div>
+        </div>
+      </div>
+
+      <p id="bmi-advice" class="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed font-mono">
+        Your BMI is in the healthy range. Keep maintaining balanced nutrition and regular physical activity.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    let mode = 'metric';
+
+    const btnMetric = document.getElementById('bmi-unit-metric');
+    const btnImperial = document.getElementById('bmi-unit-imperial');
+
+    const metricFields = document.getElementById('bmi-metric-fields');
+    const imperialFields = document.getElementById('bmi-imperial-fields');
+
+    const cmInput = document.getElementById('bmi-height-cm');
+    const kgInput = document.getElementById('bmi-weight-kg');
+
+    const ftInput = document.getElementById('bmi-height-ft');
+    const inInput = document.getElementById('bmi-height-in');
+    const lbsInput = document.getElementById('bmi-weight-lbs');
+
+    const bmiScore = document.getElementById('bmi-score');
+    const bmiBadge = document.getElementById('bmi-badge');
+    const bmiPointer = document.getElementById('bmi-pointer');
+    const bmiAdvice = document.getElementById('bmi-advice');
+
+    function calculateBMI() {
+      let bmi = 0;
+      if (mode === 'metric') {
+        const cm = parseFloat(cmInput.value) || 0;
+        const kg = parseFloat(kgInput.value) || 0;
+        if (cm > 0 && kg > 0) {
+          const m = cm / 100;
+          bmi = kg / (m * m);
+        }
+      } else {
+        const ft = parseFloat(ftInput.value) || 0;
+        const inch = parseFloat(inInput.value) || 0;
+        const lbs = parseFloat(lbsInput.value) || 0;
+        const totalInches = (ft * 12) + inch;
+        if (totalInches > 0 && lbs > 0) {
+          bmi = (lbs / (totalInches * totalInches)) * 703;
+        }
+      }
+
+      if (bmi <= 0 || isNaN(bmi)) {
+        if (bmiScore) bmiScore.textContent = '--';
+        return;
+      }
+
+      const formatted = bmi.toFixed(1);
+      if (bmiScore) bmiScore.textContent = formatted;
+
+      let category = 'Normal Weight';
+      let badgeClass = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
+      let pct = 50;
+      let advice = 'Your weight is in the recommended healthy range.';
+
+      if (bmi < 18.5) {
+        category = 'Underweight';
+        badgeClass = 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
+        pct = Math.max(5, (bmi / 18.5) * 25);
+        advice = 'Below standard weight range. Consider consulting a nutritionist for healthy weight gain.';
+      } else if (bmi < 25) {
+        category = 'Normal Weight';
+        badgeClass = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
+        pct = 25 + (((bmi - 18.5) / 6.5) * 25);
+        advice = 'Great news! Your BMI is in the healthy body weight range.';
+      } else if (bmi < 30) {
+        category = 'Overweight';
+        badgeClass = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
+        pct = 50 + (((bmi - 25) / 5) * 25);
+        advice = 'Slightly above healthy range. Regular cardio and balanced diet recommended.';
+      } else {
+        category = 'Obese';
+        badgeClass = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20';
+        pct = Math.min(95, 75 + (((bmi - 30) / 15) * 25));
+        advice = 'Above healthy parameters. Consult a health professional for personalized fitness plan.';
+      }
+
+      if (bmiBadge) {
+        bmiBadge.textContent = category;
+        bmiBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-bold border ${badgeClass}`;
+      }
+      if (bmiPointer) bmiPointer.style.left = `${pct}%`;
+      if (bmiAdvice) bmiAdvice.textContent = advice;
+    }
+
+    if (btnMetric && btnImperial) {
+      btnMetric.addEventListener('click', () => {
+        mode = 'metric';
+        btnMetric.className = 'px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs';
+        btnImperial.className = 'px-2.5 py-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors';
+        metricFields?.classList.remove('hidden');
+        imperialFields?.classList.add('hidden');
+        calculateBMI();
+      });
+
+      btnImperial.addEventListener('click', () => {
+        mode = 'imperial';
+        btnImperial.className = 'px-2.5 py-1.5 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs';
+        btnMetric.className = 'px-2.5 py-1.5 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors';
+        imperialFields?.classList.remove('hidden');
+        metricFields?.classList.add('hidden');
+        calculateBMI();
+      });
+    }
+
+    [cmInput, kgInput, ftInput, inInput, lbsInput].forEach(inp => {
+      if (inp) inp.addEventListener('input', calculateBMI);
+    });
+
+    calculateBMI();
+  })();
+</script>
