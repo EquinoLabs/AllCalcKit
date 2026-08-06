@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Contact Us — All Calc Kit" 
+  description="Get in touch with the All Calc Kit team. Send feature suggestions, tool requests, bug reports, or general inquiries."
+  canonicalUrl="https://allcalckit.com/contact"
+>
+  <!-- Hero Header -->
+  <section class="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-neutral-500 mb-6">
+        <a href="/" class="hover:text-black dark:hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-black dark:text-white font-semibold">Contact Us</span>
+      </nav>
+
+      <div class="space-y-4">
+        <span class="px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono text-xs font-bold uppercase tracking-wider inline-block">
+          Get In Touch
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-black dark:text-white">
+          Contact Us.
+        </h1>
+        <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl font-medium">
+          Have a question, feedback, or tool request? We'd love to hear from you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Section -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12">
+      
+      <!-- Contact Form Column -->
+      <div class="md:col-span-7 space-y-6">
+        <div class="bg-white dark:bg-neutral-900/60 p-6 sm:p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-xl space-y-5">
+          <h2 class="text-xl font-bold text-black dark:text-white tracking-tight">Send Us a Message</h2>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Fill out the form below and our team will get back to you within 24 business hours.
+          </p>
+
+          <form id="contact-form" class="space-y-4 pt-2">
+            <div>
+              <label for="contact-name" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1.5 font-semibold">Your Name *</label>
+              <input 
+                id="contact-name" 
+                type="text" 
+                required 
+                placeholder="e.g. Sarah Jenkins" 
+                class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label for="contact-email" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1.5 font-semibold">Email Address *</label>
+              <input 
+                id="contact-email" 
+                type="email" 
+                required 
+                placeholder="e.g. sarah@example.com" 
+                class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label for="contact-subject" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1.5 font-semibold">Inquiry Type *</label>
+              <select 
+                id="contact-subject"
+                class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all font-sans"
+              >
+                <option value="request">New Tool / Calculator Request</option>
+                <option value="feedback">General Feedback & Suggestions</option>
+                <option value="bug">Report a Bug or Calculation Issue</option>
+                <option value="partnership">Business / Media Inquiry</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="contact-message" class="block text-xs font-mono text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1.5 font-semibold">Message *</label>
+              <textarea 
+                id="contact-message" 
+                rows="4" 
+                required 
+                placeholder="Tell us what tool you'd like us to add or describe your feedback in detail..." 
+                class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-sm focus:ring-2 focus:ring-amber-500 outline-none transition-all leading-relaxed"
+              ></textarea>
+            </div>
+
+            <button 
+              type="submit" 
+              class="w-full py-3.5 px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-bold text-sm hover:opacity-90 active:scale-98 transition-all shadow-md flex items-center justify-center gap-2"
+            >
+              <span>Send Message</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+          </form>
+
+          <!-- Success Alert -->
+          <div id="contact-success" class="hidden p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-700 dark:text-emerald-300 text-xs font-mono leading-relaxed text-center">
+            ✓ Thank you! Your message has been sent successfully. We will reply to your email shortly.
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Side Column -->
+      <div class="md:col-span-5 space-y-6">
+        <div class="bg-neutral-50 dark:bg-neutral-900/40 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 space-y-4">
+          <h3 class="font-bold text-black dark:text-white text-base">Direct Email Contact</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Prefer direct email? Reach out to our technical team directly:
+          </p>
+          <a href="mailto:support@allcalckit.com" class="inline-block font-mono text-xs text-blue-600 dark:text-blue-400 font-bold underline hover:opacity-80">
+            support@allcalckit.com
+          </a>
+        </div>
+
+        <div class="bg-neutral-50 dark:bg-neutral-900/40 p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 space-y-4">
+          <h3 class="font-bold text-black dark:text-white text-base">Frequently Asked Questions</h3>
+          <div class="space-y-3 text-xs leading-relaxed">
+            <div>
+              <p class="font-bold text-black dark:text-white">Are all calculators free?</p>
+              <p class="text-neutral-500 dark:text-neutral-400">Yes, 100% free forever without ads or accounts.</p>
+            </div>
+            <div>
+              <p class="font-bold text-black dark:text-white">How fast do you build new tools?</p>
+              <p class="text-neutral-500 dark:text-neutral-400">We launch user-requested calculators every month.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contact-form');
+      const successMsg = document.getElementById('contact-success');
+
+      if (form && successMsg) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          form.classList.add('hidden');
+          successMsg.classList.remove('hidden');
+        });
+      }
+    });
+  </script>
+</Layout>

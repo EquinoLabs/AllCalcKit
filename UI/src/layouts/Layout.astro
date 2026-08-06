@@ -134,6 +134,14 @@ const webAppSchema = {
           </div>
         </a>
 
+        <!-- Desktop Nav Links (MPA Navigation) -->
+        <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+          <a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About</a>
+          <a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact</a>
+          <a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy</a>
+          <a href="/terms" class="hover:text-black dark:hover:text-white transition-colors">Terms</a>
+        </nav>
+
         <!-- Global Search Trigger (Cmd + K) -->
         <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-64 justify-between">
           <div class="flex items-center gap-2">
@@ -211,22 +219,26 @@ const webAppSchema = {
           </div>
 
           <div class="col-span-2 md:col-span-1">
-            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Domain</h4>
-            <p class="text-xs font-mono text-neutral-600 dark:text-neutral-300 font-semibold mb-2">allcalckit.com</p>
-            <p class="text-[11px] text-neutral-500 dark:text-neutral-500">
-              Designed for ultimate speed, precision, and mobile efficiency.
-            </p>
+            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Company & Legal</h4>
+            <ul class="space-y-2 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+              <li><a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About Us</a></li>
+              <li><a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="hover:text-black dark:hover:text-white transition-colors">Terms & Conditions</a></li>
+              <li><a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact Us</a></li>
+            </ul>
           </div>
         </div>
 
         <div class="pt-8 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-500">
           <p>© {new Date().getFullYear()} All Calc Kit. All rights reserved.</p>
-          <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
-            <span>Fast & Free</span>
+          <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center font-medium">
+            <a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About</a>
             <span>•</span>
-            <span>Privacy First</span>
+            <a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy</a>
             <span>•</span>
-            <span>Instant Calculations</span>
+            <a href="/terms" class="hover:text-black dark:hover:text-white transition-colors">Terms</a>
+            <span>•</span>
+            <a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact</a>
           </div>
         </div>
       </div>

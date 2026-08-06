@@ -1,0 +1,102 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Privacy Policy — All Calc Kit" 
+  description="Read All Calc Kit's privacy policy. All unit conversions, health metrics, and financial calculations process locally inside your browser without tracking or storing personal data."
+  canonicalUrl="https://allcalckit.com/privacy"
+>
+  <!-- Hero Header -->
+  <section class="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-neutral-500 mb-6">
+        <a href="/" class="hover:text-black dark:hover:text-white transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-black dark:text-white font-semibold">Privacy Policy</span>
+      </nav>
+
+      <div class="space-y-4">
+        <span class="px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider inline-block">
+          Data Protection & Privacy
+        </span>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-black dark:text-white">
+          Privacy Policy.
+        </h1>
+        <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl font-medium">
+          Effective Date: August 6, 2026. Your privacy is paramount—we process your calculations locally inside your browser.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-10 text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed">
+    
+    <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 text-emerald-900 dark:text-emerald-200 space-y-2">
+      <h3 class="font-bold text-base flex items-center gap-2">
+        <span>🔒</span> Executive Summary: Zero Personal Data Collection
+      </h3>
+      <p class="text-xs leading-relaxed">
+        All Calc Kit operates on a strict <strong>Client-Side Computation model</strong>. All values you type into our unit converters, financial calculators, health trackers, and text tools are processed instantaneously inside your own web browser. Your inputs are never transmitted to, recorded by, or stored on our servers.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-xl font-bold text-black dark:text-white">1. Information We Do Not Collect</h2>
+      <p>
+        Because we respect your privacy, we explicitly do <strong>not</strong> collect or store:
+      </p>
+      <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm">
+        <li>Calculation inputs, health stats (BMI, weight, height), loan figures, or text content pasted into our converters.</li>
+        <li>Personally Identifiable Information (PII) such as your name, email address, physical address, or phone number.</li>
+        <li>Financial account details or banking records.</li>
+      </ul>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-xl font-bold text-black dark:text-white">2. Local Storage Usage</h2>
+      <p>
+        We use your browser's native <code>localStorage</code> feature solely to preserve user interface preferences between page reloads:
+      </p>
+      <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm">
+        <li><code>ack_theme</code>: Saves your preferred color mode (<code>light</code> or <code>dark</code>).</li>
+      </ul>
+      <p class="text-xs text-neutral-500">
+        You can clear local storage data at any time through your web browser's settings.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-xl font-bold text-black dark:text-white">3. Third-Party APIs & Services</h2>
+      <p>
+        To provide accurate live currency conversion rates, our Live Currency Converter fetches exchange rate benchmarks from standard public financial APIs. These API queries contain currency ticker symbols only (e.g., <code>USD</code> to <code>EUR</code>) and contain no personal identifier information.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-xl font-bold text-black dark:text-white">4. Cookies & Advertising Tracking</h2>
+      <p>
+        All Calc Kit does not use third-party advertising cookies, cross-site behavioral tracking pixels, or invasive remarketing tags. Our site is 100% ad-free and distraction-free.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-xl font-bold text-black dark:text-white">5. Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time to reflect changes in web standards or service enhancements. Any updates will be posted directly on this page with a revised effective date.
+      </p>
+    </div>
+
+    <div class="pt-8 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h4 class="font-bold text-black dark:text-white text-base">Questions about our Privacy Policy?</h4>
+        <p class="text-xs text-neutral-600 dark:text-neutral-400">Feel free to reach out to our team with any privacy concerns.</p>
+      </div>
+      <a href="/contact" class="px-5 py-2.5 rounded-full bg-black dark:bg-white text-white dark:text-black font-semibold text-xs hover:opacity-90 transition-opacity whitespace-nowrap">
+        Contact Privacy Team →
+      </a>
+    </div>
+  </section>
+</Layout>
