@@ -1,4 +1,6 @@
+# All Calc Kit - Search Engine Crawler Guidance
 User-agent: *
 Allow: /
 
+# XML Sitemap Location
 Sitemap: https://allcalckit.com/sitemap.xml
