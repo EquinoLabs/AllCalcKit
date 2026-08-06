@@ -23,6 +23,7 @@ const {
   ogImage = "https://allcalckit.com/logo-curved.png",
   ogType = "website",
   showQuickTools = false,
+  isErrorPage = false,
   jsonLd
 } = Astro.props;
 
@@ -134,29 +135,32 @@ const webAppSchema = {
           </div>
         </a>
 
-        <!-- Desktop Nav Links (MPA Navigation) -->
-        <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
-          <a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About</a>
-          <a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact</a>
-          <a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy</a>
-          <a href="/terms" class="hover:text-black dark:hover:text-white transition-colors">Terms</a>
-        </nav>
+        {!isErrorPage && (
+          <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+            <a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About</a>
+            <a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact</a>
+            <a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy</a>
+            <a href="/terms" class="hover:text-black dark:hover:text-white transition-colors">Terms</a>
+          </nav>
+        )}
 
-        <!-- Global Search Trigger (Cmd + K) -->
-        <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-64 justify-between">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <span>Search 35+ tools…</span>
-          </div>
-          <kbd class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
-        </button>
+        {!isErrorPage && (
+          <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="hidden md:flex items-center gap-3 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-64 justify-between">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <span>Search 35+ tools…</span>
+            </div>
+            <kbd class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
+          </button>
+        )}
 
         <!-- Right Action Cluster -->
         <div class="flex items-center gap-2 sm:gap-3">
-          <!-- Mobile Search Button -->
-          <button id="open-search-mobile" type="button" aria-label="Search" class="md:hidden p-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          </button>
+          {!isErrorPage && (
+            <button id="open-search-mobile" type="button" aria-label="Search" class="md:hidden p-2 rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </button>
+          )}
 
           <!-- Theme Toggle -->
           <button id="theme-toggle" type="button" aria-label="Toggle light or dark theme" class="p-2 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
