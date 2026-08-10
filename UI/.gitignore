@@ -26,3 +26,7 @@ pnpm-debug.log*
 # playwright test artifacts
 test-results/
 playwright-report/
+
+# cloudflare local runtime state
+.wrangler/
+.wrangler.toml
