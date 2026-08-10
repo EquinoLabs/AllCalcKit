@@ -16,10 +16,10 @@
     "test:all": "vitest run && playwright test"
   },
   "dependencies": {
-    "@astrojs/node": "^11.1.0",
+    "@astrojs/cloudflare": "^14.2.0",
     "@lucide/astro": "^1.28.0",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.1.6",
+    "astro": "^7.2.0",
     "lucide-astro": "^0.556.0",
     "tailwindcss": "^4.3.3"
   },
