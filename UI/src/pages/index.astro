@@ -150,7 +150,7 @@ const faqSchema = {
   </section>
 
   <!-- Category Nav Bar (Navigates directly to category pages) -->
-  <section class="sticky top-16 z-30 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 py-3 overflow-x-auto no-scrollbar shadow-xs">
+  <section tabindex="0" aria-label="Category navigation bar" class="sticky top-16 z-30 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 py-3 overflow-x-auto no-scrollbar shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-2">
       {CATEGORIES.map(cat => (
         <a href={cat.url} class="px-4 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 text-black dark:text-neutral-200 border border-neutral-300 dark:border-neutral-800 text-xs font-semibold whitespace-nowrap hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black active:scale-95 transition-all">

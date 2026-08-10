@@ -1,0 +1,291 @@
+---
+import type { CalculatorContent } from '../../data/calculator-content/types';
+
+interface Props {
+  content: CalculatorContent;
+  calcName: string;
+  categoryName?: string;
+  categoryUrl?: string;
+}
+
+const { content, calcName, categoryName, categoryUrl } = Astro.props;
+---
+
+<article class="space-y-10 sm:space-y-12">
+  
+  {/* 1. Introduction Section */}
+  {content.intro && (
+    <section class="space-y-3">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
+        {content.intro.title || `What is a ${calcName}?`}
+      </h2>
+      <div class="space-y-3 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+        {content.intro.paragraphs.map(p => (
+          <p>{p}</p>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {/* 2. How to Use Section */}
+  {content.howToUse && (
+    <section class="bg-white dark:bg-neutral-900/50 rounded-2xl p-5 sm:p-7 border border-neutral-200 dark:border-neutral-800 space-y-4 shadow-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-black dark:bg-blue-500 shrink-0"></span>
+        <h2 class="text-base sm:text-lg font-bold text-black dark:text-white uppercase tracking-wider font-mono">
+          {content.howToUse.title || `How to Use the ${calcName}`}
+        </h2>
+      </div>
+      
+      {content.howToUse.description && (
+        <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 font-medium">
+          {content.howToUse.description}
+        </p>
+      )}
+
+      <ol class="space-y-3 text-xs sm:text-sm">
+        {content.howToUse.steps.map((step, idx) => (
+          <li class="flex items-start gap-3">
+            <span class="w-6 h-6 rounded-full bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 font-mono font-bold text-xs flex items-center justify-center shrink-0 border border-neutral-300 dark:border-neutral-700 mt-0.5">
+              {idx + 1}
+            </span>
+            <span class="text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
+              {step}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {/* 3. How It Works / Formula Section */}
+  {content.howItWorks && (
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
+        {content.howItWorks.title || `How ${calcName} Works`}
+      </h2>
+      
+      {content.howItWorks.paragraphs && content.howItWorks.paragraphs.length > 0 && (
+        <div class="space-y-3 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+          {content.howItWorks.paragraphs.map(p => (
+            <p>{p}</p>
+          ))}
+        </div>
+      )}
+
+      {content.howItWorks.formula && (
+        <div class="rounded-2xl bg-neutral-50 dark:bg-neutral-950 p-4 sm:p-6 border border-neutral-200 dark:border-neutral-800 space-y-2 shadow-xs">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">
+            Calculation Formula
+          </div>
+          <div class="font-mono text-sm sm:text-base font-bold text-black dark:text-blue-400 break-words leading-relaxed">
+            {content.howItWorks.formula}
+          </div>
+          {content.howItWorks.formulaExplanation && (
+            <p class="text-xs text-neutral-600 dark:text-neutral-400 font-medium pt-1">
+              {content.howItWorks.formulaExplanation}
+            </p>
+          )}
+        </div>
+      )}
+
+      {content.howItWorks.variables && content.howItWorks.variables.length > 0 && (
+        <div class="space-y-2 pt-2">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-neutral-600 dark:text-neutral-400 font-bold">
+            Formula Variables Explained
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/40" tabindex="0" role="region" aria-label="Formula variables table">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-neutral-100 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-200 font-mono font-bold border-b border-neutral-200 dark:border-neutral-800">
+                <tr>
+                  <th scope="col" class="py-2.5 px-4">Variable / Term</th>
+                  <th scope="col" class="py-2.5 px-4">Name</th>
+                  <th scope="col" class="py-2.5 px-4">Description</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-200 dark:divide-neutral-800 text-neutral-700 dark:text-neutral-300">
+                {content.howItWorks.variables.map(v => (
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors">
+                    <td class="py-2.5 px-4 font-mono font-bold text-black dark:text-white whitespace-nowrap">{v.symbol}</td>
+                    <td class="py-2.5 px-4 font-semibold whitespace-nowrap">{v.name}</td>
+                    <td class="py-2.5 px-4">{v.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </section>
+  )}
+
+  {/* 4. Conversion / Reference Table Section */}
+  {content.conversionTable && (
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
+        {content.conversionTable.title || `Common ${calcName} Conversions`}
+      </h2>
+      
+      {content.conversionTable.description && (
+        <p class="text-sm text-neutral-600 dark:text-neutral-400 font-medium">
+          {content.conversionTable.description}
+        </p>
+      )}
+
+      <div class="overflow-x-auto rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/40 shadow-xs" tabindex="0" role="region" aria-label="Reference conversion table">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-neutral-100 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-200 font-mono font-bold border-b border-neutral-200 dark:border-neutral-800">
+            <tr>
+              {content.conversionTable.headers.map((h, idx) => (
+                <th scope="col" class={`py-3 px-4 whitespace-nowrap ${idx === 0 ? '' : 'text-neutral-700 dark:text-neutral-300'}`}>
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-neutral-200 dark:divide-neutral-800 text-neutral-700 dark:text-neutral-300">
+            {content.conversionTable.rows.map(row => (
+              <tr class="hover:bg-neutral-50 dark:hover:bg-neutral-800/30 transition-colors">
+                {row.map((cell, idx) => (
+                  <td class={`py-2.5 px-4 whitespace-nowrap ${idx === 0 ? 'font-bold text-black dark:text-white' : 'font-mono tabular-nums'}`}>
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  {/* 5. Worked Example Section */}
+  {content.example && (
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
+        {content.example.title || 'Worked Example'}
+      </h2>
+
+      <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 p-5 sm:p-7 shadow-xs space-y-4">
+        {content.example.description && (
+          <p class="text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
+            {content.example.description}
+          </p>
+        )}
+
+        {content.example.inputs && content.example.inputs.length > 0 && (
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            {content.example.inputs.map(inp => (
+              <div class="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700/60">
+                <div class="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">
+                  {inp.label}
+                </div>
+                <div class="text-sm sm:text-base font-bold text-black dark:text-white mt-0.5">
+                  {inp.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {content.example.steps && content.example.steps.length > 0 && (
+          <div class="space-y-1.5 pt-2">
+            <div class="text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">
+              Step-by-Step Walkthrough
+            </div>
+            <ul class="space-y-1.5 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 font-medium">
+              {content.example.steps.map(step => (
+                <li class="leading-relaxed">• {step}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {content.example.calculation && (
+          <div class="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 font-mono text-xs sm:text-sm font-semibold text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 break-words">
+            <span class="text-neutral-500 font-bold block sm:inline mr-2">Calculation:</span>
+            {content.example.calculation}
+          </div>
+        )}
+
+        {content.example.result && (
+          <div class="p-4 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <span class="text-xs font-mono font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300">
+              Computed Result
+            </span>
+            <span class="text-base sm:text-lg font-black text-black dark:text-blue-400 tabular-nums">
+              {content.example.result}
+            </span>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  {/* 6. Understanding Your Result Section */}
+  {content.resultExplanation && (
+    <section class="space-y-3">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
+        {content.resultExplanation.title || 'Understanding Your Result'}
+      </h2>
+      <div class="space-y-3 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+        {content.resultExplanation.paragraphs.map(p => (
+          <p>{p}</p>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {/* 7. Frequently Asked Questions Section */}
+  {content.faqs && content.faqs.length > 0 && (
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
+        Frequently Asked Questions
+      </h2>
+      <div class="space-y-3">
+        {content.faqs.map(faq => (
+          <details class="group rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 overflow-hidden shadow-xs transition-all">
+            <summary class="flex items-center justify-between p-4 sm:p-5 cursor-pointer list-none select-none hover:bg-neutral-50 dark:hover:bg-neutral-800/40 transition-colors">
+              <h3 class="font-bold text-sm sm:text-base text-black dark:text-white pr-4">
+                {faq.question}
+              </h3>
+              <svg class="w-4 h-4 shrink-0 text-neutral-500 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </summary>
+            <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-1 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium border-t border-neutral-100 dark:border-neutral-800/60 mt-1">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {/* 8. Important Notes Section */}
+  {content.notes && content.notes.items && content.notes.items.length > 0 && (
+    <section class="bg-neutral-50 dark:bg-neutral-900/30 rounded-2xl p-5 sm:p-7 border border-neutral-200 dark:border-neutral-800 space-y-3">
+      <h2 class="text-base sm:text-lg font-bold tracking-tight text-black dark:text-white flex items-center gap-2">
+        <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>{content.notes.title || 'Important Notes & Considerations'}</span>
+      </h2>
+      <ul class="space-y-2.5 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
+        {content.notes.items.map(note => (
+          <li class="flex items-start gap-2.5 leading-relaxed font-medium">
+            <span class="text-black dark:text-white font-bold select-none">•</span>
+            <span>{note}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {/* Back Navigation Bar */}
+  <div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs font-mono">
+    {categoryUrl && categoryName ? (
+      <a href={categoryUrl} class="text-black dark:text-blue-400 hover:underline flex items-center gap-1 font-bold underline">
+        ← Back to {categoryName}
+      </a>
+    ) : <span></span>}
+    <span class="text-neutral-500 dark:text-neutral-400">AllCalcKit Precision Tools</span>
+  </div>
+
+</article>

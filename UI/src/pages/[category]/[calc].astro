@@ -1,6 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { CALCULATORS, CATEGORIES } from '../../data/calculators';
+import { getCalculatorContent } from '../../data/calculatorContent';
+import CalculatorContentRenderer from '../../components/calculator-content/CalculatorContent.astro';
+
 import UnitConverter from '../../components/calculators/UnitConverter.astro';
 import CurrencyConverter from '../../components/calculators/CurrencyConverter.astro';
 import EmiCalculator from '../../components/calculators/EmiCalculator.astro';
@@ -58,6 +61,20 @@ export function getStaticPaths() {
 
 const { calc } = Astro.props;
 const categoryObj = CATEGORIES.find(c => c.id === calc.categoryId) || { name: calc.category, url: `/${calc.categoryId}` };
+const content = getCalculatorContent(calc.id);
+
+const faqSchema = (content?.faqs && content.faqs.length > 0) ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": content.faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+} : undefined;
 
 const lengthUnits = [
   { id: 'm', name: 'Meters (m)', ratio: 1 },
@@ -94,7 +111,13 @@ const volumeUnits = [
 ];
 ---
 
-<Layout title={`${calc.name} — All Calc Kit`} description={calc.description} canonicalUrl={`https://allcalckit.com${calc.url}`} showQuickTools={false}>
+<Layout 
+  title={`${calc.name} — All Calc Kit`} 
+  description={calc.description} 
+  canonicalUrl={`https://allcalckit.com${calc.url}`} 
+  showQuickTools={false}
+  jsonLd={faqSchema}
+>
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
     
     <!-- Breadcrumb: Home / [Category] / [Calc Name] -->
@@ -169,27 +192,37 @@ const volumeUnits = [
       {calc.id === 'electricity-bill' && <ElectricityBillCalculator />}
     </div>
 
-    <!-- Usage & Formula Guide -->
-    <div class="bg-white dark:bg-neutral-900/50 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-800 space-y-4 text-xs font-mono shadow-xs">
-      <h3 class="font-bold text-sm text-black dark:text-white uppercase tracking-wider">How to use {calc.name}</h3>
-      {calc.howToUse ? (
-        <ol class="space-y-2 text-neutral-600 dark:text-neutral-400 font-medium">
-          {calc.howToUse.map((step, idx) => (
-            <li class="leading-relaxed"><strong class="text-black dark:text-white font-bold">{idx + 1}.</strong> {step}</li>
-          ))}
-        </ol>
-      ) : (
-        <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium">
-          1. Enter your starting values into the input fields above.<br/>
-          2. Results recalculate automatically as you type.
-        </p>
-      )}
-      <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
-        <a href={categoryObj.url} class="text-black dark:text-blue-400 hover:underline flex items-center gap-1 font-bold underline">
-          ← Back to {calc.category}
-        </a>
-        <span class="text-neutral-500 dark:text-neutral-400">URL: allcalckit.com{calc.url}</span>
+    <!-- Educational Content & Usage Guide -->
+    {content ? (
+      <CalculatorContentRenderer 
+        content={content} 
+        calcName={calc.name} 
+        categoryName={calc.category} 
+        categoryUrl={categoryObj.url} 
+      />
+    ) : (
+      <div class="bg-white dark:bg-neutral-900/50 rounded-2xl p-6 border border-neutral-200 dark:border-neutral-800 space-y-4 text-xs font-mono shadow-xs">
+        <h3 class="font-bold text-sm text-black dark:text-white uppercase tracking-wider">How to use {calc.name}</h3>
+        {calc.howToUse ? (
+          <ol class="space-y-2 text-neutral-600 dark:text-neutral-400 font-medium">
+            {calc.howToUse.map((step, idx) => (
+              <li class="leading-relaxed"><strong class="text-black dark:text-white font-bold">{idx + 1}.</strong> {step}</li>
+            ))}
+          </ol>
+        ) : (
+          <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium">
+            1. Enter your starting values into the input fields above.<br/>
+            2. Results recalculate automatically as you type.
+          </p>
+        )}
+        <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+          <a href={categoryObj.url} class="text-black dark:text-blue-400 hover:underline flex items-center gap-1 font-bold underline">
+            ← Back to {calc.category}
+          </a>
+          <span class="text-neutral-500 dark:text-neutral-400">URL: allcalckit.com{calc.url}</span>
+        </div>
       </div>
-    </div>
+    )}
   </div>
 </Layout>
+
