@@ -10,8 +10,8 @@
     
     <!-- Currency & Locale Selector Pill -->
     <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs shrink-0">
-      <span class="text-[10px] text-neutral-500 dark:text-neutral-400 font-semibold hidden sm:inline">Unit:</span>
-      <select class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
+      <span class="text-[10px] text-neutral-600 dark:text-neutral-400 font-semibold hidden sm:inline">Unit:</span>
+      <select aria-label="Select currency unit" class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
         <option value="USD">USD ($)</option>
         <option value="INR">INR (₹)</option>
         <option value="EUR">EUR (€)</option>
@@ -26,7 +26,7 @@
       <!-- Loan Amount -->
       <div>
         <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Amount</label>
+          <label for="emi-amount" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Amount</label>
           <span id="emi-amount-val" class="font-mono font-bold text-black dark:text-white">100,000</span>
         </div>
         <input id="emi-amount" type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
@@ -35,7 +35,7 @@
       <!-- Interest Rate -->
       <div>
         <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
+          <label for="emi-rate" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
           <span id="emi-rate-val" class="font-mono font-bold text-black dark:text-white">8.5%</span>
         </div>
         <input id="emi-rate" type="range" min="1" max="25" step="0.1" value="8.5" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
@@ -44,7 +44,7 @@
       <!-- Tenure -->
       <div>
         <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Tenure (Years)</label>
+          <label for="emi-tenure" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Tenure (Years)</label>
           <span id="emi-tenure-val" class="font-mono font-bold text-black dark:text-white">5 Years</span>
         </div>
         <input id="emi-tenure" type="range" min="1" max="30" step="1" value="5" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />

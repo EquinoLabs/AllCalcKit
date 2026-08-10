@@ -32,9 +32,10 @@ const { title, category, units, defaultFrom = units[0]?.id, defaultTo = units[1]
     <!-- From Input -->
     <div class="lg:col-span-3 space-y-2">
       <div class="flex items-center justify-between gap-2">
-        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">From Unit</label>
+        <label for={`unit-from-${title.toLowerCase().replace(/\s+/g, '-')}`} class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">From Unit</label>
         <select 
           id={`unit-from-${title.toLowerCase().replace(/\s+/g, '-')}`}
+          aria-label="From Unit"
           class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-200 text-xs font-bold outline-none cursor-pointer shrink-0 max-w-[65%]"
         >
           {units.map(u => (
@@ -45,6 +46,7 @@ const { title, category, units, defaultFrom = units[0]?.id, defaultTo = units[1]
       <input 
         type="number" 
         id={`val-from-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        aria-label="Value to convert"
         value="1" 
         step="any"
         class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white text-lg font-bold focus:ring-2 focus:ring-black dark:focus:ring-blue-500 outline-none transition-all tabular-nums"
@@ -66,9 +68,10 @@ const { title, category, units, defaultFrom = units[0]?.id, defaultTo = units[1]
     <!-- To Input / Result -->
     <div class="lg:col-span-3 space-y-2">
       <div class="flex items-center justify-between gap-2">
-        <label class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">To Target</label>
+        <label for={`unit-to-${title.toLowerCase().replace(/\s+/g, '-')}`} class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-semibold">To Target</label>
         <select 
           id={`unit-to-${title.toLowerCase().replace(/\s+/g, '-')}`}
+          aria-label="To Target Unit"
           class="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-black dark:text-neutral-200 text-xs font-bold outline-none cursor-pointer shrink-0 max-w-[65%]"
         >
           {units.map(u => (
@@ -79,6 +82,7 @@ const { title, category, units, defaultFrom = units[0]?.id, defaultTo = units[1]
       <input 
         type="text" 
         id={`val-to-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        aria-label="Converted result"
         readonly 
         class="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-black dark:text-blue-400 text-lg font-black outline-none tabular-nums"
       />

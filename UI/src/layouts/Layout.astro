@@ -20,7 +20,7 @@ const {
   description = "Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 35+ free utilities.",
   keywords = DEFAULT_KEYWORDS,
   canonicalUrl = "https://allcalckit.com/",
-  ogImage = "https://allcalckit.com/logo-curved.png",
+  ogImage = "https://allcalckit.com/logo-header-footer.png",
   ogType = "website",
   showQuickTools = false,
   isErrorPage = false,
@@ -55,6 +55,17 @@ const webAppSchema = {
   },
   "description": description
 };
+
+const RELATED_TOOLS = [
+  { name: 'Length Converter', url: '/units/length' },
+  { name: 'Percentage Calculator', url: '/math/percentage' },
+  { name: 'Age Calculator', url: '/health/age-calc' },
+  { name: 'Loan / EMI Calculator', url: '/finance/loan-emi' },
+  { name: 'BMI Calculator', url: '/health/bmi' },
+  { name: 'Currency Converter', url: '/finance/currency' },
+  { name: 'Compound Interest Calculator', url: '/finance/compound-interest' },
+  { name: 'Word & Character Counter', url: '/text/word-counter' },
+];
 ---
 
 <!doctype html>
@@ -141,7 +152,7 @@ const webAppSchema = {
         <!-- Logo -->
         <a href="/" class="flex items-center gap-2.5 group">
           <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center bg-white border border-neutral-200 dark:border-neutral-800">
-            <img src="/logo-curved.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+            <img src="/logo-header-footer.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
           </div>
           <div class="flex items-center gap-2">
             <span class="font-bold tracking-tight text-base sm:text-lg group-hover:opacity-80 transition-opacity">All Calc Kit</span>
@@ -149,7 +160,7 @@ const webAppSchema = {
         </a>
 
         {!isErrorPage && (
-          <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+          <nav aria-label="Main Navigation" class="hidden lg:flex items-center gap-6 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
             <a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About</a>
             <a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact</a>
             <a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy</a>
@@ -203,7 +214,7 @@ const webAppSchema = {
           <div class="col-span-2">
             <div class="flex items-center gap-2 mb-3">
               <div class="w-6 h-6 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800">
-                <img src="/logo-curved.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+                <img src="/logo-header-footer.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
               </div>
               <span class="font-bold text-base tracking-tight">All Calc Kit</span>
               <span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">v1.0</span>
@@ -218,25 +229,25 @@ const webAppSchema = {
           </div>
 
           <div>
-            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Categories</h4>
+            <h3 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Categories</h3>
             <ul class="space-y-2 text-xs text-neutral-500 dark:text-neutral-400">
-              {CATEGORIES.slice(0, 4).map(cat => (
+              {CATEGORIES.map(cat => (
                 <li><a href={cat.url} class="hover:text-black dark:hover:text-white transition-colors">{cat.name}</a></li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">More Categories</h4>
+            <h3 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Quick Tools</h3>
             <ul class="space-y-2 text-xs text-neutral-500 dark:text-neutral-400">
-              {CATEGORIES.slice(4).map(cat => (
-                <li><a href={cat.url} class="hover:text-black dark:hover:text-white transition-colors">{cat.name}</a></li>
+              {RELATED_TOOLS.map(tool => (
+                <li><a href={tool.url} class="hover:text-black dark:hover:text-white transition-colors">{tool.name}</a></li>
               ))}
             </ul>
           </div>
 
           <div class="col-span-2 md:col-span-1">
-            <h4 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Company & Legal</h4>
+            <h3 class="font-mono text-xs text-neutral-900 dark:text-neutral-100 uppercase tracking-wider mb-3">Company & Legal</h3>
             <ul class="space-y-2 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
               <li><a href="/about" class="hover:text-black dark:hover:text-white transition-colors">About Us</a></li>
               <li><a href="/privacy" class="hover:text-black dark:hover:text-white transition-colors">Privacy Policy</a></li>
