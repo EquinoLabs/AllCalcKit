@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import { CALCULATORS, CATEGORIES } from '../../data/calculators';
 import { getCalculatorContent } from '../../data/calculatorContent';
+import { getExplainContent } from '../../data/explainContent';
 import CalculatorContentRenderer from '../../components/calculator-content/CalculatorContent.astro';
+import ExplainPanel from '../../components/ExplainPanel.astro';
 
 import UnitConverter from '../../components/calculators/UnitConverter.astro';
 import CurrencyConverter from '../../components/calculators/CurrencyConverter.astro';
@@ -62,6 +64,7 @@ export function getStaticPaths() {
 const { calc } = Astro.props;
 const categoryObj = CATEGORIES.find(c => c.id === calc.categoryId) || { name: calc.category, url: `/${calc.categoryId}` };
 const content = getCalculatorContent(calc.id);
+const explainContent = getExplainContent(calc.id);
 
 const faqSchema = (content?.faqs && content.faqs.length > 0) ? {
   "@context": "https://schema.org",
@@ -191,6 +194,11 @@ const volumeUnits = [
       {calc.id === 'fuel-cost' && <FuelCostCalculator />}
       {calc.id === 'electricity-bill' && <ElectricityBillCalculator />}
     </div>
+
+    <!-- Explain This Result: Collapsible Formula & Worked Example -->
+    {explainContent && (
+      <ExplainPanel content={explainContent} />
+    )}
 
     <!-- Educational Content & Usage Guide -->
     {content ? (

@@ -1,0 +1,157 @@
+---
+import type { ExplainContent } from '../data/explainContent';
+
+interface Props {
+  content: ExplainContent;
+}
+
+const { content } = Astro.props;
+---
+
+<details class="group bg-white dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-6 transition-all [&_[data-icon]]:open:rotate-180 shadow-xs mb-10">
+  <summary class="flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-black dark:text-white cursor-pointer select-none">
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <span class="w-8 h-8 rounded-xl bg-blue-500/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </span>
+      <div>
+        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block sm:inline-block sm:mr-2">
+          Explain This Result
+        </span>
+        <span class="font-bold text-neutral-900 dark:text-neutral-100">
+          {content.title || 'Formula & Worked Calculation'}
+        </span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="hidden sm:inline-block text-xs font-mono text-neutral-600 dark:text-neutral-300 font-medium group-open:hidden">
+        Show Formula
+      </span>
+      <span class="hidden sm:inline-block text-xs font-mono text-neutral-600 dark:text-neutral-300 font-medium hidden group-open:inline-block">
+        Hide
+      </span>
+      <svg data-icon class="w-4 h-4 text-neutral-500 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </summary>
+
+  <div class="mt-5 pt-5 border-t border-neutral-100 dark:border-neutral-800/80 space-y-6 text-xs sm:text-sm">
+    
+    {/* 1. Mathematical Formula Block */}
+    <div class="space-y-2">
+      <div class="text-[11px] font-mono uppercase tracking-wider text-neutral-700 dark:text-neutral-300 font-bold flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+        <span>Mathematical Formula</span>
+      </div>
+      <div class="rounded-xl bg-neutral-50 dark:bg-neutral-950 p-4 border border-neutral-200 dark:border-neutral-800 space-y-2 shadow-xs">
+        <div class="font-mono text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 break-words leading-relaxed">
+          {content.formula}
+        </div>
+        {content.formulaExplanation && (
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 font-medium leading-relaxed pt-1 border-t border-neutral-200/60 dark:border-neutral-800/60">
+            {content.formulaExplanation}
+          </p>
+        )}
+      </div>
+    </div>
+
+    {/* Optional Formula Variables */}
+    {content.variables && content.variables.length > 0 && (
+      <div class="space-y-2">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-neutral-700 dark:text-neutral-300 font-bold flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>Variable Definitions</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {content.variables.map(v => (
+            <div class="p-2.5 rounded-xl bg-neutral-50/70 dark:bg-neutral-950/50 border border-neutral-200/80 dark:border-neutral-800/80 flex items-start gap-2.5">
+              <span class="font-mono font-bold text-xs text-black dark:text-white px-1.5 py-0.5 rounded bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 shrink-0">
+                {v.symbol}
+              </span>
+              <div class="text-xs">
+                <span class="font-bold text-neutral-900 dark:text-neutral-100">{v.name}: </span>
+                <span class="text-neutral-600 dark:text-neutral-400 leading-snug">{v.description}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* 2. Step-by-Step Worked Example */}
+    {content.example && (
+      <div class="space-y-2">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-neutral-700 dark:text-neutral-300 font-bold flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+          <span>Worked Example</span>
+        </div>
+        <div class="rounded-xl bg-white dark:bg-neutral-950/40 p-4 border border-neutral-200 dark:border-neutral-800 space-y-3.5">
+          {content.example.title && (
+            <h4 class="font-bold text-xs sm:text-sm text-neutral-900 dark:text-white">
+              {content.example.title}
+            </h4>
+          )}
+          {content.example.scenario && (
+            <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium">
+              {content.example.scenario}
+            </p>
+          )}
+
+          {/* Sample Inputs */}
+          {content.example.inputs && content.example.inputs.length > 0 && (
+            <div class="flex flex-wrap gap-2 pt-1">
+              {content.example.inputs.map(input => (
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 text-neutral-800 dark:text-neutral-200 font-mono text-[11px] border border-neutral-200 dark:border-neutral-700/60">
+                  <span class="text-neutral-600 dark:text-neutral-400 font-medium">{input.label}:</span>
+                  <span class="font-bold">{input.value}</span>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Step-by-step breakdown */}
+          <ol class="space-y-2 pt-1 text-xs sm:text-sm">
+            {content.example.steps.map((step, idx) => (
+              <li class="flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 font-mono font-bold text-[10px] flex items-center justify-center shrink-0 border border-neutral-300 dark:border-neutral-700 mt-0.5">
+                  {idx + 1}
+                </span>
+                <span class="text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          {/* Final Result Box */}
+          {content.example.result && (
+            <div class="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{content.example.result}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+
+    {/* 3. When & Why to Use This Calculator */}
+    {content.useCase && (
+      <div class="space-y-1.5 pt-1">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-neutral-700 dark:text-neutral-300 font-bold flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+          <span>When & Why to Use This</span>
+        </div>
+        <p class="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium bg-neutral-50 dark:bg-neutral-950/40 p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800">
+          {content.useCase}
+        </p>
+      </div>
+    )}
+
+  </div>
+</details>
