@@ -94,6 +94,70 @@
       </div>
     </div>
   </div>
+
+  <!-- Live Explain Calculation Walkthrough -->
+  <details id="pct-explain-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 mt-6 shadow-xs">
+    <summary class="flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
+      <div class="flex items-center gap-2.5">
+        <span class="w-7 h-7 rounded-lg bg-amber-500/10 dark:bg-amber-400/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        </span>
+        <div>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 block sm:inline-block sm:mr-2">Explain Calculation</span>
+          <span class="font-bold text-neutral-900 dark:text-neutral-100">Live Mathematical Working Across 3 Modes</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 group-open:hidden">Show Steps</span>
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hidden group-open:inline">Hide Steps</span>
+        <svg data-icon class="w-4 h-4 text-neutral-400 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </summary>
+
+    <div class="mt-4 pt-4 border-t border-neutral-200/70 dark:border-neutral-800/80 space-y-4 text-xs font-mono">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- Mode 1 Breakdown -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1.5">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">1. Percentage Value</div>
+          <div class="text-neutral-500 text-[10px]">Formula: (X ÷ 100) × Y</div>
+          <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+            (<span id="exp-p1-x">15</span> ÷ 100) × <span id="exp-p1-y">200</span>
+          </div>
+          <div class="font-bold text-amber-600 dark:text-amber-400 text-xs">
+            = <span id="exp-p1-res">30</span>
+          </div>
+        </div>
+
+        <!-- Mode 2 Breakdown -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1.5">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">2. Percentage Share</div>
+          <div class="text-neutral-500 text-[10px]">Formula: (X ÷ Y) × 100</div>
+          <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+            (<span id="exp-p2-x">45</span> ÷ <span id="exp-p2-y">150</span>) × 100
+          </div>
+          <div class="font-bold text-amber-600 dark:text-amber-400 text-xs">
+            = <span id="exp-p2-res">30%</span>
+          </div>
+        </div>
+
+        <!-- Mode 3 Breakdown -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1.5">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">3. Percentage Change</div>
+          <div class="text-neutral-500 text-[10px]">Formula: [(V2 − V1) ÷ |V1|] × 100</div>
+          <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+            [(<span id="exp-p3-v2">100</span> − <span id="exp-p3-v1">80</span>) ÷ <span id="exp-p3-v1-base">80</span>] × 100
+          </div>
+          <div class="font-bold text-emerald-600 dark:text-emerald-400 text-xs">
+            = <span id="exp-p3-res">+25%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
 </div>
 
 <script is:inline>
@@ -102,13 +166,27 @@
     const p1Total = document.getElementById('p1-total');
     const p1Result = document.getElementById('p1-result');
     const p1Label = document.getElementById('p1-label');
+    const expP1X = document.getElementById('exp-p1-x');
+    const expP1Y = document.getElementById('exp-p1-y');
+    const expP1Res = document.getElementById('exp-p1-res');
 
     function calc1() {
-      const p = parseFloat(p1Pct.value) || 0;
-      const t = parseFloat(p1Total.value) || 0;
+      const p = parseFloat(p1Pct.value);
+      const t = parseFloat(p1Total.value);
+      if (isNaN(p) || isNaN(t)) {
+        if (p1Result) p1Result.textContent = '--';
+        if (expP1X) expP1X.textContent = '--';
+        if (expP1Y) expP1Y.textContent = '--';
+        if (expP1Res) expP1Res.textContent = '--';
+        return;
+      }
       const res = (p / 100) * t;
+      const formatted = Number.isInteger(res) ? res.toLocaleString() : res.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (p1Label) p1Label.textContent = `What is ${p}% of ${t.toLocaleString()}?`;
-      if (p1Result) p1Result.textContent = Number.isInteger(res) ? res.toLocaleString() : res.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (p1Result) p1Result.textContent = formatted;
+      if (expP1X) expP1X.textContent = p.toString();
+      if (expP1Y) expP1Y.textContent = t.toLocaleString();
+      if (expP1Res) expP1Res.textContent = formatted;
     }
     if (p1Pct && p1Total) {
       p1Pct.addEventListener('input', calc1);
@@ -119,17 +197,34 @@
     const p2Total = document.getElementById('p2-total');
     const p2Result = document.getElementById('p2-result');
     const p2Label = document.getElementById('p2-label');
+    const expP2X = document.getElementById('exp-p2-x');
+    const expP2Y = document.getElementById('exp-p2-y');
+    const expP2Res = document.getElementById('exp-p2-res');
 
     function calc2() {
-      const part = parseFloat(p2Part.value) || 0;
-      const total = parseFloat(p2Total.value) || 0;
+      const part = parseFloat(p2Part.value);
+      const total = parseFloat(p2Total.value);
+      if (isNaN(part) || isNaN(total)) {
+        if (p2Result) p2Result.textContent = '--';
+        if (expP2X) expP2X.textContent = '--';
+        if (expP2Y) expP2Y.textContent = '--';
+        if (expP2Res) expP2Res.textContent = '--';
+        return;
+      }
       if (p2Label) p2Label.textContent = `${part.toLocaleString()} is what % of ${total.toLocaleString()}?`;
       if (total === 0) {
         if (p2Result) p2Result.textContent = 'N/A';
+        if (expP2X) expP2X.textContent = part.toString();
+        if (expP2Y) expP2Y.textContent = '0';
+        if (expP2Res) expP2Res.textContent = 'Undefined (Division by 0)';
         return;
       }
       const res = (part / total) * 100;
-      if (p2Result) p2Result.textContent = (Number.isInteger(res) ? res : res.toFixed(2)) + '%';
+      const formatted = (Number.isInteger(res) ? res : res.toFixed(2)) + '%';
+      if (p2Result) p2Result.textContent = formatted;
+      if (expP2X) expP2X.textContent = part.toLocaleString();
+      if (expP2Y) expP2Y.textContent = total.toLocaleString();
+      if (expP2Res) expP2Res.textContent = formatted;
     }
     if (p2Part && p2Total) {
       p2Part.addEventListener('input', calc2);
@@ -140,20 +235,44 @@
     const p3V2 = document.getElementById('p3-v2');
     const p3Result = document.getElementById('p3-result');
     const p3Label = document.getElementById('p3-label');
+    const expP3V2 = document.getElementById('exp-p3-v2');
+    const expP3V1 = document.getElementById('exp-p3-v1');
+    const expP3V1Base = document.getElementById('exp-p3-v1-base');
+    const expP3Res = document.getElementById('exp-p3-res');
 
     function calc3() {
-      const v1 = parseFloat(p3V1.value) || 0;
-      const v2 = parseFloat(p3V2.value) || 0;
+      const v1 = parseFloat(p3V1.value);
+      const v2 = parseFloat(p3V2.value);
+      if (isNaN(v1) || isNaN(v2)) {
+        if (p3Result) p3Result.textContent = '--';
+        if (expP3V2) expP3V2.textContent = '--';
+        if (expP3V1) expP3V1.textContent = '--';
+        if (expP3V1Base) expP3V1Base.textContent = '--';
+        if (expP3Res) expP3Res.textContent = '--';
+        return;
+      }
       if (p3Label) p3Label.textContent = `% Change from ${v1.toLocaleString()} to ${v2.toLocaleString()}`;
       if (v1 === 0) {
         if (p3Result) p3Result.textContent = 'N/A';
+        if (expP3V2) expP3V2.textContent = v2.toLocaleString();
+        if (expP3V1) expP3V1.textContent = '0';
+        if (expP3V1Base) expP3V1Base.textContent = '0';
+        if (expP3Res) expP3Res.textContent = 'Undefined (Base is 0)';
         return;
       }
       const change = ((v2 - v1) / Math.abs(v1)) * 100;
       const formatted = (Number.isInteger(change) ? change : change.toFixed(2));
+      const resText = (change >= 0 ? '+' : '') + formatted + '%';
       if (p3Result) {
-        p3Result.textContent = (change >= 0 ? '+' : '') + formatted + '%';
+        p3Result.textContent = resText;
         p3Result.className = `font-mono font-bold text-xl ${change >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`;
+      }
+      if (expP3V2) expP3V2.textContent = v2.toLocaleString();
+      if (expP3V1) expP3V1.textContent = v1.toLocaleString();
+      if (expP3V1Base) expP3V1Base.textContent = Math.abs(v1).toLocaleString();
+      if (expP3Res) {
+        expP3Res.textContent = resText;
+        expP3Res.className = change >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
       }
     }
     if (p3V1 && p3V2) {

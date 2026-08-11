@@ -80,6 +80,67 @@
       </p>
     </div>
   </div>
+
+  <!-- Live Explain Calculation Walkthrough -->
+  <details id="bmi-explain-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 mt-6 shadow-xs">
+    <summary class="flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
+      <div class="flex items-center gap-2.5">
+        <span class="w-7 h-7 rounded-lg bg-rose-500/10 dark:bg-rose-400/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        </span>
+        <div>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block sm:inline-block sm:mr-2">Explain Calculation</span>
+          <span class="font-bold text-neutral-900 dark:text-neutral-100">Live Mathematical Working</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 group-open:hidden">Show Steps</span>
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hidden group-open:inline">Hide Steps</span>
+        <svg data-icon class="w-4 h-4 text-neutral-400 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </summary>
+
+    <div class="mt-4 pt-4 border-t border-neutral-200/70 dark:border-neutral-800/80 space-y-4 text-xs font-mono">
+      <!-- Formula -->
+      <div class="space-y-1.5">
+        <div class="text-[10px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">Standard BMI Formula</div>
+        <div id="exp-bmi-formula-box" class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-rose-300 font-bold overflow-x-auto text-xs sm:text-sm">
+          BMI = Weight (kg) ÷ [Height (m)]²
+        </div>
+      </div>
+
+      <!-- Live Calculation Working -->
+      <div id="bmi-explain-body" class="space-y-3">
+        <!-- Step 1: Input Values -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 1 — Standardized Input Values</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-0.5 pt-0.5">
+            <div>Weight = <span id="exp-bmi-weight" class="font-bold text-black dark:text-white">70 kg</span></div>
+            <div>Height = <span id="exp-bmi-height" class="font-bold text-black dark:text-white">175 cm (1.75 m)</span></div>
+          </div>
+        </div>
+
+        <!-- Step 2: Intermediate & Result -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 2 — Calculation & Substitution</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-1 pt-0.5">
+            <div>Height Squared = <span id="exp-bmi-sq" class="font-bold text-black dark:text-white">1.75 × 1.75 = 3.0625 m²</span></div>
+            <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+              BMI = <span id="exp-bmi-sub-eq">70 ÷ 3.0625</span>
+            </div>
+            <div class="font-bold text-rose-600 dark:text-rose-400 text-sm flex items-center gap-2 flex-wrap">
+              <span>= <span id="exp-bmi-final-val">22.9</span> kg/m²</span>
+              <span id="exp-bmi-cat-badge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold font-sans">Normal Weight</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
 </div>
 
 <script is:inline>
@@ -104,27 +165,47 @@
     const bmiPointer = document.getElementById('bmi-pointer');
     const bmiAdvice = document.getElementById('bmi-advice');
 
+    // Explain elements
+    const expFormulaBox = document.getElementById('exp-bmi-formula-box');
+    const expWeight = document.getElementById('exp-bmi-weight');
+    const expHeight = document.getElementById('exp-bmi-height');
+    const expSq = document.getElementById('exp-bmi-sq');
+    const expSubEq = document.getElementById('exp-bmi-sub-eq');
+    const expFinalVal = document.getElementById('exp-bmi-final-val');
+    const expCatBadge = document.getElementById('exp-bmi-cat-badge');
+
     function calculateBMI() {
       let bmi = 0;
+      let heightCmVal = 0;
+      let weightKgVal = 0;
+      let heightFtVal = 0;
+      let heightInVal = 0;
+      let weightLbsVal = 0;
+
       if (mode === 'metric') {
-        const cm = parseFloat(cmInput.value) || 0;
-        const kg = parseFloat(kgInput.value) || 0;
-        if (cm > 0 && kg > 0) {
-          const m = cm / 100;
-          bmi = kg / (m * m);
+        heightCmVal = parseFloat(cmInput.value) || 0;
+        weightKgVal = parseFloat(kgInput.value) || 0;
+        if (heightCmVal > 0 && weightKgVal > 0) {
+          const m = heightCmVal / 100;
+          bmi = weightKgVal / (m * m);
         }
       } else {
-        const ft = parseFloat(ftInput.value) || 0;
-        const inch = parseFloat(inInput.value) || 0;
-        const lbs = parseFloat(lbsInput.value) || 0;
-        const totalInches = (ft * 12) + inch;
-        if (totalInches > 0 && lbs > 0) {
-          bmi = (lbs / (totalInches * totalInches)) * 703;
+        heightFtVal = parseFloat(ftInput.value) || 0;
+        heightInVal = parseFloat(inInput.value) || 0;
+        weightLbsVal = parseFloat(lbsInput.value) || 0;
+        const totalInches = (heightFtVal * 12) + heightInVal;
+        if (totalInches > 0 && weightLbsVal > 0) {
+          bmi = (weightLbsVal / (totalInches * totalInches)) * 703;
         }
       }
 
       if (bmi <= 0 || isNaN(bmi)) {
         if (bmiScore) bmiScore.textContent = '--';
+        if (expWeight) expWeight.textContent = '--';
+        if (expHeight) expHeight.textContent = '--';
+        if (expSq) expSq.textContent = '--';
+        if (expSubEq) expSubEq.textContent = 'Enter valid values above';
+        if (expFinalVal) expFinalVal.textContent = '--';
         return;
       }
 
@@ -164,6 +245,32 @@
       }
       if (bmiPointer) bmiPointer.style.left = `${pct}%`;
       if (bmiAdvice) bmiAdvice.textContent = advice;
+
+      // Update Live Explain Calculation
+      if (mode === 'metric') {
+        const m = heightCmVal / 100;
+        const mSq = m * m;
+        if (expFormulaBox) expFormulaBox.textContent = 'BMI = Weight (kg) ÷ [Height (m)]²';
+        if (expWeight) expWeight.textContent = `${weightKgVal} kg`;
+        if (expHeight) expHeight.textContent = `${heightCmVal} cm (${m.toFixed(2)} m)`;
+        if (expSq) expSq.textContent = `${m.toFixed(2)} × ${m.toFixed(2)} = ${mSq.toFixed(4)} m²`;
+        if (expSubEq) expSubEq.textContent = `${weightKgVal} ÷ ${mSq.toFixed(4)}`;
+      } else {
+        const totalInches = (heightFtVal * 12) + heightInVal;
+        const inSq = totalInches * totalInches;
+        const weighted = weightLbsVal * 703;
+        if (expFormulaBox) expFormulaBox.textContent = 'BMI = [Weight (lbs) × 703] ÷ [Height (in)]²';
+        if (expWeight) expWeight.textContent = `${weightLbsVal} lbs`;
+        if (expHeight) expHeight.textContent = `${heightFtVal} ft ${heightInVal} in (${totalInches} in)`;
+        if (expSq) expSq.textContent = `${totalInches} × ${totalInches} = ${inSq} in²`;
+        if (expSubEq) expSubEq.textContent = `(${weightLbsVal} × 703) ÷ ${inSq} = ${weighted} ÷ ${inSq}`;
+      }
+
+      if (expFinalVal) expFinalVal.textContent = formatted;
+      if (expCatBadge) {
+        expCatBadge.textContent = category;
+        expCatBadge.className = `text-xs px-2 py-0.5 rounded-full border font-bold font-sans ${badgeClass}`;
+      }
     }
 
     if (btnMetric && btnImperial) {

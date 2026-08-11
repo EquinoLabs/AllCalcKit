@@ -85,6 +85,76 @@
       </div>
     </div>
   </div>
+
+  <!-- Live Explain Calculation Walkthrough -->
+  <details id="emi-explain-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 mt-6 shadow-xs">
+    <summary class="flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
+      <div class="flex items-center gap-2.5">
+        <span class="w-7 h-7 rounded-lg bg-purple-500/10 dark:bg-purple-400/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        </span>
+        <div>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 block sm:inline-block sm:mr-2">Explain Calculation</span>
+          <span class="font-bold text-neutral-900 dark:text-neutral-100">Live Mathematical Working</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 group-open:hidden">Show Steps</span>
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hidden group-open:inline">Hide Steps</span>
+        <svg data-icon class="w-4 h-4 text-neutral-400 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </summary>
+
+    <div class="mt-4 pt-4 border-t border-neutral-200/70 dark:border-neutral-800/80 space-y-4 text-xs font-mono">
+      <!-- Formula -->
+      <div class="space-y-1.5">
+        <div class="text-[10px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">Standard Amortization Formula</div>
+        <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-purple-300 font-bold overflow-x-auto text-xs sm:text-sm">
+          EMI = [P × r × (1 + r)ⁿ] ÷ [(1 + r)ⁿ − 1]
+        </div>
+      </div>
+
+      <!-- Live Calculation Working -->
+      <div id="emi-explain-body" class="space-y-3">
+        <!-- Step 1: Inputs & Monthly Rate -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 1 — Rate & Periods Conversion</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-0.5 pt-0.5">
+            <div>Principal (P) = <span id="exp-emi-p" class="font-bold text-black dark:text-white">$100,000</span></div>
+            <div>Monthly Rate (r) = <span id="exp-emi-rate-formula">8.5% ÷ 12 ÷ 100</span> = <span id="exp-emi-r" class="font-bold text-black dark:text-white">0.00708333</span></div>
+            <div>Total Payments (n) = <span id="exp-emi-tenure-formula">5 × 12</span> = <span id="exp-emi-n" class="font-bold text-black dark:text-white">60 months</span></div>
+          </div>
+        </div>
+
+        <!-- Step 2: Substitution & EMI -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 2 — Monthly Installment (EMI)</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-1 pt-0.5">
+            <div>Growth Multiplier (1 + r)ⁿ = <span id="exp-emi-growth" class="font-bold text-black dark:text-white">(1.00708333)⁶⁰ ≈ 1.5273</span></div>
+            <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+              EMI = [<span id="exp-emi-sub-p">100,000</span> × <span id="exp-emi-sub-r">0.00708333</span> × <span id="exp-emi-sub-growth1">1.5273</span>] ÷ [<span id="exp-emi-sub-growth2">1.5273</span> − 1]
+            </div>
+            <div class="font-bold text-purple-600 dark:text-purple-400 text-sm">
+              = <span id="exp-emi-monthly-val">$2,051.65 / month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Total Interest & Repayment -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 3 — Total Cost Breakdown</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-0.5 pt-0.5">
+            <div>Total Repayment = <span id="exp-emi-tot-formula">$2,051.65 × 60</span> = <span id="exp-emi-tot-payable" class="font-bold text-black dark:text-white">$123,099.16</span></div>
+            <div>Total Interest = <span id="exp-emi-int-formula">$123,099.16 − $100,000</span> = <span id="exp-emi-tot-interest" class="font-bold text-black dark:text-white">$23,099.16</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
 </div>
 
 <script is:inline>
@@ -106,6 +176,23 @@
     const principalBar = document.getElementById('principal-bar');
     const interestBar = document.getElementById('interest-bar');
 
+    // Explain elements
+    const expP = document.getElementById('exp-emi-p');
+    const expRateFormula = document.getElementById('exp-emi-rate-formula');
+    const expR = document.getElementById('exp-emi-r');
+    const expTenureFormula = document.getElementById('exp-emi-tenure-formula');
+    const expN = document.getElementById('exp-emi-n');
+    const expGrowth = document.getElementById('exp-emi-growth');
+    const expSubP = document.getElementById('exp-emi-sub-p');
+    const expSubR = document.getElementById('exp-emi-sub-r');
+    const expSubGrowth1 = document.getElementById('exp-emi-sub-growth1');
+    const expSubGrowth2 = document.getElementById('exp-emi-sub-growth2');
+    const expMonthlyVal = document.getElementById('exp-emi-monthly-val');
+    const expTotFormula = document.getElementById('exp-emi-tot-formula');
+    const expTotPayable = document.getElementById('exp-emi-tot-payable');
+    const expIntFormula = document.getElementById('exp-emi-int-formula');
+    const expTotInterest = document.getElementById('exp-emi-tot-interest');
+
     const CURRENCY_CONFIGS = {
       USD: { symbol: '$', locale: 'en-US' },
       INR: { symbol: '₹', locale: 'en-IN' },
@@ -124,12 +211,19 @@
       return `${cfg.symbol}${formatted}`;
     }
 
+    function formatPreciseMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      const formatted = num.toLocaleString(cfg.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return `${cfg.symbol}${formatted}`;
+    }
+
     function calculateEMI() {
       if (!amountInput || !rateInput || !tenureInput) return;
 
-      const P = parseFloat(amountInput.value);
-      const annualRate = parseFloat(rateInput.value);
-      const years = parseFloat(tenureInput.value);
+      const P = parseFloat(amountInput.value) || 0;
+      const annualRate = parseFloat(rateInput.value) || 0;
+      const years = parseFloat(tenureInput.value) || 0;
 
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
@@ -138,24 +232,63 @@
       if (rateVal) rateVal.textContent = annualRate.toFixed(1) + '%';
       if (tenureVal) tenureVal.textContent = years + (years === 1 ? ' Year' : ' Years');
 
+      if (P <= 0 || years <= 0) {
+        if (monthlyResult) monthlyResult.textContent = `${cfg.symbol}0`;
+        if (totalInterestEl) totalInterestEl.textContent = `${cfg.symbol}0`;
+        if (totalPayableEl) totalPayableEl.textContent = `${cfg.symbol}0`;
+        return;
+      }
+
       const r = annualRate / 12 / 100;
       const n = years * 12;
 
-      const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-      const totalPayable = emi * n;
-      const totalInterest = totalPayable - P;
+      let emi = 0;
+      let totalPayable = 0;
+      let totalInterest = 0;
+      let growth = 1;
+
+      if (r === 0) {
+        emi = P / n;
+        totalPayable = P;
+        totalInterest = 0;
+      } else {
+        growth = Math.pow(1 + r, n);
+        emi = (P * r * growth) / (growth - 1);
+        totalPayable = emi * n;
+        totalInterest = totalPayable - P;
+      }
 
       if (monthlyResult) monthlyResult.textContent = formatMoney(emi);
       if (totalInterestEl) totalInterestEl.textContent = formatMoney(totalInterest);
       if (totalPayableEl) totalPayableEl.textContent = formatMoney(totalPayable);
 
-      const pPct = Math.round((P / totalPayable) * 100);
+      const pPct = totalPayable > 0 ? Math.round((P / totalPayable) * 100) : 100;
       const iPct = 100 - pPct;
 
       if (principalPctEl) principalPctEl.textContent = pPct + '%';
       if (interestPctEl) interestPctEl.textContent = iPct + '%';
       if (principalBar) principalBar.style.width = pPct + '%';
       if (interestBar) interestBar.style.width = iPct + '%';
+
+      // Update live Explain Calculation breakdown
+      if (expP) expP.textContent = formatMoney(P);
+      if (expRateFormula) expRateFormula.textContent = `${annualRate.toFixed(1)}% ÷ 12 ÷ 100`;
+      if (expR) expR.textContent = r.toFixed(8).replace(/\.?0+$/, '') || '0';
+      if (expTenureFormula) expTenureFormula.textContent = `${years} × 12`;
+      if (expN) expN.textContent = `${n} months`;
+
+      const growthStr = growth.toFixed(4);
+      if (expGrowth) expGrowth.textContent = `(1 + ${r.toFixed(6)})^${n} ≈ ${growthStr}`;
+      if (expSubP) expSubP.textContent = Math.round(P).toLocaleString(cfg.locale);
+      if (expSubR) expSubR.textContent = r.toFixed(6);
+      if (expSubGrowth1) expSubGrowth1.textContent = growthStr;
+      if (expSubGrowth2) expSubGrowth2.textContent = growthStr;
+      if (expMonthlyVal) expMonthlyVal.textContent = `${formatPreciseMoney(emi)} / month`;
+
+      if (expTotFormula) expTotFormula.textContent = `${formatPreciseMoney(emi)} × ${n}`;
+      if (expTotPayable) expTotPayable.textContent = formatPreciseMoney(totalPayable);
+      if (expIntFormula) expIntFormula.textContent = `${formatPreciseMoney(totalPayable)} − ${formatMoney(P)}`;
+      if (expTotInterest) expTotInterest.textContent = formatPreciseMoney(totalInterest);
     }
 
     // Initialize currency selects
