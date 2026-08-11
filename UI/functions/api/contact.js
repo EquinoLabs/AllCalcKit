@@ -1,103 +1,84 @@
-const SUPPORT_REF_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-function generateSupportReference() {
-  const now = new Date();
-  const yyyymmdd =
-    now.getUTCFullYear() +
-    String(now.getUTCMonth() + 1).padStart(2, '0') +
-    String(now.getUTCDate()).padStart(2, '0');
-  const bytes = new Uint8Array(8);
-  crypto.getRandomValues(bytes);
-  let randomPart = '';
-  for (let i = 0; i < 8; i++) {
-    randomPart += SUPPORT_REF_ALPHABET[bytes[i] % SUPPORT_REF_ALPHABET.length];
-  }
-  return `ACK-${yyyymmdd}-${randomPart}`;
-}
+import { validateContactForm } from '../../src/utils/contactValidation';
+import { generateSupportReference } from '../../src/utils/reference';
+import { sendContactEmail } from '../../src/lib/email';
 
 export async function onRequestPost({ request, env }) {
   try {
-    const body = await request.json();
-
-    // Field names sent by UI/src/pages/contact.astro
-    const { name, email, subject, message, honeypot } = body;
-
-    // Anti-spam: honeypot must be empty
-    if (honeypot) {
+    const contentType = request.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
       return new Response(
-        JSON.stringify({ error: 'Submission rejected.' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ success: false, error: 'Content-Type must be application/json.' }),
+        { status: 415, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    if (!name || !email || !message) {
-      const errors = {};
-      if (!name) errors.name = 'Please enter your name.';
-      if (!email) errors.email = 'Please enter your email address.';
-      if (!message) errors.message = 'Please enter a message.';
+    const rawBody = await request.text();
+    if (rawBody.length > 50 * 1024) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields', errors }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ success: false, error: 'Request payload exceeds allowable limit.' }),
+        { status: 413, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Honeypot cleared; send via Resend
-    const resendRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'AllCalcKit Contact <support@allcalckit.com>',
-        to: ['support@allcalckit.com'],
-        reply_to: email,
-        subject: `[AllCalcKit] Contact form submission from ${name}`,
-        text: [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          `Inquiry Type: ${subject || 'n/a'}`,
-          '',
-          message,
-        ].join('\n'),
-      }),
-    });
-
-    if (!resendRes.ok) {
-      const errText = await resendRes.text();
+    let parsedBody;
+    try {
+      parsedBody = JSON.parse(rawBody);
+    } catch {
       return new Response(
-        JSON.stringify({ error: 'Failed to send email', details: errText }),
-        {
-          status: 502,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ success: false, error: 'Malformed JSON payload.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    // Honeypot check — if tripped, fake a success response so bots don't adapt
+    if (parsedBody.honeypot) {
+      return new Response(
+        JSON.stringify({ success: true, reference: generateSupportReference(), message: 'Message sent successfully!' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const validation = validateContactForm(parsedBody);
+    if (!validation.valid || !validation.sanitizedData) {
+      return new Response(
+        JSON.stringify({ success: false, errors: validation.errors, error: 'Validation failed. Please check the form fields.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { sanitizedData } = validation;
+    const reference = generateSupportReference();
+    const submittedAt = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+
+    await sendContactEmail({
+      reference,
+      name: sanitizedData.name,
+      email: sanitizedData.email,
+      subjectKey: sanitizedData.subject,
+      subjectLabel: sanitizedData.subjectLabel,
+      message: sanitizedData.message,
+      submittedAt,
+      sourceUrl: 'https://allcalckit.com/contact',
+    }, env); // Cloudflare secrets arrive via the env parameter, not process.env
 
     return new Response(
-      JSON.stringify({
-        success: true,
-        reference: generateSupportReference(),
-        message: 'Message sent successfully!',
-      }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ success: true, reference, message: 'Message sent successfully!' }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
-  } catch (err) {
+  } catch (error) {
+    console.error('[Contact API Error]:', error);
     return new Response(
-      JSON.stringify({ error: 'Unexpected error', details: String(err) }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ success: false, error: 'Something went wrong while sending your message. Please try again or email support@allcalckit.com directly.' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
+
+export async function onRequest({ request }) {
+  if (request.method !== 'POST') {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Method not allowed. Use POST to submit the contact form.' }),
+      { status: 405, headers: { 'Content-Type': 'application/json', 'Allow': 'POST' } }
     );
   }
 }
