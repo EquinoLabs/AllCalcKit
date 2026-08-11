@@ -1,177 +1,101 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { POST, ALL } from '../../src/pages/api/contact';
-import { sendContactEmail } from '../../src/lib/email';
+import { onRequestPost } from '../../functions/api/contact';
 import { isValidSupportReference } from '../../src/utils/reference';
 
-// Mock context for Astro APIRoute
-function createAstroContext(req: Request) {
-  return {
-    request: req,
-    params: {},
-    props: {},
-    site: new URL('https://allcalckit.com'),
-    generator: 'Astro',
-    cookies: {} as unknown,
-    redirect: vi.fn(),
-    locals: {},
-    url: new URL(req.url),
-    clientAddress: '127.0.0.1',
-  } as unknown as Parameters<typeof POST>[0];
+function handler(req: Request, env: Record<string, string | undefined> = {}) {
+  return onRequestPost({ request: req, env } as never);
 }
 
-describe('Contact API Endpoint (POST /api/contact)', () => {
+describe('Contact API (Cloudflare Pages Function POST /api/contact)', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
 
-  it('successfully processes valid submissions and returns a 200 with support reference', async () => {
-    const validBody = {
-      name: 'Sarah Jenkins',
-      email: 'sarah@example.com',
-      subject: 'bug',
-      message: 'Found an issue with decimal precision in the percentage calculator.',
-    };
+  it('successfully processes valid submissions and returns 200 with a support reference', async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve(
+        new Response(JSON.stringify({ id: 'msg_123' }), { status: 200 })
+      )
+    );
+    vi.stubGlobal('fetch', fetchMock);
 
     const req = new Request('https://allcalckit.com/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(validBody),
+      body: JSON.stringify({
+        name: 'Sarah Jenkins',
+        email: 'sarah@example.com',
+        subject: 'bug',
+        message: 'Found an issue with decimal precision in the percentage calculator.',
+      }),
     });
 
-    const response = await POST(createAstroContext(req));
+    const response = await handler(req, { RESEND_API_KEY: 'test-key' });
     expect(response.status).toBe(200);
 
     const data = await response.json();
     expect(data.success).toBe(true);
-    expect(data.reference).toBeDefined();
     expect(isValidSupportReference(data.reference)).toBe(true);
     expect(data.message).toBe('Message sent successfully!');
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe('https://api.resend.com/emails');
+    expect(init.headers['Authorization']).toBe('Bearer test-key');
   });
 
-  it('rejects submissions with missing or invalid fields with HTTP 400', async () => {
-    const invalidBody = {
-      name: '',
-      email: 'not-an-email',
-      subject: 'invalid-subject',
-      message: 'short',
-    };
-
+  it('rejects submissions with missing required fields with HTTP 400', async () => {
     const req = new Request('https://allcalckit.com/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(invalidBody),
+      body: JSON.stringify({ name: '', email: 'sarah@example.com', subject: 'bug', message: '' }),
     });
 
-    const response = await POST(createAstroContext(req));
+    const response = await handler(req);
     expect(response.status).toBe(400);
 
     const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.errors).toBeDefined();
+    expect(data.error).toBe('Missing required fields');
     expect(data.errors.name).toBeDefined();
-    expect(data.errors.email).toBeDefined();
-    expect(data.errors.subject).toBeDefined();
     expect(data.errors.message).toBeDefined();
   });
 
-  it('rejects requests with non-JSON Content-Type with HTTP 415', async () => {
-    const req = new Request('https://allcalckit.com/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'raw body text',
-    });
-
-    const response = await POST(createAstroContext(req));
-    expect(response.status).toBe(415);
-
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.error).toContain('Content-Type must be application/json');
-  });
-
-  it('rejects malformed JSON payloads with HTTP 400', async () => {
+  it('rejects bot submissions that fill the honeypot field with HTTP 400', async () => {
     const req = new Request('https://allcalckit.com/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: '{"invalid": json',
+      body: JSON.stringify({
+        name: 'Spam Bot',
+        email: 'bot@spam.com',
+        subject: 'partnership',
+        message: 'Visit our link for commercial partnerships!',
+        honeypot: 'filled-by-bot',
+      }),
     });
 
-    const response = await POST(createAstroContext(req));
+    const response = await handler(req);
     expect(response.status).toBe(400);
-
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.error).toBe('Malformed JSON payload.');
+    expect((await response.json()).error).toBe('Submission rejected.');
   });
 
-  it('rejects payloads exceeding allowable size limit with HTTP 413', async () => {
-    const largeBody = {
-      name: 'John Doe',
-      email: 'john@example.com',
-      subject: 'feedback',
-      message: 'A'.repeat(60 * 1024), // 60 KB
-    };
+  it('returns HTTP 502 when the Resend API rejects the message', async () => {
+    vi.stubGlobal('fetch', vi.fn(() =>
+      Promise.resolve(new Response('unauthorized', { status: 401 }))
+    ));
 
     const req = new Request('https://allcalckit.com/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(largeBody),
+      body: JSON.stringify({
+        name: 'Sarah Jenkins',
+        email: 'sarah@example.com',
+        subject: 'feedback',
+        message: 'A thoroughly complete test message.',
+      }),
     });
 
-    const response = await POST(createAstroContext(req));
-    expect(response.status).toBe(413);
-
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.error).toContain('exceeds allowable limit');
-  });
-
-  it('rejects bot submissions triggering honeypot with HTTP 400', async () => {
-    const botBody = {
-      name: 'Spam Bot',
-      email: 'bot@spam.com',
-      subject: 'partnership',
-      message: 'Visit our link for commercial partnerships!',
-      honeypot: 'filled-by-bot',
-    };
-
-    const req = new Request('https://allcalckit.com/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(botBody),
-    });
-
-    const response = await POST(createAstroContext(req));
-    expect(response.status).toBe(400);
-
-    const data = await response.json();
-    expect(data.success).toBe(false);
-    expect(data.errors.honeypot).toBeDefined();
-  });
-
-  it('returns HTTP 405 for non-POST HTTP methods via ALL handler', async () => {
-    const req = new Request('https://allcalckit.com/api/contact', {
-      method: 'GET',
-    });
-
-    const response = await ALL(createAstroContext(req));
-    expect(response.status).toBe(405);
-    expect(response.headers.get('Allow')).toBe('POST');
-  });
-
-  it('runs sendContactEmail in simulation mode when no API key is set', async () => {
-    const emailResult = await sendContactEmail({
-      reference: 'ACK-20260811-TESTTEST',
-      name: 'Tester',
-      email: 'test@example.com',
-      subjectKey: 'request',
-      subjectLabel: 'New Tool / Calculator Request',
-      message: 'Please add an option price calculator tool.',
-      submittedAt: '2026-08-11 12:00:00 UTC',
-    });
-
-    expect(emailResult.success).toBe(true);
-    expect(emailResult.mode).toBe('simulated');
-    expect(emailResult.messageId).toContain('ACK-20260811-TESTTEST');
+    const response = await handler(req, { RESEND_API_KEY: 'bad-key' });
+    expect(response.status).toBe(502);
+    expect((await response.json()).error).toBe('Failed to send email');
   });
 });
