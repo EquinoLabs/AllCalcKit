@@ -162,11 +162,14 @@ function isTestEnvironment(): boolean {
  * Sends a structured support request email.
  * 
  * Target: support@allcalckit.com
+ * 
+ * Secrets may be supplied via the `env` parameter (Cloudflare Pages Functions
+ * expose them this way); falls back to the process/import.meta environments.
  */
-export async function sendContactEmail(payload: EmailPayload): Promise<SendEmailResult> {
-  const recipient = getEnvVar('CONTACT_EMAIL_TO') || 'support@allcalckit.com';
-  const sender = getEnvVar('CONTACT_EMAIL_FROM') || 'AllCalcKit Support <support@allcalckit.com>';
-  const apiKey = getEnvVar('RESEND_API_KEY');
+export async function sendContactEmail(payload: EmailPayload, env?: Record<string, string | undefined>): Promise<SendEmailResult> {
+  const recipient = env?.CONTACT_EMAIL_TO || getEnvVar('CONTACT_EMAIL_TO') || 'support@allcalckit.com';
+  const sender = env?.CONTACT_EMAIL_FROM || getEnvVar('CONTACT_EMAIL_FROM') || 'AllCalcKit Support <support@allcalckit.com>';
+  const apiKey = env?.RESEND_API_KEY || getEnvVar('RESEND_API_KEY');
   const isTest = isTestEnvironment();
 
   const subject = `[AllCalcKit] Support Request — ${payload.reference}`;
