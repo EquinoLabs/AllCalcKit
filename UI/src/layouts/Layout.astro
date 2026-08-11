@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { CATEGORIES, CALCULATORS } from '../data/calculators';
+import { pwaInfo } from 'virtual:pwa-info';
 
 interface Props {
   title?: string;
@@ -71,6 +72,8 @@ const RELATED_TOOLS = [
 <!doctype html>
 <html lang="en" class="dark">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Google tag (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-7C5VRS3F68"></script>
     <script is:inline>
@@ -82,16 +85,18 @@ const RELATED_TOOLS = [
     </script>
 
     <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-3223615901840567" />
     <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3223615901840567" crossorigin="anonymous"></script>
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#09090b" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CalcKit" />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="CalcKit" />
-    <link rel="manifest" href="/site.webmanifest" />
+    {pwaInfo ? <Fragment set:html={pwaInfo.webManifest.linkTag} /> : <link rel="manifest" href="/site.webmanifest" />}
     <link rel="canonical" href={canonicalUrl} />
     <meta name="generator" content={Astro.generator} />
 
@@ -381,6 +386,22 @@ const RELATED_TOOLS = [
           renderResults(filtered);
         });
       }
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      import { registerSW } from 'virtual:pwa-register';
+
+      registerSW({
+        immediate: true,
+        onRegisteredSW(_swScriptUrl, registration) {
+          if (registration) {
+            setInterval(() => {
+              registration.update();
+            }, 60 * 60 * 1000);
+          }
+        },
+      });
     </script>
   </body>
 </html>
