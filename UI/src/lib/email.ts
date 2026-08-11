@@ -176,16 +176,9 @@ export async function sendContactEmail(payload: EmailPayload, env?: Record<strin
   const text = buildPlainTextEmail(payload);
   const html = buildHtmlEmail(payload);
 
-  // If running in test mode or no API key is configured, operate in safe simulated mode
-  if (isTest || !apiKey) {
-    if (!isTest) {
-      console.log(`[ContactEmail Simulated] No RESEND_API_KEY found. Simulated email to ${recipient} (Ref: ${payload.reference}):\n${text}`);
-    }
-    return {
-      success: true,
-      messageId: `sim_${payload.reference}`,
-      mode: 'simulated',
-    };
+  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
+    console.error(`[ContactEmail Error] No RESEND_API_KEY found. Cannot dispatch email to ${recipient} (Ref: ${payload.reference}).`);
+    throw new Error('Email service not configured: missing RESEND_API_KEY');
   }
 
   // Live transactional delivery via Resend HTTP API

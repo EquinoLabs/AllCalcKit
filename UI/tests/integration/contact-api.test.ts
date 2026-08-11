@@ -9,13 +9,13 @@ vi.mock('../../src/lib/email', async (importOriginal) => {
     ...actual,
     sendContactEmail: vi.fn(async () => ({
       success: true,
-      mode: 'simulated' as const,
-      messageId: 'sim_test',
+      mode: 'live' as const,
+      messageId: 'live_test',
     })),
   };
 });
 
-function handler(req: Request, env: Record<string, string | undefined> = {}) {
+function handler(req: Request, env: Record<string, string | undefined> = { RESEND_API_KEY: 'test-key' }) {
   return onRequestPost({ request: req, env } as never);
 }
 
@@ -27,6 +27,37 @@ describe('Contact API (Cloudflare Pages Function POST /api/contact)', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it('fails with HTTP 500 immediately if RESEND_API_KEY is missing or empty', async () => {
+    const payload = {
+      name: 'Sarah Jenkins',
+      email: 'sarah@example.com',
+      subject: 'bug',
+      message: 'Found an issue with decimal precision in the percentage calculator.',
+    };
+
+    const req = new Request('https://allcalckit.com/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    // Test with completely empty env
+    const responseEmpty = await handler(req, {});
+    expect(responseEmpty.status).toBe(500);
+    const dataEmpty = await responseEmpty.json();
+    expect(dataEmpty.success).toBe(false);
+    expect(dataEmpty.error).toBe('Email service not configured. Please contact support@allcalckit.com directly.');
+
+    // Test with whitespace-only env
+    const responseWhitespace = await handler(req, { RESEND_API_KEY: '   ' });
+    expect(responseWhitespace.status).toBe(500);
+    const dataWhitespace = await responseWhitespace.json();
+    expect(dataWhitespace.success).toBe(false);
+    expect(dataWhitespace.error).toBe('Email service not configured. Please contact support@allcalckit.com directly.');
+
+    expect(sendContactEmail).not.toHaveBeenCalled();
   });
 
   it('processes a valid submission: returns 200 + reference, passes reference into the email payload, and forwards env', async () => {
@@ -58,7 +89,7 @@ describe('Contact API (Cloudflare Pages Function POST /api/contact)', () => {
     expect(emailPayload.subjectLabel).toBe('Report a Bug or Calculation Issue');
     expect(envArg).toMatchObject({ RESEND_API_KEY: 'test-key' });
 
-    // Bug #1 regression: the reference must appear inside the email body itself.
+    // Reference must appear inside the email body itself.
     expect(buildPlainTextEmail(emailPayload)).toContain(`Support Reference:\n${data.reference}`);
     expect(buildPlainTextEmail(emailPayload)).toContain('Sarah Jenkins');
   });
