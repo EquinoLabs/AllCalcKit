@@ -224,7 +224,10 @@ const CURRENCIES = [
       const inUSD = amt / rateFromUSD;
       const converted = inUSD * rateToUSD;
 
-      const formattedResult = converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const fromLocale = fromCode === 'INR' ? 'en-IN' : undefined;
+      const toLocale = toCode === 'INR' ? 'en-IN' : undefined;
+
+      const formattedResult = converted.toLocaleString(toLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       resultInput.value = formattedResult;
 
       if (rateInfo) {
@@ -232,10 +235,10 @@ const CURRENCIES = [
       }
 
       // Update Live Explain Calculation
-      if (expAmount) expAmount.textContent = `${amt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${fromCode}`;
+      if (expAmount) expAmount.textContent = `${amt.toLocaleString(fromLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${fromCode}`;
       if (expRate) expRate.textContent = `1 ${fromCode} = ${singleRate.toFixed(4)} ${toCode}`;
       if (expInvRate) expInvRate.textContent = `1 ${toCode} = ${invRate.toFixed(4)} ${fromCode}`;
-      if (expSubAmt) expSubAmt.textContent = amt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (expSubAmt) expSubAmt.textContent = amt.toLocaleString(fromLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       if (expSubRate) expSubRate.textContent = singleRate.toFixed(4);
       if (expFinalVal) expFinalVal.textContent = `${formattedResult} ${toCode}`;
     }

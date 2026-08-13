@@ -117,6 +117,14 @@ export const CALCULATORS: CalculatorMeta[] = [
       'View final discounted price and exact money saved.'
     ]
   },
+  {
+    id: 'rent-vs-buy', name: 'Rent vs Buy Calculator', category: 'Currency & Finance', categoryId: 'finance', description: 'Compare true long-term costs of renting vs buying a home with breakeven analysis', icon: 'home', popular: true, phase: 2, url: '/finance/rent-vs-buy', tags: ['rent vs buy', 'mortgage vs rent', 'home buying', 'real estate', 'breakeven', 'property'],
+    howToUse: [
+      'Enter Monthly Rent and target Home Purchase Price.',
+      'Adjust Down Payment %, Mortgage Interest Rate, Property Tax, and Maintenance assumptions.',
+      'Slide the Time Horizon (years) to see total net costs, overall savings, and your exact Breakeven Year.'
+    ]
+  },
 
   // 3. Health & Fitness
   {

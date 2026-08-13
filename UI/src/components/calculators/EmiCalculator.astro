@@ -30,6 +30,10 @@
           <span id="emi-amount-val" class="font-mono font-bold text-black dark:text-white">100,000</span>
         </div>
         <input id="emi-amount" type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
+        <div class="flex justify-between text-[10px] font-mono text-neutral-400 mt-1">
+          <span id="emi-min-hint">Min: $10,000</span>
+          <span id="emi-max-hint">Max: $1,000,000</span>
+        </div>
       </div>
 
       <!-- Interest Rate -->
@@ -167,6 +171,9 @@
     const rateVal = document.getElementById('emi-rate-val');
     const tenureVal = document.getElementById('emi-tenure-val');
 
+    const minHint = document.getElementById('emi-min-hint');
+    const maxHint = document.getElementById('emi-max-hint');
+
     const monthlyResult = document.getElementById('emi-monthly-result');
     const totalInterestEl = document.getElementById('emi-total-interest');
     const totalPayableEl = document.getElementById('emi-total-payable');
@@ -204,6 +211,18 @@
       return localStorage.getItem('ack_currency') || 'USD';
     }
 
+    function formatIndianCompact(num) {
+      if (num >= 10000000) {
+        const cr = (num / 10000000).toFixed(2).replace(/\.00$/, '');
+        return `${cr} Cr`;
+      }
+      if (num >= 100000) {
+        const l = (num / 100000).toFixed(2).replace(/\.00$/, '');
+        return `${l} Lakh`;
+      }
+      return '';
+    }
+
     function formatMoney(num) {
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
@@ -218,6 +237,39 @@
       return `${cfg.symbol}${formatted}`;
     }
 
+    let lastCurrency = getCurrency();
+
+    function updateSliderForCurrency() {
+      const curr = getCurrency();
+      if (!amountInput) return;
+
+      if (curr === 'INR') {
+        amountInput.min = '50000';
+        amountInput.max = '20000000';
+        amountInput.step = '50000';
+        if (minHint) minHint.textContent = 'Min: ₹50,000 (50k)';
+        if (maxHint) maxHint.textContent = 'Max: ₹2,00,00,000 (2 Cr)';
+        
+        // If switched from non-INR or initial value is default $100k, set natural Indian home loan default ₹25 Lakhs
+        if (lastCurrency !== 'INR' && parseFloat(amountInput.value) <= 1000000) {
+          amountInput.value = '2500000';
+        }
+      } else {
+        amountInput.min = '10000';
+        amountInput.max = '1000000';
+        amountInput.step = '5000';
+        const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+        if (minHint) minHint.textContent = `Min: ${cfg.symbol}10,000`;
+        if (maxHint) maxHint.textContent = `Max: ${cfg.symbol}1,000,000`;
+        
+        // If switched from INR and value is large Indian number, reset to standard USD default $100k
+        if (lastCurrency === 'INR' && parseFloat(amountInput.value) > 1000000) {
+          amountInput.value = '100000';
+        }
+      }
+      lastCurrency = curr;
+    }
+
     function calculateEMI() {
       if (!amountInput || !rateInput || !tenureInput) return;
 
@@ -228,7 +280,16 @@
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
 
-      if (amountVal) amountVal.textContent = Math.round(P).toLocaleString(cfg.locale);
+      let amountDisplay = Math.round(P).toLocaleString(cfg.locale);
+      if (curr === 'INR') {
+        const compact = formatIndianCompact(P);
+        if (compact) {
+          amountDisplay = `₹${amountDisplay} (${compact})`;
+        } else {
+          amountDisplay = `₹${amountDisplay}`;
+        }
+      }
+      if (amountVal) amountVal.textContent = amountDisplay;
       if (rateVal) rateVal.textContent = annualRate.toFixed(1) + '%';
       if (tenureVal) tenureVal.textContent = years + (years === 1 ? ' Year' : ' Years');
 
@@ -304,6 +365,7 @@
 
     window.addEventListener('ack_currency_change', (e) => {
       selects.forEach(sel => sel.value = e.detail);
+      updateSliderForCurrency();
       calculateEMI();
     });
 
@@ -311,6 +373,7 @@
     rateInput.addEventListener('input', calculateEMI);
     tenureInput.addEventListener('input', calculateEMI);
 
+    updateSliderForCurrency();
     calculateEMI();
   })();
 </script>

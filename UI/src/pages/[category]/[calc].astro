@@ -17,6 +17,7 @@ import CompoundInterestCalculator from '../../components/calculators/CompoundInt
 import TaxGstCalculator from '../../components/calculators/TaxGstCalculator.astro';
 import TipSplitCalculator from '../../components/calculators/TipSplitCalculator.astro';
 import DiscountCalculator from '../../components/calculators/DiscountCalculator.astro';
+import RentVsBuyCalculator from '../../components/calculators/RentVsBuyCalculator.astro';
 
 import BmrCalculator from '../../components/calculators/BmrCalculator.astro';
 import TdeeCalculator from '../../components/calculators/TdeeCalculator.astro';
@@ -171,6 +172,7 @@ const volumeUnits = [
       {calc.id === 'tax-gst' && <TaxGstCalculator />}
       {calc.id === 'tip-split' && <TipSplitCalculator />}
       {calc.id === 'discount' && <DiscountCalculator />}
+      {calc.id === 'rent-vs-buy' && <RentVsBuyCalculator />}
 
       {calc.id === 'bmr' && <BmrCalculator />}
       {calc.id === 'tdee' && <TdeeCalculator />}

@@ -22,8 +22,9 @@
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="space-y-4">
       <div>
-        <label for="disc-price" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Original Price</label>
-        <input id="disc-price" type="number" value="250" min="0" step="any" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-rose-500 tabular-nums" />
+        <label for="disc-price" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Original Price / MRP</label>
+        <input id="disc-price" type="number" value="2499" min="0" step="10" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-rose-500 tabular-nums" />
+        <span id="disc-price-hint" class="text-[11px] font-mono text-neutral-500 mt-1 block"></span>
       </div>
 
       <div>
@@ -39,13 +40,14 @@
 
       <!-- Quick Preset Buttons -->
       <div>
-        <span class="block text-[11px] font-mono text-neutral-600 dark:text-neutral-400 font-semibold mb-1.5">Quick Presets:</span>
-        <div class="flex flex-wrap gap-2">
-          <button type="button" data-disc="10" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">10% OFF</button>
-          <button type="button" data-disc="20" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">20% OFF</button>
-          <button type="button" data-disc="25" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">25% OFF</button>
-          <button type="button" data-disc="33" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">33% OFF</button>
-          <button type="button" data-disc="50" class="disc-preset-btn cursor-pointer px-3 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all duration-150 shadow-2xs">50% OFF</button>
+        <span class="block text-[11px] font-mono text-neutral-600 dark:text-neutral-400 font-semibold mb-1.5">Quick Sale Presets:</span>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" data-disc="10" class="disc-preset-btn cursor-pointer px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all shadow-2xs">10%</button>
+          <button type="button" data-disc="20" class="disc-preset-btn cursor-pointer px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all shadow-2xs">20%</button>
+          <button type="button" data-disc="30" class="disc-preset-btn cursor-pointer px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all shadow-2xs">30%</button>
+          <button type="button" data-disc="40" class="disc-preset-btn cursor-pointer px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all shadow-2xs">40%</button>
+          <button type="button" data-disc="50" class="disc-preset-btn cursor-pointer px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all shadow-2xs">50%</button>
+          <button type="button" data-disc="70" class="disc-preset-btn cursor-pointer px-2.5 py-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-bold text-black dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:scale-95 transition-all shadow-2xs">70%</button>
         </div>
       </div>
     </div>
@@ -58,7 +60,7 @@
 
       <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
         <div>
-          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Savings</span>
+          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Money Saved</span>
           <span id="disc-savings" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$0</span>
         </div>
         <div>
@@ -68,7 +70,7 @@
       </div>
 
       <div class="text-xs font-mono text-neutral-500 leading-relaxed">
-        Calculates exact deal savings for smart shopping.
+        Calculates exact bargain savings across festive deals, sales, and retail MRP discounts.
       </div>
     </div>
   </div>
@@ -79,6 +81,7 @@
     const priceInp = document.getElementById('disc-price');
     const pctRange = document.getElementById('disc-pct');
     const pctInp = document.getElementById('disc-pct-input');
+    const priceHint = document.getElementById('disc-price-hint');
 
     const finalPriceEl = document.getElementById('disc-final-price');
     const savingsEl = document.getElementById('disc-savings');
@@ -104,13 +107,35 @@
       return `${cfg.symbol}${formatted}`;
     }
 
+    let lastCurrency = getCurrency();
+
+    function updateInputsForCurrency() {
+      const curr = getCurrency();
+      if (!priceInp) return;
+
+      if (curr === 'INR') {
+        priceInp.step = '50';
+        if (lastCurrency !== 'INR' || parseFloat(priceInp.value) < 500) {
+          priceInp.value = '2499';
+        }
+        if (priceHint) priceHint.textContent = 'Typical MRP: ₹999 – ₹9,999';
+      } else {
+        priceInp.step = '5';
+        if (lastCurrency === 'INR' && parseFloat(priceInp.value) > 1000) {
+          priceInp.value = '150';
+        }
+        if (priceHint) priceHint.textContent = 'Typical price: $25 – $500';
+      }
+      lastCurrency = curr;
+    }
+
     function updateActivePresets(currentVal) {
       presets.forEach(p => {
         if (parseFloat(p.getAttribute('data-disc')) === parseFloat(currentVal)) {
-          p.classList.add('bg-black', 'text-white', 'border-black', 'dark:bg-neutral-700', 'dark:text-white', 'dark:border-neutral-500');
+          p.classList.add('bg-black', 'text-white', 'border-black', 'dark:bg-rose-600', 'dark:text-white', 'dark:border-rose-500');
           p.classList.remove('bg-neutral-100', 'dark:bg-neutral-800', 'text-black', 'dark:text-neutral-300');
         } else {
-          p.classList.remove('bg-black', 'text-white', 'border-black', 'dark:bg-neutral-700', 'dark:text-white', 'dark:border-neutral-500');
+          p.classList.remove('bg-black', 'text-white', 'border-black', 'dark:bg-rose-600', 'dark:text-white', 'dark:border-rose-500');
           p.classList.add('bg-neutral-100', 'dark:bg-neutral-800', 'text-black', 'dark:text-neutral-300');
         }
       });
@@ -160,10 +185,12 @@
 
     window.addEventListener('ack_currency_change', (e) => {
       selects.forEach(sel => sel.value = e.detail);
+      updateInputsForCurrency();
       calcDisc();
     });
 
     priceInp.addEventListener('input', calcDisc);
+    updateInputsForCurrency();
     calcDisc();
   })();
 </script>

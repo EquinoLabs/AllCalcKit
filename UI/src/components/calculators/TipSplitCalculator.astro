@@ -23,20 +23,21 @@
     <div class="space-y-4">
       <div>
         <label for="tip-bill" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Total Bill Amount</label>
-        <input id="tip-bill" type="number" value="120" min="0" step="any" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums" />
+        <input id="tip-bill" type="number" value="1800" min="0" step="10" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums" />
+        <span id="tip-bill-hint" class="text-[11px] font-mono text-neutral-500 mt-1 block"></span>
       </div>
 
       <div>
         <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label for="tip-pct" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Tip Percentage</label>
-          <span id="tip-pct-val" class="font-mono font-bold text-black dark:text-white">15%</span>
+          <label for="tip-pct" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Tip / Gratuity Percentage</label>
+          <span id="tip-pct-val" class="font-mono font-bold text-black dark:text-white">10%</span>
         </div>
-        <input id="tip-pct" type="range" min="0" max="40" step="1" value="15" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+        <input id="tip-pct" type="range" min="0" max="30" step="1" value="10" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
       </div>
 
       <div>
         <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label for="tip-people" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Number of People</label>
+          <label for="tip-people" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Number of Diners / People</label>
           <span id="tip-people-val" class="font-mono font-bold text-black dark:text-white">3 People</span>
         </div>
         <input id="tip-people" type="range" min="1" max="20" step="1" value="3" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
@@ -61,7 +62,7 @@
       </div>
 
       <div class="text-xs font-mono text-neutral-500 leading-relaxed">
-        Effortless dining bill splitting & tip computation.
+        Effortless dining bill splitting, group sharing & gratuity computation.
       </div>
     </div>
   </div>
@@ -142,6 +143,7 @@
     const billInp = document.getElementById('tip-bill');
     const pctInp = document.getElementById('tip-pct');
     const pplInp = document.getElementById('tip-people');
+    const billHint = document.getElementById('tip-bill-hint');
 
     const pctVal = document.getElementById('tip-pct-val');
     const pplVal = document.getElementById('tip-people-val');
@@ -158,7 +160,7 @@
     const expTotVal = document.getElementById('exp-tip-tot-val');
     const expSplitFormula = document.getElementById('exp-tip-split-formula');
     const expPerVal = document.getElementById('exp-tip-per-val');
-    const expTipPerson = document.getElementById('exp-tip-tip-person');
+    const expTipPerPerson = document.getElementById('exp-tip-tip-person');
 
     const CURRENCY_CONFIGS = {
       USD: { symbol: '$', locale: 'en-US' },
@@ -178,40 +180,59 @@
       return `${cfg.symbol}${formatted}`;
     }
 
+    let lastCurrency = getCurrency();
+
+    function updateInputsForCurrency() {
+      const curr = getCurrency();
+      if (!billInp) return;
+
+      if (curr === 'INR') {
+        billInp.step = '50';
+        if (lastCurrency !== 'INR' || parseFloat(billInp.value) < 300) {
+          billInp.value = '1800';
+          if (pctInp) pctInp.value = '10';
+        }
+        if (billHint) billHint.textContent = 'Typical dining bill: ₹800 – ₹5,000';
+      } else {
+        billInp.step = '5';
+        if (lastCurrency === 'INR' && parseFloat(billInp.value) > 500) {
+          billInp.value = '120';
+          if (pctInp) pctInp.value = '15';
+        }
+        if (billHint) billHint.textContent = 'Typical restaurant bill: $40 – $300';
+      }
+      lastCurrency = curr;
+    }
+
     function calcTip() {
       if (!billInp || !pctInp || !pplInp) return;
       const bill = parseFloat(billInp.value) || 0;
       const pct = parseFloat(pctInp.value) || 0;
-      const ppl = parseInt(pplInp.value) || 1;
+      const ppl = Math.max(1, parseInt(pplInp.value, 10) || 1);
 
       if (pctVal) pctVal.textContent = pct + '%';
       if (pplVal) pplVal.textContent = ppl + (ppl === 1 ? ' Person' : ' People');
 
-      const totalTip = bill * (pct / 100);
-      const grandTotal = bill + totalTip;
+      const tipTotal = bill * (pct / 100);
+      const totalBill = bill + tipTotal;
+      const perPerson = totalBill / ppl;
+      const tipPerPerson = tipTotal / ppl;
 
-      const totalPerPerson = ppl > 0 ? grandTotal / ppl : grandTotal;
-      const tipPerPerson = ppl > 0 ? totalTip / ppl : totalTip;
+      if (perPersonEl) perPersonEl.textContent = formatMoney(perPerson);
+      if (totalTipEl) totalTipEl.textContent = formatMoney(tipTotal);
+      if (tipPersonEl) tipPersonEl.textContent = formatMoney(tipPerPerson);
 
-      const formattedPerPerson = formatMoney(totalPerPerson);
-      const formattedTotalTip = formatMoney(totalTip);
-      const formattedGrandTotal = formatMoney(grandTotal);
-      const formattedTipPerPerson = formatMoney(tipPerPerson);
-      const formattedBill = formatMoney(bill);
+      // Live Explain Working
+      if (expTipFormula) expTipFormula.textContent = `${formatMoney(bill)} × (${pct} ÷ 100)`;
+      if (expTipSub) expTipSub.textContent = `${formatMoney(bill)} × ${(pct / 100).toFixed(2)}`;
+      if (expTipVal) expTipVal.textContent = formatMoney(tipTotal);
 
-      if (perPersonEl) perPersonEl.textContent = formattedPerPerson;
-      if (totalTipEl) totalTipEl.textContent = formattedTotalTip;
-      if (tipPersonEl) tipPersonEl.textContent = formattedTipPerPerson;
+      if (expTotFormula) expTotFormula.textContent = `${formatMoney(bill)} + ${formatMoney(tipTotal)}`;
+      if (expTotVal) expTotVal.textContent = formatMoney(totalBill);
 
-      // Update Live Explain Calculation
-      if (expTipFormula) expTipFormula.textContent = `${formattedBill} × (${pct} ÷ 100)`;
-      if (expTipSub) expTipSub.textContent = `${formattedBill} × ${(pct / 100).toFixed(2)}`;
-      if (expTipVal) expTipVal.textContent = formattedTotalTip;
-      if (expTotFormula) expTotFormula.textContent = `${formattedBill} + ${formattedTotalTip}`;
-      if (expTotVal) expTotVal.textContent = formattedGrandTotal;
-      if (expSplitFormula) expSplitFormula.textContent = `${formattedGrandTotal} ÷ ${ppl} ${ppl === 1 ? 'person' : 'people'}`;
-      if (expPerVal) expPerVal.textContent = `${formattedPerPerson} / person`;
-      if (expTipPerson) expTipPerson.textContent = formattedTipPerPerson;
+      if (expSplitFormula) expSplitFormula.textContent = `${formatMoney(totalBill)} ÷ ${ppl} ${ppl === 1 ? 'person' : 'people'}`;
+      if (expPerVal) expPerVal.textContent = `${formatMoney(perPerson)} / person`;
+      if (expTipPerPerson) expTipPerPerson.textContent = formatMoney(tipPerPerson);
     }
 
     const selects = document.querySelectorAll('.ack-currency-select');
@@ -226,10 +247,15 @@
 
     window.addEventListener('ack_currency_change', (e) => {
       selects.forEach(sel => sel.value = e.detail);
+      updateInputsForCurrency();
       calcTip();
     });
 
-    [billInp, pctInp, pplInp].forEach(el => el.addEventListener('input', calcTip));
+    billInp.addEventListener('input', calcTip);
+    pctInp.addEventListener('input', calcTip);
+    pplInp.addEventListener('input', calcTip);
+
+    updateInputsForCurrency();
     calcTip();
   })();
 </script>

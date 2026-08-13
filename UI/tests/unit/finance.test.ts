@@ -6,9 +6,12 @@ import {
   calculateFD,
   calculateRD,
   calculateTaxGST,
+  calculateTaxGSTWithSplit,
   calculateDiscount,
   calculateTipSplit,
-  convertCurrency
+  convertCurrency,
+  formatIndianCurrency,
+  formatIndianCompact
 } from '../../src/lib/calculators/finance';
 
 describe('Financial Calculators Engine', () => {
@@ -214,6 +217,50 @@ describe('Financial Calculators Engine', () => {
 
     it('handles zero amount safely', () => {
       expect(convertCurrency(0, 1.0, 0.92)).toBe(0);
+    });
+  });
+
+  describe('India-Specific Monetary Formatting & Regional Slabs', () => {
+    it('formats numbers in Indian numbering system (Lakhs and Crores)', () => {
+      expect(formatIndianCurrency(100000)).toBe('₹1,00,000');
+      expect(formatIndianCurrency(2500000)).toBe('₹25,00,000');
+      expect(formatIndianCurrency(10000000)).toBe('₹1,00,00,000');
+      expect(formatIndianCurrency(15000000, false)).toBe('1,50,00,000');
+    });
+
+    it('generates clean compact Indian labels (Lakhs / Crores / k)', () => {
+      expect(formatIndianCompact(5000)).toBe('5k');
+      expect(formatIndianCompact(100000)).toBe('1 Lakh');
+      expect(formatIndianCompact(2500000)).toBe('25 Lakh');
+      expect(formatIndianCompact(15000000)).toBe('1.5 Cr');
+      expect(formatIndianCompact(20000000)).toBe('2 Cr');
+    });
+
+    it('calculates Indian GST invoice split (CGST 9% + SGST 9% on 18% slab)', () => {
+      const res = calculateTaxGSTWithSplit(10000, 18, 'add');
+      expect(res.totalAmount).toBe(11800);
+      expect(res.netAmount).toBe(10000);
+      expect(res.taxAmount).toBe(1800);
+      expect(res.cgstRate).toBe(9);
+      expect(res.sgstRate).toBe(9);
+      expect(res.cgstAmount).toBe(900);
+      expect(res.sgstAmount).toBe(900);
+    });
+
+    it('calculates Indian home loan benchmark (₹25 Lakhs @ 8.5% for 20 years)', () => {
+      const res = calculateEMI(2500000, 8.5, 20);
+      // 25L at 8.5% for 20 years -> monthly EMI is ~₹21,695.58
+      expect(res.monthlyEmi).toBeCloseTo(21695.58, 1);
+      expect(res.totalPayable).toBeCloseTo(5206939.40, 0);
+      expect(res.totalInterest).toBeCloseTo(2706939.40, 0);
+    });
+
+    it('calculates Indian dining bill split (₹1,800 with 10% tip among 3 people)', () => {
+      const res = calculateTipSplit(1800, 10, 3);
+      expect(res.totalTip).toBe(180);
+      expect(res.totalBill).toBe(1980);
+      expect(res.perPersonTotal).toBe(660);
+      expect(res.tipPerPerson).toBe(60);
     });
   });
 });
