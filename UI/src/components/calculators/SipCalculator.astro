@@ -187,9 +187,7 @@
       let monthlyDisplay = Math.round(P).toLocaleString(cfg.locale);
       if (curr === 'INR' && P >= 100000) {
         const compact = (P / 100000).toFixed(1).replace(/\.0$/, '');
-        monthlyDisplay = `₹${monthlyDisplay} (${compact}L/mo)`;
-      } else {
-        monthlyDisplay = `${cfg.symbol}${monthlyDisplay}`;
+        monthlyDisplay = `${monthlyDisplay} (${compact}L/mo)`;
       }
 
       if (monthlyVal) monthlyVal.textContent = monthlyDisplay;

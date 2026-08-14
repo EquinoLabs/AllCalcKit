@@ -26,6 +26,19 @@ test.describe('E2E — Contact Us Form & Support Workflow', () => {
   });
 
   test('Valid submission displays support reference and success confirmation', async ({ page }) => {
+    // Intercept /api/contact with standard Cloudflare Pages Function success response
+    await page.route('/api/contact', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          reference: 'ACK-20260814-K9X2M4P7',
+          message: 'Message sent successfully!'
+        })
+      });
+    });
+
     // Fill out form
     await page.fill('#contact-name', 'Sarah Jenkins');
     await page.fill('#contact-email', 'sarah.jenkins@example.com');

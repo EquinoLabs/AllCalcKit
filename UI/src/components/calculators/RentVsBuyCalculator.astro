@@ -1,4 +1,5 @@
 ---
+import ShareResult from '../ShareResult.astro';
 ---
 
 <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
@@ -125,79 +126,98 @@
     </div>
   </div>
 
-  <!-- Simplified, Immediate Recommendation Banner -->
-  <div id="rvb-verdict-card" class="mt-6 p-5 sm:p-6 rounded-2xl border transition-all bg-emerald-500/10 border-emerald-500/30 text-neutral-900 dark:text-white">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div class="space-y-2">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span id="rvb-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-emerald-600 text-white">
-            Buying is Cheaper
-          </span>
-          <span id="rvb-breakeven-pill" class="px-3 py-0.5 rounded-full text-xs font-mono font-semibold bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200">
-            Buying becomes financially superior after Year 4.
-          </span>
-        </div>
-        <h4 id="rvb-headline" class="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 dark:text-white">
-          Buying builds ₹0 more net wealth.
-        </h4>
-        <p id="rvb-subheadline" class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">
-          Unrecoverable cost to buy is ₹0 vs. ₹0 to rent over 15 years.
-        </p>
-      </div>
+  <!-- Simplified Primary Result Hero Banner -->
+  <div id="rvb-verdict-card" class="mt-6 sm:mt-8 p-5 sm:p-6 rounded-2xl border transition-all bg-emerald-500/10 border-emerald-500/30 text-neutral-900 dark:text-white space-y-4">
+    <div>
+      <span id="rvb-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-emerald-600 text-white inline-block">
+        Buying is Cheaper
+      </span>
+    </div>
+    
+    <div class="space-y-1.5 max-w-3xl">
+      <h4 id="rvb-headline" class="text-2xl sm:text-3xl font-black font-mono tracking-tight text-neutral-900 dark:text-white leading-tight">
+        Buying builds ₹0 more net wealth.
+      </h4>
+      <p id="rvb-subheadline" class="text-xs sm:text-sm font-mono text-neutral-600 dark:text-neutral-400">
+        Unrecoverable cost to buy is ₹0 vs. ₹0 to rent over 15 years.
+      </p>
+    </div>
 
-      <div class="shrink-0 flex sm:flex-col justify-between sm:text-right border-t sm:border-t-0 pt-3 sm:pt-0 border-neutral-200 dark:border-neutral-800">
-        <div>
-          <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block font-semibold">Estimated Monthly Outflow (EMI)</span>
-          <span id="rvb-monthly-mortgage" class="font-mono font-black text-xl text-neutral-900 dark:text-white tabular-nums">₹52,069/mo</span>
-        </div>
-        <div class="sm:mt-2">
-          <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block font-semibold">Starting Monthly Rent</span>
-          <span id="rvb-monthly-rent-display" class="font-mono font-bold text-sm text-blue-600 dark:text-blue-400 tabular-nums">₹25,000/mo</span>
-        </div>
+    <div class="pt-3 border-t border-emerald-500/20 flex items-center justify-between flex-wrap gap-3">
+      <div class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">
+        Verdict based on total unrecoverable costs & capital net worth.
       </div>
+      <ShareResult id="rvb-share-btn" calculatorTitle="Rent vs. Buy Decision" />
     </div>
   </div>
 
-  <!-- Detailed Cost Breakdown: 2 Cards (Positive Gains & Cost Terminology) -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-    <!-- Renting Outcome Card -->
-    <div class="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-3">
-      <div class="flex items-center justify-between">
-        <span id="rvb-net-rent-title" class="font-bold text-xs font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider">Option A: Renting Unrecoverable Cost</span>
-        <span id="rvb-net-rent" class="font-mono font-bold text-base text-black dark:text-white tabular-nums">₹0</span>
+  <!-- Key Supporting Metric Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-5 sm:mt-6">
+    <!-- Card 1: Monthly Cash Outflow Context -->
+    <div class="p-5 rounded-2xl bg-neutral-50/90 dark:bg-neutral-950/70 border border-neutral-200/90 dark:border-neutral-800/90 flex flex-col justify-between space-y-4 shadow-2xs">
+      <div>
+        <div class="flex items-center gap-1.5 mb-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600"></span>
+          <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Monthly Cash Outflow</div>
+        </div>
+        <div class="space-y-2.5 font-mono">
+          <div class="flex items-baseline justify-between">
+            <span class="text-xs text-neutral-600 dark:text-neutral-400">Buying Outflow (EMI)</span>
+            <span id="rvb-monthly-mortgage" class="font-black text-base sm:text-lg text-neutral-900 dark:text-white tabular-nums">₹52,069/mo</span>
+          </div>
+          <div class="flex items-baseline justify-between">
+            <span class="text-xs text-neutral-600 dark:text-neutral-400">Starting Monthly Rent</span>
+            <span id="rvb-monthly-rent-display" class="font-bold text-xs sm:text-sm text-blue-600 dark:text-blue-400 tabular-nums">₹25,000/mo</span>
+          </div>
+        </div>
       </div>
-      <div class="space-y-1.5 text-xs font-mono border-t border-neutral-200 dark:border-neutral-800 pt-2 text-neutral-600 dark:text-neutral-400">
-        <div class="flex justify-between">
+      <div id="rvb-breakeven-pill" class="text-xs text-neutral-600 dark:text-neutral-400 pt-3 border-t border-neutral-200 dark:border-neutral-800 leading-relaxed font-mono">
+        Buying becomes financially superior after Year 4.
+      </div>
+    </div>
+
+    <!-- Card 2: Option A: Renting Breakdown -->
+    <div class="p-5 rounded-2xl bg-blue-500/5 dark:bg-blue-950/20 border border-blue-500/20 dark:border-blue-900/40 flex flex-col justify-between space-y-3 shadow-2xs">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span id="rvb-net-rent-title" class="font-bold text-xs font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider">Option A: Renting Unrecoverable Cost</span>
+        </div>
+        <span id="rvb-net-rent" class="font-mono font-black text-xl sm:text-2xl text-black dark:text-white tabular-nums block">₹0</span>
+      </div>
+      <div class="space-y-1.5 text-xs font-mono border-t border-blue-500/20 dark:border-blue-900/30 pt-2.5 text-neutral-600 dark:text-neutral-400">
+        <div class="flex justify-between py-0.5">
           <span>Cumulative Rent Paid</span>
           <span id="rvb-tot-rent" class="font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">₹0</span>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between py-0.5">
           <span>Misc. Housing Costs</span>
           <span id="rvb-tot-rent-ins" class="font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">₹0</span>
         </div>
-        <div class="flex justify-between text-emerald-600 dark:text-emerald-400">
+        <div class="flex justify-between py-0.5 text-emerald-600 dark:text-emerald-400 font-semibold">
           <span>Invested Capital Returns</span>
           <span id="rvb-renter-inv-gain" class="font-bold tabular-nums">₹0</span>
         </div>
       </div>
     </div>
 
-    <!-- Buying Outcome Card -->
-    <div class="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-3">
-      <div class="flex items-center justify-between">
-        <span id="rvb-net-buy-title" class="font-bold text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Option B: Housing Profit After Sale</span>
-        <span id="rvb-net-buy" class="font-mono font-bold text-base text-black dark:text-white tabular-nums">₹0</span>
+    <!-- Card 3: Option B: Buying Breakdown -->
+    <div class="p-5 rounded-2xl bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/20 dark:border-emerald-900/40 flex flex-col justify-between space-y-3 shadow-2xs">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span id="rvb-net-buy-title" class="font-bold text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Option B: Housing Profit After Sale</span>
+        </div>
+        <span id="rvb-net-buy" class="font-mono font-black text-xl sm:text-2xl text-black dark:text-white tabular-nums block">₹0</span>
       </div>
-      <div class="space-y-1.5 text-xs font-mono border-t border-neutral-200 dark:border-neutral-800 pt-2 text-neutral-600 dark:text-neutral-400">
-        <div class="flex justify-between">
+      <div class="space-y-1.5 text-xs font-mono border-t border-emerald-500/20 dark:border-emerald-900/30 pt-2.5 text-neutral-600 dark:text-neutral-400">
+        <div class="flex justify-between py-0.5">
           <span>Total Buying Outflows</span>
           <span id="rvb-tot-buy-outflows" class="font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">₹0</span>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between py-0.5">
           <span>Future Home Valuation</span>
           <span id="rvb-future-home-val" class="font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">₹0</span>
         </div>
-        <div class="flex justify-between text-emerald-600 dark:text-emerald-400">
+        <div class="flex justify-between py-0.5 text-emerald-600 dark:text-emerald-400 font-semibold">
           <span>Net Sale Proceeds (Recovered)</span>
           <span id="rvb-net-sale-proceeds" class="font-bold tabular-nums">₹0</span>
         </div>
@@ -205,9 +225,9 @@
     </div>
   </div>
 
-  <!-- Year-by-Year Comparison Table (Collapsible) -->
-  <details id="rvb-table-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 mt-6 shadow-xs">
-    <summary class="flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
+  <!-- Year-by-Year Financial Progression Table -->
+  <div class="mt-5 sm:mt-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs overflow-hidden">
+    <div class="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-4">
       <div class="flex items-center gap-2.5">
         <span class="w-7 h-7 rounded-lg bg-blue-500/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,23 +235,16 @@
           </svg>
         </span>
         <div>
-          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block sm:inline-block sm:mr-2">Yearly Breakdown</span>
-          <span class="font-bold text-neutral-900 dark:text-neutral-100">Year-by-Year Financial Comparison (1–30 Years)</span>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">Yearly Breakdown</span>
+          <span class="font-bold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100">Year-by-Year Financial Progression (1–30 Years)</span>
         </div>
       </div>
-      <div class="flex items-center gap-1.5 shrink-0">
-        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 group-open:hidden">Show Table</span>
-        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hidden group-open:inline">Hide Table</span>
-        <svg data-icon class="w-4 h-4 text-neutral-400 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-    </summary>
+    </div>
 
-    <div class="mt-4 pt-4 border-t border-neutral-200/70 dark:border-neutral-800/80 overflow-x-auto">
+    <div id="rvb-table-wrapper" class="overflow-x-auto hidden">
       <table class="w-full text-left font-mono text-xs border-collapse min-w-[520px]">
         <thead>
-          <tr class="border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-semibold">
+          <tr class="border-b border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider font-semibold bg-neutral-100/70 dark:bg-neutral-800/70">
             <th class="py-2.5 px-3">Year</th>
             <th class="py-2.5 px-3">Renting</th>
             <th class="py-2.5 px-3">Buying</th>
@@ -240,11 +253,22 @@
           </tr>
         </thead>
         <tbody id="rvb-table-body" class="divide-y divide-neutral-200/60 dark:divide-neutral-800/60 text-neutral-700 dark:text-neutral-300">
-          <!-- Populated dynamically via JS -->
+          <!-- Populated dynamically via JS upon expansion -->
         </tbody>
       </table>
     </div>
-  </details>
+
+    <!-- Table Expansion Toggle -->
+    <div class="border-t border-neutral-200 dark:border-neutral-800 p-2.5 sm:p-3 text-center bg-neutral-50/60 dark:bg-neutral-950/60">
+      <button
+        type="button"
+        id="rvb-table-toggle"
+        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition-colors shadow-2xs"
+      >
+        <span id="rvb-table-toggle-text">↓ Show Year-by-Year Progression Table (1–30 Years)</span>
+      </button>
+    </div>
+  </div>
 
   <!-- Live Explain Calculation Walkthrough -->
   <details id="rvb-explain-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 mt-6 shadow-xs">
@@ -317,20 +341,22 @@
   </div>
 </div>
 
-<script is:inline>
-  (function() {
-    const horizonInp = document.getElementById('rvb-horizon');
-    const rentInp = document.getElementById('rvb-rent');
-    const rentGrowthInp = document.getElementById('rvb-rent-growth');
-    const rentersInsInp = document.getElementById('rvb-renters-ins');
-    const invReturnInp = document.getElementById('rvb-inv-return');
+<script>
+  import { parseQueryParams, initShareButton, RENT_VS_BUY_SCHEMA } from '../../utils/share';
 
-    const priceInp = document.getElementById('rvb-price');
-    const downPctInp = document.getElementById('rvb-down-pct');
-    const mortgageRateInp = document.getElementById('rvb-mortgage-rate');
-    const propTaxInp = document.getElementById('rvb-prop-tax');
-    const maintInp = document.getElementById('rvb-maint');
-    const apprecInp = document.getElementById('rvb-appreciation');
+  (function() {
+    const horizonInp = document.getElementById('rvb-horizon') as HTMLInputElement | null;
+    const rentInp = document.getElementById('rvb-rent') as HTMLInputElement | null;
+    const rentGrowthInp = document.getElementById('rvb-rent-growth') as HTMLInputElement | null;
+    const rentersInsInp = document.getElementById('rvb-renters-ins') as HTMLInputElement | null;
+    const invReturnInp = document.getElementById('rvb-inv-return') as HTMLInputElement | null;
+
+    const priceInp = document.getElementById('rvb-price') as HTMLInputElement | null;
+    const downPctInp = document.getElementById('rvb-down-pct') as HTMLInputElement | null;
+    const mortgageRateInp = document.getElementById('rvb-mortgage-rate') as HTMLInputElement | null;
+    const propTaxInp = document.getElementById('rvb-prop-tax') as HTMLInputElement | null;
+    const maintInp = document.getElementById('rvb-maint') as HTMLInputElement | null;
+    const apprecInp = document.getElementById('rvb-appreciation') as HTMLInputElement | null;
 
     const horizonVal = document.getElementById('rvb-horizon-val');
     const rentVal = document.getElementById('rvb-rent-val');
@@ -358,7 +384,14 @@
     const futureHomeValEl = document.getElementById('rvb-future-home-val');
     const netSaleProceedsEl = document.getElementById('rvb-net-sale-proceeds');
 
+    const tableWrapper = document.getElementById('rvb-table-wrapper');
     const tableBody = document.getElementById('rvb-table-body');
+    const tableToggleBtn = document.getElementById('rvb-table-toggle');
+    const tableToggleText = document.getElementById('rvb-table-toggle-text');
+    let isTableExpanded = false;
+    let lastYearlyComparison: Array<{ year: number; netCostRent: number; netCostBuy: number; difference: number; advantage: 'rent' | 'buy' }> = [];
+    let lastTimeHorizonYears = 15;
+    let lastBreakevenYear: number | null = null;
 
     // Explain elements
     const expRentPaid = document.getElementById('exp-rvb-rent-paid');
@@ -385,18 +418,18 @@
     const expDiffFormula = document.getElementById('exp-rvb-diff-formula');
     const expFinalVerdict = document.getElementById('exp-rvb-final-verdict');
 
-    const CURRENCY_CONFIGS = {
+    const CURRENCY_CONFIGS: Record<string, { symbol: string; locale: string }> = {
       USD: { symbol: '$', locale: 'en-US' },
       INR: { symbol: '₹', locale: 'en-IN' },
       EUR: { symbol: '€', locale: 'en-IE' },
       GBP: { symbol: '£', locale: 'en-GB' }
     };
 
-    function getCurrency() {
+    function getCurrency(): string {
       return localStorage.getItem('ack_currency') || 'INR';
     }
 
-    function formatIndianCompact(num) {
+    function formatIndianCompact(num: number): string {
       if (num >= 10000000) {
         const cr = (num / 10000000).toFixed(2).replace(/\.00$/, '').replace(/(\.[1-9])0$/, '$1');
         return `${cr} Cr`;
@@ -408,7 +441,7 @@
       return '';
     }
 
-    function formatMoney(num) {
+    function formatMoney(num: number): string {
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.INR;
       const formatted = Math.round(num).toLocaleString(cfg.locale);
@@ -490,16 +523,16 @@
 
       const timeHorizonYears = parseInt(horizonInp.value) || 15;
       const monthlyRent = parseFloat(rentInp.value) || 0;
-      const rentGrowth = (parseFloat(rentGrowthInp?.value) || 5.0) / 100;
-      const rentersInsurance = parseFloat(rentersInsInp?.value) || 0;
-      const investmentReturnRate = (parseFloat(invReturnInp?.value) || 11.0) / 100;
+      const rentGrowth = (parseFloat(rentGrowthInp?.value || '5.0') || 5.0) / 100;
+      const rentersInsurance = parseFloat(rentersInsInp?.value || '0') || 0;
+      const investmentReturnRate = (parseFloat(invReturnInp?.value || '11.0') || 11.0) / 100;
 
       const homePrice = parseFloat(priceInp.value) || 0;
-      const downPaymentPct = (parseFloat(downPctInp?.value) || 20) / 100;
-      const mortgageRate = (parseFloat(mortgageRateInp?.value) || 8.5) / 100;
-      const propertyTaxRate = (parseFloat(propTaxInp?.value) || 0.4) / 100;
-      const maintenanceRate = (parseFloat(maintInp?.value) || 1.0) / 100;
-      const appreciationRate = (parseFloat(apprecInp?.value) || 4.0) / 100;
+      const downPaymentPct = (parseFloat(downPctInp?.value || '20') || 20) / 100;
+      const mortgageRate = (parseFloat(mortgageRateInp?.value || '8.5') || 8.5) / 100;
+      const propertyTaxRate = (parseFloat(propTaxInp?.value || '0.4') || 0.4) / 100;
+      const maintenanceRate = (parseFloat(maintInp?.value || '1.0') || 1.0) / 100;
+      const appreciationRate = (parseFloat(apprecInp?.value || '4.0') || 4.0) / 100;
       const homeInsurance = getCurrency() === 'INR' ? 4000 : 1200;
       const buyClosingPct = 0.03;
       const sellClosingPct = 0.06;
@@ -539,7 +572,7 @@
         }
       }
 
-      let breakevenYear = null;
+      let breakevenYear: number | null = null;
       let simRentPaid = 0;
       let simPropertyTax = 0;
       let simMaintenance = 0;
@@ -560,7 +593,13 @@
       let selTotBuyOutflows = 0;
       let selNetBuy = 0;
 
-      const yearlyComparison = [];
+      const yearlyComparison: Array<{
+        year: number;
+        netCostRent: number;
+        netCostBuy: number;
+        advantage: string;
+        difference: number;
+      }> = [];
 
       for (let yr = 1; yr <= 30; yr++) {
         const startYrHomeValue = homePrice * Math.pow(1 + appreciationRate, yr - 1);
@@ -677,11 +716,11 @@
         if (selNetRent < 0) {
           netRentTitleEl.textContent = 'Option A: Net Investment Gain After Rent';
           netRentEl.textContent = formatMoney(Math.abs(selNetRent));
-          netRentEl.className = 'font-mono font-bold text-base text-emerald-600 dark:text-emerald-400 tabular-nums';
+          netRentEl.className = 'font-mono font-black text-xl sm:text-2xl text-emerald-600 dark:text-emerald-400 tabular-nums block';
         } else {
           netRentTitleEl.textContent = 'Option A: Renting Unrecoverable Cost';
           netRentEl.textContent = formatMoney(selNetRent);
-          netRentEl.className = 'font-mono font-bold text-base text-black dark:text-white tabular-nums';
+          netRentEl.className = 'font-mono font-black text-xl sm:text-2xl text-black dark:text-white tabular-nums block';
         }
       }
 
@@ -693,11 +732,11 @@
         if (selNetBuy < 0) {
           netBuyTitleEl.textContent = 'Option B: Housing Profit After Sale';
           netBuyEl.textContent = formatMoney(Math.abs(selNetBuy));
-          netBuyEl.className = 'font-mono font-bold text-base text-emerald-600 dark:text-emerald-400 tabular-nums';
+          netBuyEl.className = 'font-mono font-black text-xl sm:text-2xl text-emerald-600 dark:text-emerald-400 tabular-nums block';
         } else {
           netBuyTitleEl.textContent = 'Option B: Buying Unrecoverable Cost';
           netBuyEl.textContent = formatMoney(selNetBuy);
-          netBuyEl.className = 'font-mono font-bold text-base text-black dark:text-white tabular-nums';
+          netBuyEl.className = 'font-mono font-black text-xl sm:text-2xl text-black dark:text-white tabular-nums block';
         }
       }
 
@@ -705,47 +744,14 @@
       if (futureHomeValEl) futureHomeValEl.textContent = formatMoney(selFutureHomeVal);
       if (netSaleProceedsEl) netSaleProceedsEl.textContent = formatMoney(selNetSaleProceeds);
 
-      // Render Year-by-Year Comparison Table
-      if (tableBody) {
-        let tableHtml = '';
-        yearlyComparison.forEach(pt => {
-          const isSelected = pt.year === timeHorizonYears;
-          const isBreakeven = pt.year === breakevenYear;
-          const isBuy = pt.advantage === 'buy';
+      // Cache yearly comparison data
+      lastYearlyComparison = yearlyComparison;
+      lastTimeHorizonYears = timeHorizonYears;
+      lastBreakevenYear = breakevenYear;
 
-          let rentText = formatMoney(Math.abs(pt.netCostRent));
-          if (pt.netCostRent < 0) rentText = `+${rentText} (Gain)`;
-
-          let buyText = formatMoney(Math.abs(pt.netCostBuy));
-          if (pt.netCostBuy < 0) buyText = `+${buyText} (Gain)`;
-
-          const rowClass = isSelected
-            ? 'bg-emerald-500/10 dark:bg-emerald-500/20 font-bold'
-            : (isBreakeven ? 'bg-amber-500/5 dark:bg-amber-500/10' : 'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50');
-
-          const badgeOption = isBuy
-            ? '<span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold">Buying</span>'
-            : '<span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-bold">Renting</span>';
-
-          const yearLabel = isSelected
-            ? `<span class="inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Year ${pt.year} <span class="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400">(Selected)</span></span>`
-            : (isBreakeven
-              ? `<span class="inline-flex items-center gap-1.5">Year ${pt.year} <span class="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px]">Breakeven</span></span>`
-              : `Year ${pt.year}`);
-
-          tableHtml += `
-            <tr class="${rowClass} transition-colors">
-              <td class="py-2 px-3 tabular-nums">${yearLabel}</td>
-              <td class="py-2 px-3 tabular-nums">${rentText}</td>
-              <td class="py-2 px-3 tabular-nums">${buyText}</td>
-              <td class="py-2 px-3">${badgeOption}</td>
-              <td class="py-2 px-3 tabular-nums text-right font-bold ${isBuy ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}">
-                +${formatMoney(pt.difference)}
-              </td>
-            </tr>
-          `;
-        });
-        tableBody.innerHTML = tableHtml;
+      // Render Table Rows only if currently expanded
+      if (isTableExpanded) {
+        renderTableRows();
       }
 
       // Explain Calculation Sheet Working
@@ -804,17 +810,17 @@
     }
 
     // Initialize currency selects
-    const selects = document.querySelectorAll('.ack-currency-select');
+    const selects = document.querySelectorAll('.ack-currency-select') as NodeListOf<HTMLSelectElement>;
     selects.forEach(sel => {
       sel.value = getCurrency();
       sel.addEventListener('change', (e) => {
-        const val = e.target.value;
+        const val = (e.target as HTMLSelectElement).value;
         localStorage.setItem('ack_currency', val);
         window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
       });
     });
 
-    window.addEventListener('ack_currency_change', (e) => {
+    window.addEventListener('ack_currency_change', (e: any) => {
       selects.forEach(sel => sel.value = e.detail);
       updateSlidersForCurrency();
       calcRentVsBuy();
@@ -831,7 +837,130 @@
       }
     });
 
-    updateSlidersForCurrency();
-    calcRentVsBuy();
+    // Read and restore URL query parameters if present
+    function restoreStateFromUrl() {
+      const { values, hasParams } = parseQueryParams<{
+        unit?: string;
+        years?: number;
+        rent?: number;
+        rentGrowth?: number;
+        miscCosts?: number;
+        investmentReturn?: number;
+        homePrice?: number;
+        downPayment?: number;
+        mortgageRate?: number;
+        propertyTax?: number;
+        maintenance?: number;
+        appreciation?: number;
+      }>(window.location.search, RENT_VS_BUY_SCHEMA);
+
+      if (values.unit) {
+        localStorage.setItem('ack_currency', values.unit);
+        selects.forEach(sel => sel.value = values.unit!);
+      }
+
+      updateSlidersForCurrency();
+
+      if (horizonInp && typeof values.years === 'number') horizonInp.value = values.years.toString();
+      if (rentInp && typeof values.rent === 'number') rentInp.value = values.rent.toString();
+      if (rentGrowthInp && typeof values.rentGrowth === 'number') rentGrowthInp.value = values.rentGrowth.toString();
+      if (rentersInsInp && typeof values.miscCosts === 'number') rentersInsInp.value = values.miscCosts.toString();
+      if (invReturnInp && typeof values.investmentReturn === 'number') invReturnInp.value = values.investmentReturn.toString();
+      if (priceInp && typeof values.homePrice === 'number') priceInp.value = values.homePrice.toString();
+      if (downPctInp && typeof values.downPayment === 'number') downPctInp.value = values.downPayment.toString();
+      if (mortgageRateInp && typeof values.mortgageRate === 'number') mortgageRateInp.value = values.mortgageRate.toString();
+      if (propTaxInp && typeof values.propertyTax === 'number') propTaxInp.value = values.propertyTax.toString();
+      if (maintInp && typeof values.maintenance === 'number') maintInp.value = values.maintenance.toString();
+      if (apprecInp && typeof values.appreciation === 'number') apprecInp.value = values.appreciation.toString();
+
+      calcRentVsBuy();
+      return hasParams;
+    }
+
+    function renderTableRows() {
+      if (!tableBody || !lastYearlyComparison || lastYearlyComparison.length === 0) return;
+      let tableHtml = '';
+      lastYearlyComparison.forEach(pt => {
+        const isSelected = pt.year === lastTimeHorizonYears;
+        const isBreakeven = pt.year === lastBreakevenYear;
+        const isBuy = pt.advantage === 'buy';
+
+        let rentText = formatMoney(Math.abs(pt.netCostRent));
+        if (pt.netCostRent < 0) rentText = `+${rentText} (Gain)`;
+
+        let buyText = formatMoney(Math.abs(pt.netCostBuy));
+        if (pt.netCostBuy < 0) buyText = `+${buyText} (Gain)`;
+
+        const rowClass = isSelected
+          ? 'bg-emerald-500/10 dark:bg-emerald-500/20 font-bold'
+          : (isBreakeven ? 'bg-amber-500/5 dark:bg-amber-500/10' : 'hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50');
+
+        const badgeOption = isBuy
+          ? '<span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold">Buying</span>'
+          : '<span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-bold">Renting</span>';
+
+        const yearLabel = isSelected
+          ? `<span class="inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Year ${pt.year} <span class="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400">(Selected)</span></span>`
+          : (isBreakeven
+            ? `<span class="inline-flex items-center gap-1.5">Year ${pt.year} <span class="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px]">Breakeven</span></span>`
+            : `Year ${pt.year}`);
+
+        tableHtml += `
+          <tr class="${rowClass} transition-colors">
+            <td class="py-2.5 px-3 tabular-nums">${yearLabel}</td>
+            <td class="py-2.5 px-3 tabular-nums">${rentText}</td>
+            <td class="py-2.5 px-3 tabular-nums">${buyText}</td>
+            <td class="py-2.5 px-3">${badgeOption}</td>
+            <td class="py-2.5 px-3 tabular-nums text-right font-bold ${isBuy ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'}">
+              +${formatMoney(pt.difference)}
+            </td>
+          </tr>
+        `;
+      });
+      tableBody.innerHTML = tableHtml;
+    }
+
+    restoreStateFromUrl();
+
+    // Table Expansion Toggle
+    if (tableToggleBtn) {
+      tableToggleBtn.addEventListener('click', () => {
+        isTableExpanded = !isTableExpanded;
+        if (tableWrapper) {
+          if (isTableExpanded) {
+            tableWrapper.classList.remove('hidden');
+            renderTableRows();
+          } else {
+            tableWrapper.classList.add('hidden');
+          }
+        }
+        if (tableToggleText) {
+          tableToggleText.textContent = isTableExpanded
+            ? '↑ Hide Year-by-Year Progression Table'
+            : '↓ Show Year-by-Year Progression Table (1–30 Years)';
+        }
+      });
+    }
+
+    // Initialize Share Result integration
+    initShareButton({
+      buttonId: 'rvb-share-btn',
+      schema: RENT_VS_BUY_SCHEMA,
+      title: 'Rent vs. Buy Decision Engine',
+      getParams: () => ({
+        unit: getCurrency(),
+        years: parseInt(horizonInp?.value || '15'),
+        rent: parseFloat(rentInp?.value || '25000'),
+        rentGrowth: parseFloat(rentGrowthInp?.value || '5.0'),
+        miscCosts: parseFloat(rentersInsInp?.value || '5000'),
+        investmentReturn: parseFloat(invReturnInp?.value || '11.0'),
+        homePrice: parseFloat(priceInp?.value || '7500000'),
+        downPayment: parseFloat(downPctInp?.value || '20'),
+        mortgageRate: parseFloat(mortgageRateInp?.value || '8.5'),
+        propertyTax: parseFloat(propTaxInp?.value || '0.4'),
+        maintenance: parseFloat(maintInp?.value || '1.0'),
+        appreciation: parseFloat(apprecInp?.value || '4.0')
+      })
+    });
   })();
 </script>

@@ -44,6 +44,60 @@ export function calculateEMI(principal: number, annualRate: number, tenureYears:
   };
 }
 
+export interface LoanScenarioInput {
+  principal: number;
+  annualRate: number;
+  tenureYears: number;
+}
+
+export interface LoanComparisonResult {
+  scenarioA: EmiResult & LoanScenarioInput;
+  scenarioB: EmiResult & LoanScenarioInput;
+  monthlyEmiDiff: number; // positive: A > B, negative: B > A
+  totalInterestDiff: number; // positive: A > B, negative: B > A
+  totalPayableDiff: number; // positive: A > B, negative: B > A
+  cheaperScenario: 'A' | 'B' | 'identical';
+  monthlyCheaperScenario: 'A' | 'B' | 'identical';
+  monthlySavings: number;
+  interestSavings: number;
+  totalCostSavings: number;
+}
+
+export function compareLoans(
+  loanA: LoanScenarioInput,
+  loanB: LoanScenarioInput
+): LoanComparisonResult {
+  const resA = calculateEMI(loanA.principal, loanA.annualRate, loanA.tenureYears);
+  const resB = calculateEMI(loanB.principal, loanB.annualRate, loanB.tenureYears);
+
+  const monthlyEmiDiff = resA.monthlyEmi - resB.monthlyEmi;
+  const totalInterestDiff = resA.totalInterest - resB.totalInterest;
+  const totalPayableDiff = resA.totalPayable - resB.totalPayable;
+
+  let cheaperScenario: 'A' | 'B' | 'identical' = 'identical';
+  if (Math.abs(totalPayableDiff) >= 0.5) {
+    cheaperScenario = totalPayableDiff > 0 ? 'B' : 'A';
+  }
+
+  let monthlyCheaperScenario: 'A' | 'B' | 'identical' = 'identical';
+  if (Math.abs(monthlyEmiDiff) >= 0.5) {
+    monthlyCheaperScenario = monthlyEmiDiff > 0 ? 'B' : 'A';
+  }
+
+  return {
+    scenarioA: { ...resA, ...loanA },
+    scenarioB: { ...resB, ...loanB },
+    monthlyEmiDiff,
+    totalInterestDiff,
+    totalPayableDiff,
+    cheaperScenario,
+    monthlyCheaperScenario,
+    monthlySavings: Math.abs(monthlyEmiDiff),
+    interestSavings: Math.abs(totalInterestDiff),
+    totalCostSavings: Math.abs(totalPayableDiff),
+  };
+}
+
 export interface SipResult {
   totalInvested: number;
   estimatedReturns: number;

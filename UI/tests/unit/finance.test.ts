@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateEMI,
+  compareLoans,
   calculateSIP,
   calculateCompoundInterest,
   calculateFD,
@@ -49,6 +50,61 @@ describe('Financial Calculators Engine', () => {
       expect(calculateEMI(0, 5, 5).monthlyEmi).toBe(0);
       expect(calculateEMI(100000, 5, 0).monthlyEmi).toBe(0);
       expect(calculateEMI(-1000, 5, 5).monthlyEmi).toBe(0);
+    });
+  });
+
+  describe('Loan Comparison Mode (compareLoans)', () => {
+    it('correctly compares two loan offers with different interest rates', () => {
+      const loanA = { principal: 100000, annualRate: 8.5, tenureYears: 5 };
+      const loanB = { principal: 100000, annualRate: 7.5, tenureYears: 5 };
+      const comparison = compareLoans(loanA, loanB);
+
+      // Scenario A: ~$2051.65, Scenario B: ~$2003.79
+      expect(comparison.scenarioA.monthlyEmi).toBeCloseTo(2051.65, 1);
+      expect(comparison.scenarioB.monthlyEmi).toBeCloseTo(2003.79, 1);
+      expect(comparison.monthlySavings).toBeCloseTo(47.86, 1);
+      expect(comparison.cheaperScenario).toBe('B');
+      expect(comparison.monthlyCheaperScenario).toBe('B');
+      expect(comparison.totalInterestDiff).toBeGreaterThan(0);
+      expect(comparison.interestSavings).toBeCloseTo(2871.37, 0);
+    });
+
+    it('correctly identifies when Scenario A is cheaper due to shorter tenure', () => {
+      const loanA = { principal: 2500000, annualRate: 8.5, tenureYears: 15 };
+      const loanB = { principal: 2500000, annualRate: 8.5, tenureYears: 20 };
+      const comparison = compareLoans(loanA, loanB);
+
+      // Scenario A has higher monthly EMI but lower overall interest
+      expect(comparison.scenarioA.monthlyEmi).toBeGreaterThan(comparison.scenarioB.monthlyEmi);
+      expect(comparison.monthlyCheaperScenario).toBe('B');
+      expect(comparison.cheaperScenario).toBe('A'); // Overall total interest is significantly lower
+      expect(comparison.interestSavings).toBeGreaterThan(700000);
+    });
+
+    it('handles identical scenarios correctly', () => {
+      const loan = { principal: 100000, annualRate: 8.5, tenureYears: 5 };
+      const comparison = compareLoans(loan, loan);
+
+      expect(comparison.monthlyEmiDiff).toBe(0);
+      expect(comparison.totalInterestDiff).toBe(0);
+      expect(comparison.totalPayableDiff).toBe(0);
+      expect(comparison.cheaperScenario).toBe('identical');
+      expect(comparison.monthlyCheaperScenario).toBe('identical');
+      expect(comparison.monthlySavings).toBe(0);
+    });
+
+    it('ensures independent calculations where modifying loan A does not mutate loan B', () => {
+      const loanA = { principal: 100000, annualRate: 8.5, tenureYears: 5 };
+      const loanB = { principal: 200000, annualRate: 9.0, tenureYears: 10 };
+      const comp1 = compareLoans(loanA, loanB);
+
+      const modifiedLoanA = { ...loanA, principal: 150000 };
+      const comp2 = compareLoans(modifiedLoanA, loanB);
+
+      // Scenario B results must be completely unchanged
+      expect(comp2.scenarioB.monthlyEmi).toBe(comp1.scenarioB.monthlyEmi);
+      expect(comp2.scenarioB.totalPayable).toBe(comp1.scenarioB.totalPayable);
+      expect(comp2.scenarioA.monthlyEmi).not.toBe(comp1.scenarioA.monthlyEmi);
     });
   });
 

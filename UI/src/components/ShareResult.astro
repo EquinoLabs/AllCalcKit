@@ -1,0 +1,50 @@
+---
+interface Props {
+  id?: string;
+  buttonText?: string;
+  copiedText?: string;
+  sharedText?: string;
+  class?: string;
+  calculatorTitle?: string;
+}
+
+const {
+  id = 'ack-share-btn',
+  buttonText = 'Share Result',
+  copiedText = 'Link copied!',
+  sharedText = 'Shared successfully!',
+  class: className = '',
+  calculatorTitle = 'Calculation'
+} = Astro.props;
+---
+
+<div class={`inline-flex items-center relative ${className}`} data-share-container id={`${id}-container`}>
+  <button
+    type="button"
+    id={id}
+    data-share-btn
+    data-default-text={buttonText}
+    data-copied-text={copiedText}
+    data-shared-text={sharedText}
+    data-calc-title={calculatorTitle}
+    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 font-mono text-xs font-bold border border-neutral-300 dark:border-neutral-700 transition-all duration-200 cursor-pointer select-none active:scale-95 shadow-2xs hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white group"
+    aria-label={`Share ${calculatorTitle} result`}
+    title={`Share ${calculatorTitle} result`}
+  >
+    <!-- Default Share Icon -->
+    <svg data-share-icon="default" class="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+    </svg>
+
+    <!-- Success Checkmark Icon (Hidden initially) -->
+    <svg data-share-icon="success" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 hidden shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+    </svg>
+
+    <!-- Label -->
+    <span data-share-label class="tracking-tight">{buttonText}</span>
+  </button>
+
+  <!-- Live Status Region for Screen Readers -->
+  <span class="sr-only" role="status" aria-live="polite" data-share-status></span>
+</div>

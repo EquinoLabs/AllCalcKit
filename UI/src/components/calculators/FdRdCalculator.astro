@@ -214,7 +214,7 @@
     if (btnFd && btnRd) {
       btnFd.addEventListener('click', () => {
         mode = 'fd';
-        if (labelAmt) labelAmt.textContent = 'Total Fixed Deposit Amount (Lump Sum)';
+        if (labelAmt) labelAmt.textContent = 'Total Deposit Amount';
         btnFd.className = 'px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs cursor-pointer';
         btnRd.className = 'px-3 py-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer';
         updateInputsForCurrency();
@@ -222,7 +222,7 @@
       });
       btnRd.addEventListener('click', () => {
         mode = 'rd';
-        if (labelAmt) labelAmt.textContent = 'Monthly Recurring Deposit Amount';
+        if (labelAmt) labelAmt.textContent = 'Monthly Deposit Amount';
         btnRd.className = 'px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs cursor-pointer';
         btnFd.className = 'px-3 py-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer';
         updateInputsForCurrency();

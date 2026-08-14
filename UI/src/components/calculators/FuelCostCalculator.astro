@@ -48,7 +48,7 @@
       <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
         <div>
           <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Fuel Required</span>
-          <span id="fuel-vol-val" class="font-bold text-black dark:text-white tabular-nums">0 Liters</span>
+          <span id="fuel-vol-val" class="font-bold text-black dark:text-white tabular-nums">0 Units</span>
         </div>
         <div>
           <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Cost per Distance Unit</span>
@@ -127,7 +127,7 @@
       const costPerDist = totalCost / (dist || 1);
 
       if (costEl) costEl.textContent = formatMoney(totalCost);
-      if (volEl) volEl.textContent = `${fuelNeeded.toFixed(1)} Liters`;
+      if (volEl) volEl.textContent = `${fuelNeeded.toFixed(1)} Units`;
       if (unitCostEl) unitCostEl.textContent = `${formatMoney(costPerDist)} / km`;
     }
 

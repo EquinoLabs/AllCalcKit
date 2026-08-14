@@ -15,7 +15,7 @@ test.describe('E2E — Site-Wide Smoke & Route Verification', () => {
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('header')).toBeVisible();
     await expect(page.locator('footer')).toBeVisible();
-    await expect(page.locator('text=Quick Tools')).toBeVisible();
+    await expect(page.locator('footer').getByText('Quick Tools')).toBeVisible();
 
     expect(consoleErrors).toEqual([]);
   });
@@ -46,7 +46,7 @@ test.describe('E2E — Site-Wide Smoke & Route Verification', () => {
       await expect(page.locator('article')).toBeVisible();
 
       // Verify footer Quick Tools is present
-      await expect(page.locator('text=Quick Tools')).toBeVisible();
+      await expect(page.locator('footer').getByText('Quick Tools')).toBeVisible();
 
       expect(consoleErrors).toEqual([]);
     });

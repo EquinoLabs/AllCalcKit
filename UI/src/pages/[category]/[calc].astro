@@ -110,6 +110,9 @@ const volumeUnits = [
   { id: 'gal', name: 'Gallons (US)', ratio: 3.78541 },
   { id: 'floz', name: 'Fluid Ounces (fl oz)', ratio: 0.0295735 }
 ];
+const containerClass = (calc.id === 'loan-emi' || calc.id === 'rent-vs-buy') 
+  ? 'max-w-7xl' 
+  : (calc.id === 'percentage' ? 'max-w-6xl xl:max-w-[1240px]' : 'max-w-4xl');
 ---
 
 <Layout 
@@ -119,7 +122,7 @@ const volumeUnits = [
   showQuickTools={false}
   jsonLd={faqSchema}
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+  <div class={`mx-auto px-4 sm:px-6 py-12 ${containerClass}`}>
     
     <!-- Breadcrumb: Home / [Category] / [Calc Name] -->
     <nav class="flex items-center gap-2 text-xs font-mono text-neutral-500 mb-6">

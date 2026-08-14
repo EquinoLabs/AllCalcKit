@@ -33,7 +33,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run preview -- --port 4321',
+    command: 'npx --yes sirv-cli dist --port 4321',
     port: 4321,
     reuseExistingServer: !process.env.CI,
     cwd: import.meta.dirname,
