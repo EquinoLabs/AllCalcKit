@@ -162,21 +162,41 @@ function isTestEnvironment(): boolean {
  * Sends a structured support request email.
  * 
  * Target: support@allcalckit.com
+/**
+ * Strips surrounding quotes and whitespace from environment variable strings.
+ */
+function cleanConfigString(val?: string): string | undefined {
+  if (!val || typeof val !== 'string') return undefined;
+  const trimmed = val.trim();
+  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
+
+/**
+ * Sends a structured support request email.
+ * 
+ * Target: support@allcalckit.com
  * 
  * Secrets may be supplied via the `env` parameter (Cloudflare Pages Functions
  * expose them this way); falls back to the process/import.meta environments.
  */
 export async function sendContactEmail(payload: EmailPayload, env?: Record<string, string | undefined>): Promise<SendEmailResult> {
-  const recipient = env?.CONTACT_EMAIL_TO || getEnvVar('CONTACT_EMAIL_TO') || 'support@allcalckit.com';
-  const sender = env?.CONTACT_EMAIL_FROM || getEnvVar('CONTACT_EMAIL_FROM') || 'AllCalcKit Support <support@allcalckit.com>';
-  const apiKey = env?.RESEND_API_KEY || getEnvVar('RESEND_API_KEY');
+  const rawRecipient = env?.CONTACT_EMAIL_TO || getEnvVar('CONTACT_EMAIL_TO');
+  const rawSender = env?.CONTACT_EMAIL_FROM || getEnvVar('CONTACT_EMAIL_FROM');
+  const rawApiKey = env?.RESEND_API_KEY || getEnvVar('RESEND_API_KEY');
+
+  const recipient = cleanConfigString(rawRecipient) || 'support@allcalckit.com';
+  const sender = cleanConfigString(rawSender) || 'AllCalcKit Support <support@allcalckit.com>';
+  const apiKey = cleanConfigString(rawApiKey);
   const isTest = isTestEnvironment();
 
   const subject = `[AllCalcKit] Support Request — ${payload.reference}`;
   const text = buildPlainTextEmail(payload);
   const html = buildHtmlEmail(payload);
 
-  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
+  if (!apiKey || !apiKey.trim()) {
     console.error(`[ContactEmail Error] No RESEND_API_KEY found. Cannot dispatch email to ${recipient} (Ref: ${payload.reference}).`);
     throw new Error('Email service not configured: missing RESEND_API_KEY');
   }
