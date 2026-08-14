@@ -272,6 +272,7 @@ describe('Money Split Calculation Engine', () => {
       expect(summary.formattedSummaryText).toContain('Goa Trip');
       expect(summary.formattedSummaryText).toContain('Rahul should receive ₹466.67');
       expect(summary.formattedSummaryText).toContain('Ananya owes ₹533.33');
+      expect(summary.formattedSummaryText).toContain('allcalckit.com/finance/money-split');
     });
   });
 });
