@@ -531,6 +531,7 @@
   import {
     deserializeGroupFromShare,
     detectGroupConflict,
+    generateGroupShareUrl,
     importGroupIntoStorage,
     shareGroupLink
   } from '../../utils/moneySplit/sharing';
@@ -1494,7 +1495,8 @@
     if (copySummaryBtn) {
       copySummaryBtn.addEventListener('click', async () => {
         if (!activeGroup) return;
-        const summary = generateSettlementSummary(activeGroup);
+        const shareUrl = generateGroupShareUrl(activeGroup);
+        const summary = generateSettlementSummary(activeGroup, shareUrl);
         const copied = await copyToClipboard(summary.formattedSummaryText);
         if (copySummaryText) {
           copySummaryText.textContent = copied ? 'Copied to Clipboard!' : 'Failed to Copy';

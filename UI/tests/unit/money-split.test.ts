@@ -265,13 +265,19 @@ describe('Money Split Calculation Engine', () => {
       expect(ananya.netBalance).toBe(0);
     });
 
-    it('generates formatted text summary for messaging apps', () => {
-      const summary = generateSettlementSummary(mockGroup);
-      expect(summary.groupName).toBe('Goa Trip');
-      expect(summary.totalGroupSpending).toBe(1600);
-      expect(summary.formattedSummaryText).toContain('Goa Trip');
-      expect(summary.formattedSummaryText).toContain('Rahul should receive ₹466.67');
-      expect(summary.formattedSummaryText).toContain('Ananya owes ₹533.33');
+    it('generates formatted text summary for messaging apps (with and without shareUrl)', () => {
+      const summaryWithoutUrl = generateSettlementSummary(mockGroup);
+      expect(summaryWithoutUrl.groupName).toBe('Goa Trip');
+      expect(summaryWithoutUrl.totalGroupSpending).toBe(1600);
+      expect(summaryWithoutUrl.formattedSummaryText).toContain('Goa Trip');
+      expect(summaryWithoutUrl.formattedSummaryText).toContain('Rahul should receive ₹466.67');
+      expect(summaryWithoutUrl.formattedSummaryText).toContain('Ananya owes ₹533.33');
+      expect(summaryWithoutUrl.formattedSummaryText).toContain('allcalckit.com/finance/money-split');
+
+      const mockShareUrl = 'https://allcalckit.com/finance/money-split?data=mock_encoded_payload';
+      const summaryWithUrl = generateSettlementSummary(mockGroup, mockShareUrl);
+      expect(summaryWithUrl.formattedSummaryText).toContain('🔗 View & Settle on All Calc Kit:');
+      expect(summaryWithUrl.formattedSummaryText).toContain(mockShareUrl);
     });
   });
 });

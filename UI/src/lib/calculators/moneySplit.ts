@@ -282,7 +282,7 @@ export function calculateTotalSpending(expenses: Expense[]): number {
 /**
  * Formats a clean text summary suitable for WhatsApp, Telegram, or SMS.
  */
-export function generateSettlementSummary(group: Group): SettlementSummary {
+export function generateSettlementSummary(group: Group, shareUrl?: string): SettlementSummary {
   const totalSpending = calculateTotalSpending(group.expenses || []);
   const balances = calculateGroupBalances(group);
   const currencySymbol = getCurrencySymbol(group.currency);
@@ -320,7 +320,12 @@ export function generateSettlementSummary(group: Group): SettlementSummary {
     }
   }
 
-  lines.push(`\nCalculated with All Calc Kit (allcalckit.com/finance/money-split)`);
+  if (shareUrl) {
+    lines.push(`--------------------------------`);
+    lines.push(`🔗 View & Settle on All Calc Kit:\n${shareUrl}`);
+  } else {
+    lines.push(`\nCalculated with All Calc Kit (allcalckit.com/finance/money-split)`);
+  }
 
   return {
     groupId: group.id,
