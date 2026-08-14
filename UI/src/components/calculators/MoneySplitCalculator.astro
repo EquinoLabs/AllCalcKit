@@ -1495,8 +1495,7 @@
     if (copySummaryBtn) {
       copySummaryBtn.addEventListener('click', async () => {
         if (!activeGroup) return;
-        const shareUrl = generateGroupShareUrl(activeGroup);
-        const summary = generateSettlementSummary(activeGroup, shareUrl);
+        const summary = generateSettlementSummary(activeGroup);
         const copied = await copyToClipboard(summary.formattedSummaryText);
         if (copySummaryText) {
           copySummaryText.textContent = copied ? 'Copied to Clipboard!' : 'Failed to Copy';
