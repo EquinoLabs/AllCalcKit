@@ -24,6 +24,7 @@
       <div>
         <label for="elec-watts" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Appliance Power Rating (Watts)</label>
         <input id="elec-watts" type="number" value="1500" min="1" step="50" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
+        <span class="text-[11px] font-mono text-neutral-500 mt-1 block">AC/Geyser: ~1500W | Fridge: ~200W | Fan: ~75W</span>
       </div>
 
       <div>
@@ -32,8 +33,9 @@
       </div>
 
       <div>
-        <label for="elec-rate" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Electricity Cost per kWh</label>
-        <input id="elec-rate" type="number" value="0.15" min="0.01" step="0.01" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
+        <label for="elec-rate" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Electricity Tariff per Unit (kWh)</label>
+        <input id="elec-rate" type="number" value="7.50" min="0.01" step="0.25" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-amber-500 tabular-nums" />
+        <span id="elec-rate-hint" class="text-[11px] font-mono text-neutral-500 mt-1 block"></span>
       </div>
     </div>
 
@@ -55,7 +57,7 @@
       </div>
 
       <div class="text-xs font-mono text-neutral-600 dark:text-neutral-400 leading-relaxed">
-        Calculates exact energy consumption (kWh) and power cost for home appliances.
+        Calculates exact energy consumption (Units / kWh) and power tariff costs for home appliances.
       </div>
     </div>
   </div>
@@ -66,6 +68,7 @@
     const wInp = document.getElementById('elec-watts');
     const hInp = document.getElementById('elec-hours');
     const rInp = document.getElementById('elec-rate');
+    const rateHint = document.getElementById('elec-rate-hint');
 
     const mCostEl = document.getElementById('elec-month-cost');
     const kwhDayEl = document.getElementById('elec-kwh-day');
@@ -87,6 +90,30 @@
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
       const formatted = num.toLocaleString(cfg.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       return `${cfg.symbol}${formatted}`;
+    }
+
+    let lastCurrency = getCurrency();
+
+    function updateInputsForCurrency() {
+      const curr = getCurrency();
+      if (!rInp) return;
+
+      if (curr === 'INR') {
+        rInp.step = '0.25';
+        rInp.min = '1.00';
+        if (lastCurrency !== 'INR' || parseFloat(rInp.value) < 1.0) {
+          rInp.value = '7.50';
+        }
+        if (rateHint) rateHint.textContent = 'Typical DISCOM slab tariff: ₹6.00 – ₹10.00 / unit (kWh)';
+      } else {
+        rInp.step = '0.01';
+        rInp.min = '0.01';
+        if (lastCurrency === 'INR' && parseFloat(rInp.value) > 1.0) {
+          rInp.value = '0.15';
+        }
+        if (rateHint) rateHint.textContent = 'Typical electricity rate: $0.10 – $0.35 / kWh';
+      }
+      lastCurrency = curr;
     }
 
     function calcElec() {
@@ -119,10 +146,12 @@
 
     window.addEventListener('ack_currency_change', (e) => {
       selects.forEach(sel => sel.value = e.detail);
+      updateInputsForCurrency();
       calcElec();
     });
 
     [wInp, hInp, rInp].forEach(el => el.addEventListener('input', calcElec));
+    updateInputsForCurrency();
     calcElec();
   })();
 </script>

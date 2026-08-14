@@ -4,12 +4,12 @@ test.describe('E2E — Interactive Calculator Functional Workflows', () => {
   test('Length Converter — Conversion, Unit Swap & Copy', async ({ page, context }) => {
     await page.goto('/units/length');
 
-    const fromInput = page.locator('#val-from-length-&-distance');
-    const toInput = page.locator('#val-to-length-&-distance');
-    const fromSelect = page.locator('#unit-from-length-&-distance');
-    const toSelect = page.locator('#unit-to-length-&-distance');
-    const swapBtn = page.locator('#swap-btn-length-&-distance');
-    const copyBtn = page.locator('#copy-btn-length-&-distance');
+    const fromInput = page.locator('[id="val-from-length-&-distance"]');
+    const toInput = page.locator('[id="val-to-length-&-distance"]');
+    const fromSelect = page.locator('[id="unit-from-length-&-distance"]');
+    const toSelect = page.locator('[id="unit-to-length-&-distance"]');
+    const swapBtn = page.locator('[id="swap-btn-length-&-distance"]');
+    const copyBtn = page.locator('[id="copy-btn-length-&-distance"]');
 
     await fromInput.fill('5');
     await fromSelect.selectOption('mi');
@@ -31,10 +31,10 @@ test.describe('E2E — Interactive Calculator Functional Workflows', () => {
   test('BMI Calculator — Metric vs Imperial unit toggle & calculation', async ({ page }) => {
     await page.goto('/health/bmi');
 
-    const hInput = page.locator('#bmi-height');
-    const wInput = page.locator('#bmi-weight');
-    const bmiVal = page.locator('#bmi-val');
-    const bmiCat = page.locator('#bmi-category');
+    const hInput = page.locator('#bmi-height-cm');
+    const wInput = page.locator('#bmi-weight-kg');
+    const bmiVal = page.locator('#bmi-score');
+    const bmiCat = page.locator('#bmi-badge');
 
     await hInput.fill('175');
     await wInput.fill('70');
@@ -43,9 +43,9 @@ test.describe('E2E — Interactive Calculator Functional Workflows', () => {
     await expect(bmiCat).toContainText('Normal');
 
     // Toggle to Imperial
-    await page.click('#unit-imperial');
-    await expect(page.locator('#bmi-unit-h')).toHaveText('Height (in)');
-    await expect(page.locator('#bmi-unit-w')).toHaveText('Weight (lbs)');
+    await page.click('#bmi-unit-imperial');
+    await expect(page.locator('#bmi-height-ft')).toBeVisible();
+    await expect(page.locator('#bmi-weight-lbs')).toBeVisible();
   });
 
   test('Loan / EMI Calculator — Input and slider synchronization', async ({ page }) => {

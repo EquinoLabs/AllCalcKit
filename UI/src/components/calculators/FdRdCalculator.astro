@@ -21,8 +21,8 @@
 
       <!-- Mode Toggle -->
       <div class="flex bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-mono">
-        <button id="fdrd-mode-fd" type="button" class="px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs">FD</button>
-        <button id="fdrd-mode-rd" type="button" class="px-3 py-1 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors">RD</button>
+        <button id="fdrd-mode-fd" type="button" class="px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs cursor-pointer">Fixed Deposit (FD)</button>
+        <button id="fdrd-mode-rd" type="button" class="px-3 py-1 rounded-lg text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer">Recurring Deposit (RD)</button>
       </div>
     </div>
   </div>
@@ -31,11 +31,18 @@
     <div class="space-y-4">
       <div>
         <label for="fdrd-amt" id="fdrd-label-amt" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Total Deposit Amount</label>
-        <input id="fdrd-amt" type="number" value="50000" min="1000" step="1000" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-purple-500 tabular-nums" />
+        <input id="fdrd-amt" type="number" value="100000" min="500" step="1000" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-purple-500 tabular-nums" />
+        <span id="fdrd-amt-hint" class="text-[11px] font-mono text-neutral-500 mt-1 block"></span>
       </div>
 
       <div>
-        <label for="fdrd-rate" class="block text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider mb-1 font-semibold">Interest Rate (% p.a.)</label>
+        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+          <label for="fdrd-rate" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
+          <label class="flex items-center gap-1 cursor-pointer font-mono text-[11px] text-purple-600 dark:text-purple-400 font-bold">
+            <input id="fdrd-senior" type="checkbox" class="rounded accent-purple-600 cursor-pointer" />
+            <span>Senior Citizen (+0.5%)</span>
+          </label>
+        </div>
         <input id="fdrd-rate" type="number" value="7.5" min="1" max="20" step="0.1" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-black dark:text-white font-bold text-base outline-none focus:ring-2 focus:ring-purple-500 tabular-nums" />
       </div>
 
@@ -49,6 +56,7 @@
       <div>
         <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1 font-semibold">Maturity Amount</div>
         <div id="fdrd-maturity" class="text-3xl sm:text-4xl font-black text-purple-600 dark:text-purple-400 tabular-nums">$0</div>
+        <div id="fdrd-compact-badge" class="text-xs font-mono font-bold text-purple-700 dark:text-purple-300 mt-0.5"></div>
       </div>
 
       <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
@@ -63,7 +71,7 @@
       </div>
 
       <div class="text-xs font-mono text-neutral-500 leading-relaxed">
-        Calculates quarterly compounded interest maturity for bank deposits.
+        Quarterly compounded bank interest maturity matching standard RBI/commercial bank standards.
       </div>
     </div>
   </div>
@@ -75,12 +83,15 @@
     const amtInp = document.getElementById('fdrd-amt');
     const rateInp = document.getElementById('fdrd-rate');
     const yearsInp = document.getElementById('fdrd-years');
+    const seniorChk = document.getElementById('fdrd-senior');
     const labelAmt = document.getElementById('fdrd-label-amt');
+    const amtHint = document.getElementById('fdrd-amt-hint');
 
     const btnFd = document.getElementById('fdrd-mode-fd');
     const btnRd = document.getElementById('fdrd-mode-rd');
 
     const matEl = document.getElementById('fdrd-maturity');
+    const compactBadge = document.getElementById('fdrd-compact-badge');
     const invEl = document.getElementById('fdrd-invested');
     const intEl = document.getElementById('fdrd-interest');
 
@@ -95,6 +106,18 @@
       return localStorage.getItem('ack_currency') || 'USD';
     }
 
+    function formatIndianCompact(num) {
+      if (num >= 10000000) {
+        const cr = (num / 10000000).toFixed(2).replace(/\.00$/, '');
+        return `≈ ₹${cr} Crores`;
+      }
+      if (num >= 100000) {
+        const l = (num / 100000).toFixed(2).replace(/\.00$/, '');
+        return `≈ ₹${l} Lakhs`;
+      }
+      return '';
+    }
+
     function formatMoney(num) {
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
@@ -102,11 +125,60 @@
       return `${cfg.symbol}${formatted}`;
     }
 
+    let lastCurrency = getCurrency();
+    let baseRate = 7.5;
+
+    function updateInputsForCurrency() {
+      const curr = getCurrency();
+      if (!amtInp) return;
+
+      if (curr === 'INR') {
+        if (mode === 'fd') {
+          amtInp.step = '10000';
+          amtInp.min = '5000';
+          if (lastCurrency !== 'INR' || parseFloat(amtInp.value) < 10000) {
+            amtInp.value = '100000';
+          }
+          if (amtHint) amtHint.textContent = 'Typical FD: ₹50,000 – ₹10,00,000 (10 Lakhs)';
+        } else {
+          amtInp.step = '500';
+          amtInp.min = '500';
+          if (lastCurrency !== 'INR' || parseFloat(amtInp.value) < 500) {
+            amtInp.value = '5000';
+          }
+          if (amtHint) amtHint.textContent = 'Typical RD: ₹1,000 – ₹50,000/month';
+        }
+      } else {
+        if (mode === 'fd') {
+          amtInp.step = '500';
+          amtInp.min = '500';
+          if (lastCurrency === 'INR' && parseFloat(amtInp.value) > 100000) {
+            amtInp.value = '10000';
+          }
+          if (amtHint) amtHint.textContent = 'Typical deposit: $5,000 – $100,000';
+        } else {
+          amtInp.step = '50';
+          amtInp.min = '50';
+          if (lastCurrency === 'INR' && parseFloat(amtInp.value) > 10000) {
+            amtInp.value = '500';
+          }
+          if (amtHint) amtHint.textContent = 'Typical monthly deposit: $100 – $2,000/mo';
+        }
+      }
+      lastCurrency = curr;
+    }
+
     function calcFDRD() {
       if (!amtInp || !rateInp || !yearsInp) return;
       const P = parseFloat(amtInp.value) || 0;
-      const r = (parseFloat(rateInp.value) || 0) / 100;
+      let effectiveRate = parseFloat(rateInp.value) || 0;
+      if (seniorChk && seniorChk.checked) {
+        effectiveRate += 0.5;
+      }
+      const r = effectiveRate / 100;
       const t = parseFloat(yearsInp.value) || 0;
+
+      const curr = getCurrency();
 
       let invested = 0;
       let maturity = 0;
@@ -128,6 +200,13 @@
       const interest = maturity - invested;
 
       if (matEl) matEl.textContent = formatMoney(maturity);
+      if (compactBadge) {
+        if (curr === 'INR') {
+          compactBadge.textContent = formatIndianCompact(maturity);
+        } else {
+          compactBadge.textContent = '';
+        }
+      }
       if (invEl) invEl.textContent = formatMoney(invested);
       if (intEl) intEl.textContent = formatMoney(interest);
     }
@@ -136,17 +215,23 @@
       btnFd.addEventListener('click', () => {
         mode = 'fd';
         if (labelAmt) labelAmt.textContent = 'Total Deposit Amount';
-        btnFd.className = 'px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs';
-        btnRd.className = 'px-3 py-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors';
+        btnFd.className = 'px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs cursor-pointer';
+        btnRd.className = 'px-3 py-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer';
+        updateInputsForCurrency();
         calcFDRD();
       });
       btnRd.addEventListener('click', () => {
         mode = 'rd';
         if (labelAmt) labelAmt.textContent = 'Monthly Deposit Amount';
-        btnRd.className = 'px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs';
-        btnFd.className = 'px-3 py-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors';
+        btnRd.className = 'px-3 py-1 rounded-lg bg-white dark:bg-neutral-900 text-black dark:text-white font-bold shadow-xs cursor-pointer';
+        btnFd.className = 'px-3 py-1 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer';
+        updateInputsForCurrency();
         calcFDRD();
       });
+    }
+
+    if (seniorChk) {
+      seniorChk.addEventListener('change', calcFDRD);
     }
 
     const selects = document.querySelectorAll('.ack-currency-select');
@@ -161,10 +246,12 @@
 
     window.addEventListener('ack_currency_change', (e) => {
       selects.forEach(sel => sel.value = e.detail);
+      updateInputsForCurrency();
       calcFDRD();
     });
 
     [amtInp, rateInp, yearsInp].forEach(el => el.addEventListener('input', calcFDRD));
+    updateInputsForCurrency();
     calcFDRD();
   })();
 </script>

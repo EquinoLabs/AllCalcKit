@@ -3,7 +3,7 @@ import { CALCULATORS } from '../../src/data/calculators';
 import { CALCULATOR_CONTENT, getCalculatorContent } from '../../src/data/calculator-content';
 
 describe('Integration — Calculator Content Registry', () => {
-  it('has a registered content object for all 39 calculators', () => {
+  it('has a registered content object for all 40 calculators', () => {
     for (const calc of CALCULATORS) {
       const content = getCalculatorContent(calc.id);
       expect(content, `Missing content for calculator id: ${calc.id}`).toBeDefined();

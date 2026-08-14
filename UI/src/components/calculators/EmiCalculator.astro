@@ -1,101 +1,536 @@
 ---
+import ShareResult from '../ShareResult.astro';
 ---
 
 <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 p-4 sm:p-6 shadow-xs hover:shadow-md transition-all w-full max-w-full overflow-hidden">
-  <div class="flex items-center justify-between gap-2 mb-4">
+  <div class="flex items-center justify-between gap-2 mb-4 flex-wrap sm:flex-nowrap">
     <div class="flex items-center gap-2 min-w-0">
       <span class="w-2.5 h-2.5 rounded-full bg-black dark:bg-purple-500 shrink-0"></span>
       <h3 class="font-bold text-base sm:text-lg text-black dark:text-white tracking-tight truncate">Loan & EMI Calculator</h3>
     </div>
     
-    <!-- Currency & Locale Selector Pill -->
-    <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs shrink-0">
-      <span class="text-[10px] text-neutral-600 dark:text-neutral-400 font-semibold hidden sm:inline">Unit:</span>
-      <select aria-label="Select currency unit" class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
-        <option value="USD">USD ($)</option>
-        <option value="INR">INR (₹)</option>
-        <option value="EUR">EUR (€)</option>
-        <option value="GBP">GBP (£)</option>
-      </select>
+    <div class="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+      <!-- Compare Loans Toggle Button -->
+      <button
+        type="button"
+        id="emi-compare-toggle"
+        role="switch"
+        aria-checked="false"
+        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700/80 text-black dark:text-white text-xs font-semibold font-mono cursor-pointer transition-all focus:outline-hidden"
+      >
+        <svg class="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span>Compare Loans</span>
+        <span id="compare-toggle-badge" class="hidden px-1.5 py-0.2 rounded-full text-[10px] bg-purple-600 text-white font-bold">ON</span>
+      </button>
+
+      <!-- Currency & Locale Selector Pill -->
+      <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-xl border border-neutral-300 dark:border-neutral-700 font-mono text-xs shrink-0">
+        <span class="text-[10px] text-neutral-600 dark:text-neutral-400 font-semibold hidden sm:inline">Unit:</span>
+        <select aria-label="Select currency unit" class="ack-currency-select bg-transparent text-black dark:text-white font-bold outline-none cursor-pointer text-xs">
+          <option value="USD">USD ($)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Controls -->
-    <div class="space-y-4">
-      <!-- Loan Amount -->
-      <div>
-        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label for="emi-amount" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Amount</label>
-          <span id="emi-amount-val" class="font-mono font-bold text-black dark:text-white">100,000</span>
+  <!-- SINGLE CALCULATOR VIEW (Default) -->
+  <div id="emi-single-view" class="space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Controls -->
+      <div class="space-y-4">
+        <!-- Loan Amount -->
+        <div>
+          <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+            <label for="emi-amount" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Amount</label>
+            <span id="emi-amount-val" class="font-mono font-bold text-black dark:text-white">100,000</span>
+          </div>
+          <input id="emi-amount" type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
+          <div class="flex justify-between text-[10px] font-mono text-neutral-400 mt-1">
+            <span id="emi-min-hint">Min: $10,000</span>
+            <span id="emi-max-hint">Max: $1,000,000</span>
+          </div>
         </div>
-        <input id="emi-amount" type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
+
+        <!-- Interest Rate -->
+        <div>
+          <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+            <label for="emi-rate" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
+            <span id="emi-rate-val" class="font-mono font-bold text-black dark:text-white">8.5%</span>
+          </div>
+          <input id="emi-rate" type="range" min="1" max="25" step="0.1" value="8.5" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
+        </div>
+
+        <!-- Tenure -->
+        <div>
+          <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+            <label for="emi-tenure" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Tenure (Years)</label>
+            <span id="emi-tenure-val" class="font-mono font-bold text-black dark:text-white">5 Years</span>
+          </div>
+          <input id="emi-tenure" type="range" min="1" max="30" step="1" value="5" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
+        </div>
       </div>
 
-      <!-- Interest Rate -->
-      <div>
-        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label for="emi-rate" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
-          <span id="emi-rate-val" class="font-mono font-bold text-black dark:text-white">8.5%</span>
+      <!-- Output Card & Visual Breakdown -->
+      <div class="bg-neutral-50 dark:bg-neutral-950 rounded-2xl p-5 sm:p-6 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">Monthly Repayment (EMI)</div>
+            <div id="emi-single-share-slot">
+              <ShareResult id="emi-share-btn" calculatorTitle="Loan & EMI" />
+            </div>
+          </div>
+          <div id="emi-monthly-result" class="text-3xl sm:text-4xl font-black text-black dark:text-purple-400 tabular-nums">
+            $0
+          </div>
         </div>
-        <input id="emi-rate" type="range" min="1" max="25" step="0.1" value="8.5" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
-      </div>
 
-      <!-- Tenure -->
-      <div>
-        <div class="flex justify-between items-center mb-1 text-xs font-semibold">
-          <label for="emi-tenure" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Tenure (Years)</label>
-          <span id="emi-tenure-val" class="font-mono font-bold text-black dark:text-white">5 Years</span>
+        <!-- Breakdown Table -->
+        <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 text-xs font-mono">
+          <div>
+            <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Interest</span>
+            <span id="emi-total-interest" class="font-bold text-black dark:text-white tabular-nums text-sm sm:text-base">$0</span>
+          </div>
+          <div>
+            <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Payable</span>
+            <span id="emi-total-payable" class="font-bold text-black dark:text-white tabular-nums text-sm sm:text-base">$0</span>
+          </div>
         </div>
-        <input id="emi-tenure" type="range" min="1" max="30" step="1" value="5" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-purple-600" />
+
+        <!-- Visual Percentage Bar -->
+        <div>
+          <div class="flex justify-between text-[11px] font-mono text-neutral-700 dark:text-neutral-400 mb-1 font-bold">
+            <span>Principal (<span id="principal-pct">70%</span>)</span>
+            <span>Interest (<span id="interest-pct">30%</span>)</span>
+          </div>
+          <div class="w-full h-3 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex">
+            <div id="principal-bar" class="h-full bg-black dark:bg-purple-600 transition-all duration-300" style="width: 70%"></div>
+            <div id="interest-bar" class="h-full bg-neutral-400 dark:bg-purple-400/40 transition-all duration-300" style="width: 30%"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Output Card & Visual Breakdown -->
-    <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
-      <div>
-        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1">Monthly Repayment (EMI)</div>
-        <div id="emi-monthly-result" class="text-3xl sm:text-4xl font-black text-black dark:text-purple-400 tabular-nums">
-          $0
+    <!-- Live Explain Calculation Walkthrough -->
+    <details id="emi-explain-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 shadow-xs">
+      <summary class="flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
+        <div class="flex items-center gap-2.5">
+          <span class="w-7 h-7 rounded-lg bg-purple-500/10 dark:bg-purple-400/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </span>
+          <div>
+            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 block sm:inline-block sm:mr-2">Explain Calculation</span>
+            <span class="font-bold text-neutral-900 dark:text-neutral-100">Live Mathematical Working</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 group-open:hidden">Show Steps</span>
+          <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hidden group-open:inline">Hide Steps</span>
+          <svg data-icon class="w-4 h-4 text-neutral-400 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </summary>
+
+      <div class="mt-4 pt-4 border-t border-neutral-200/70 dark:border-neutral-800/80 space-y-4 text-xs font-mono">
+        <!-- Formula -->
+        <div class="space-y-1.5">
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">Standard Amortization Formula</div>
+          <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-purple-300 font-bold overflow-x-auto text-xs sm:text-sm">
+            EMI = [P × r × (1 + r)ⁿ] ÷ [(1 + r)ⁿ − 1]
+          </div>
+        </div>
+
+        <!-- Live Calculation Working -->
+        <div id="emi-explain-body" class="space-y-3">
+          <!-- Step 1: Inputs & Monthly Rate -->
+          <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+            <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 1 — Rate & Periods Conversion</div>
+            <div class="text-neutral-600 dark:text-neutral-400 space-y-0.5 pt-0.5">
+              <div>Principal (P) = <span id="exp-emi-p" class="font-bold text-black dark:text-white">$100,000</span></div>
+              <div>Monthly Rate (r) = <span id="exp-emi-rate-formula">8.5% ÷ 12 ÷ 100</span> = <span id="exp-emi-r" class="font-bold text-black dark:text-white">0.00708333</span></div>
+              <div>Total Payments (n) = <span id="exp-emi-tenure-formula">5 × 12</span> = <span id="exp-emi-n" class="font-bold text-black dark:text-white">60 months</span></div>
+            </div>
+          </div>
+
+          <!-- Step 2: Substitution & EMI -->
+          <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+            <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 2 — Monthly Installment (EMI)</div>
+            <div class="text-neutral-600 dark:text-neutral-400 space-y-1 pt-0.5">
+              <div>Growth Multiplier (1 + r)ⁿ = <span id="exp-emi-growth" class="font-bold text-black dark:text-white">(1.00708333)⁶⁰ ≈ 1.5273</span></div>
+              <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+                EMI = [<span id="exp-emi-sub-p">100,000</span> × <span id="exp-emi-sub-r">0.00708333</span> × <span id="exp-emi-sub-growth1">1.5273</span>] ÷ [<span id="exp-emi-sub-growth2">1.5273</span> − 1]
+              </div>
+              <div class="font-bold text-purple-600 dark:text-purple-400 text-sm">
+                = <span id="exp-emi-monthly-val">$2,051.65 / month</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Total Interest & Repayment -->
+          <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+            <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 3 — Total Cost Breakdown</div>
+            <div class="text-neutral-600 dark:text-neutral-400 space-y-0.5 pt-0.5">
+              <div>Total Repayment = <span id="exp-emi-tot-formula">$2,051.65 × 60</span> = <span id="exp-emi-tot-payable" class="font-bold text-black dark:text-white">$123,099.16</span></div>
+              <div>Total Interest = <span id="exp-emi-int-formula">$123,099.16 − $100,000</span> = <span id="exp-emi-tot-interest" class="font-bold text-black dark:text-white">$23,099.16</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- COMPARISON MODE VIEW (When Compare Loans is Enabled) -->
+  <div id="emi-compare-view" class="hidden space-y-6">
+    <!-- Two Scenarios: Side-by-Side on Desktop, Stacked on Mobile -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Scenario A Card -->
+      <div id="scenario-a-card" class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/40 p-4 sm:p-5 space-y-5 flex flex-col justify-between">
+        <div class="space-y-4">
+          <!-- Scenario A Header -->
+          <div class="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 gap-2">
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 tracking-wide">Scenario A</span>
+              <span class="text-neutral-400 dark:text-neutral-600 font-mono text-xs hidden sm:inline">—</span>
+              <span class="text-xs text-neutral-600 dark:text-neutral-300 font-semibold font-mono">Loan Offer 1</span>
+            </div>
+            <button
+              type="button"
+              id="scenario-a-reset"
+              title="Reset Scenario A to defaults"
+              class="text-[11px] font-mono text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 cursor-pointer transition-colors shrink-0"
+            >
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Scenario A Controls -->
+          <div class="space-y-3.5">
+            <!-- Loan Amount -->
+            <div>
+              <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+                <label for="scenario-a-amount" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Amount</label>
+                <span id="scenario-a-amount-val" class="font-mono font-bold text-black dark:text-white">100,000</span>
+              </div>
+              <input id="scenario-a-amount" type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white" />
+              <div class="flex justify-between text-[10px] font-mono text-neutral-400 mt-0.5">
+                <span id="scenario-a-min-hint">Min: $10,000</span>
+                <span id="scenario-a-max-hint">Max: $1,000,000</span>
+              </div>
+            </div>
+
+            <!-- Interest Rate -->
+            <div>
+              <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+                <label for="scenario-a-rate" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
+                <span id="scenario-a-rate-val" class="font-mono font-bold text-black dark:text-white">8.5%</span>
+              </div>
+              <input id="scenario-a-rate" type="range" min="1" max="25" step="0.1" value="8.5" class="w-full h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white" />
+            </div>
+
+            <!-- Tenure -->
+            <div>
+              <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+                <label for="scenario-a-tenure" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Tenure (Years)</label>
+                <span id="scenario-a-tenure-val" class="font-mono font-bold text-black dark:text-white">5 Years</span>
+              </div>
+              <input id="scenario-a-tenure" type="range" min="1" max="30" step="1" value="5" class="w-full h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario A Results Box -->
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-4 border border-neutral-200 dark:border-neutral-800 space-y-3">
+          <div>
+            <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider font-semibold">Monthly EMI</div>
+            <div id="scenario-a-monthly" class="text-2xl sm:text-3xl font-black text-black dark:text-white tabular-nums">$0</div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs font-mono">
+            <div>
+              <span class="text-neutral-500 text-[10px] block font-semibold">Total Interest</span>
+              <span id="scenario-a-interest" class="font-bold text-neutral-800 dark:text-neutral-200 tabular-nums">$0</span>
+            </div>
+            <div>
+              <span class="text-neutral-500 text-[10px] block font-semibold">Total Repayment</span>
+              <span id="scenario-a-payable" class="font-bold text-neutral-800 dark:text-neutral-200 tabular-nums">$0</span>
+            </div>
+          </div>
+          <div class="w-full h-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex">
+            <div id="scenario-a-principal-bar" class="h-full bg-black dark:bg-neutral-200 transition-all duration-300" style="width: 70%"></div>
+            <div id="scenario-a-interest-bar" class="h-full bg-neutral-400 dark:bg-neutral-600 transition-all duration-300" style="width: 30%"></div>
+          </div>
         </div>
       </div>
 
-      <!-- Breakdown Table -->
-      <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
-        <div>
-          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Interest</span>
-          <span id="emi-total-interest" class="font-bold text-black dark:text-white tabular-nums">$0</span>
+      <!-- Scenario B Card -->
+      <div id="scenario-b-card" class="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/30 dark:bg-purple-950/20 p-4 sm:p-5 space-y-5 flex flex-col justify-between">
+        <div class="space-y-4">
+          <!-- Scenario B Header -->
+          <div class="flex items-center justify-between border-b border-purple-100 dark:border-purple-900/50 pb-3 flex-wrap gap-2">
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-600 text-white tracking-wide">Scenario B</span>
+              <span class="text-purple-300 dark:text-purple-700 font-mono text-xs hidden sm:inline">—</span>
+              <span class="text-xs text-purple-900 dark:text-purple-200 font-semibold font-mono">Loan Offer 2</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button
+                type="button"
+                id="scenario-b-copy"
+                title="Duplicate all inputs from Scenario A"
+                class="text-[11px] font-mono text-purple-700 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-100 flex items-center gap-1 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800 bg-white dark:bg-neutral-900 cursor-pointer transition-colors"
+              >
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span id="scenario-b-copy-text">Copy Scenario A</span>
+              </button>
+              <button
+                type="button"
+                id="scenario-b-reset"
+                title="Reset Scenario B to defaults"
+                class="text-[11px] font-mono text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 cursor-pointer transition-colors"
+              >
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Reset</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Scenario B Controls -->
+          <div class="space-y-3.5">
+            <!-- Loan Amount -->
+            <div>
+              <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+                <label for="scenario-b-amount" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Amount</label>
+                <span id="scenario-b-amount-val" class="font-mono font-bold text-black dark:text-white">100,000</span>
+              </div>
+              <input id="scenario-b-amount" type="range" min="10000" max="1000000" step="5000" value="100000" class="w-full h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-600" />
+              <div class="flex justify-between text-[10px] font-mono text-neutral-400 mt-0.5">
+                <span id="scenario-b-min-hint">Min: $10,000</span>
+                <span id="scenario-b-max-hint">Max: $1,000,000</span>
+              </div>
+            </div>
+
+            <!-- Interest Rate -->
+            <div>
+              <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+                <label for="scenario-b-rate" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Interest Rate (% p.a.)</label>
+                <span id="scenario-b-rate-val" class="font-mono font-bold text-black dark:text-white">8.0%</span>
+              </div>
+              <input id="scenario-b-rate" type="range" min="1" max="25" step="0.1" value="8.0" class="w-full h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-600" />
+            </div>
+
+            <!-- Tenure -->
+            <div>
+              <div class="flex justify-between items-center mb-1 text-xs font-semibold">
+                <label for="scenario-b-tenure" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Loan Tenure (Years)</label>
+                <span id="scenario-b-tenure-val" class="font-mono font-bold text-black dark:text-white">5 Years</span>
+              </div>
+              <input id="scenario-b-tenure" type="range" min="1" max="30" step="1" value="5" class="w-full h-2 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-600" />
+            </div>
+          </div>
         </div>
-        <div>
-          <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Payable</span>
-          <span id="emi-total-payable" class="font-bold text-black dark:text-white tabular-nums">$0</span>
+
+        <!-- Scenario B Results Box -->
+        <div class="bg-white dark:bg-neutral-900 rounded-xl p-4 border border-purple-200 dark:border-purple-900/60 space-y-3">
+          <div>
+            <div class="text-[11px] font-mono text-purple-600 dark:text-purple-400 uppercase tracking-wider font-semibold">Monthly EMI</div>
+            <div id="scenario-b-monthly" class="text-2xl sm:text-3xl font-black text-purple-600 dark:text-purple-400 tabular-nums">$0</div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs font-mono">
+            <div>
+              <span class="text-neutral-500 text-[10px] block font-semibold">Total Interest</span>
+              <span id="scenario-b-interest" class="font-bold text-neutral-800 dark:text-neutral-200 tabular-nums">$0</span>
+            </div>
+            <div>
+              <span class="text-neutral-500 text-[10px] block font-semibold">Total Repayment</span>
+              <span id="scenario-b-payable" class="font-bold text-neutral-800 dark:text-neutral-200 tabular-nums">$0</span>
+            </div>
+          </div>
+          <div class="w-full h-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex">
+            <div id="scenario-b-principal-bar" class="h-full bg-purple-600 transition-all duration-300" style="width: 70%"></div>
+            <div id="scenario-b-interest-bar" class="h-full bg-purple-300 dark:bg-purple-900 transition-all duration-300" style="width: 30%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEDICATED COMPARISON SUMMARY PANEL -->
+    <div id="emi-comparison-summary" class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-950/60 p-4 sm:p-6 space-y-6 shadow-xs">
+      
+      <!-- Primary Decision Hero Banner -->
+      <div id="comparison-recommendation-banner" class="p-5 sm:p-6 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/80 dark:bg-emerald-950/40 transition-colors space-y-3">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <span id="comparison-recommendation-icon" class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </span>
+            <div id="comparison-recommendation-title" class="font-bold text-sm sm:text-base text-emerald-900 dark:text-emerald-200">
+              Scenario B offers the lower lifetime borrowing cost.
+            </div>
+          </div>
+          <div id="emi-compare-share-slot"></div>
+        </div>
+        
+        <div class="space-y-1 pt-1">
+          <div id="comparison-hero-savings" class="text-3xl sm:text-4xl font-black text-emerald-950 dark:text-emerald-200 font-mono tracking-tight tabular-nums">
+            $2,871 SAVED
+          </div>
+          <div id="comparison-recommendation-detail" class="text-xs sm:text-sm font-mono text-emerald-800 dark:text-emerald-300">
+            Scenario B reduces lifetime borrowing costs by $2,871.
+          </div>
         </div>
       </div>
 
-      <!-- Visual Percentage Bar -->
-      <div>
-        <div class="flex justify-between text-[11px] font-mono text-neutral-700 dark:text-neutral-400 mb-1 font-bold">
-          <span>Principal (<span id="principal-pct">70%</span>)</span>
-          <span>Interest (<span id="interest-pct">30%</span>)</span>
+      <!-- Difference Metric Cards: Clearly Separated Domains -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+        <!-- Card 1: Monthly Cash Flow / Affordability -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2 flex flex-col justify-between">
+          <div>
+            <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Monthly Payment (EMI)</div>
+            <div id="comparison-emi-diff-val" class="text-lg sm:text-xl font-black font-mono text-neutral-900 dark:text-neutral-100 tabular-nums mt-1">
+              Scenario B: $48 lower / mo
+            </div>
+          </div>
+          <div id="comparison-emi-diff-note" class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Scenario B requires $48 less per month for cash flow.
+          </div>
         </div>
-        <div class="w-full h-3 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex">
-          <div id="principal-bar" class="h-full bg-black dark:bg-purple-600 transition-all duration-300" style="width: 70%"></div>
-          <div id="interest-bar" class="h-full bg-neutral-400 dark:bg-purple-400/40 transition-all duration-300" style="width: 30%"></div>
+
+        <!-- Card 2: Lifetime Interest Cost -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2 flex flex-col justify-between">
+          <div>
+            <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Total Interest Cost</div>
+            <div id="comparison-interest-diff-val" class="text-lg sm:text-xl font-black font-mono text-neutral-900 dark:text-neutral-100 tabular-nums mt-1">
+              Scenario B saves $2,871
+            </div>
+          </div>
+          <div id="comparison-interest-diff-note" class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Scenario B reduces total borrowing cost by $2,871 in lifetime interest.
+          </div>
+        </div>
+
+        <!-- Card 3: Overall Borrowing Cost (Principal + Interest) -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2 flex flex-col justify-between">
+          <div>
+            <div class="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Total Borrowing Cost</div>
+            <div id="comparison-payable-diff-val" class="text-lg sm:text-xl font-black font-mono text-neutral-900 dark:text-neutral-100 tabular-nums mt-1">
+              Scenario B saves $2,871 overall
+            </div>
+          </div>
+          <div id="comparison-payable-diff-note" class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Scenario B has the lower total cost of borrowing.
+          </div>
         </div>
       </div>
+
+      <!-- Side-by-side Table Breakdown with Compact Summary & Show More -->
+      <div class="overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs">
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs font-mono text-left border-collapse min-w-[520px]">
+            <thead>
+              <tr class="bg-neutral-100/70 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
+                <th class="p-3 font-bold">Metric</th>
+                <th class="p-3 font-bold">Scenario A</th>
+                <th class="p-3 font-bold text-purple-600 dark:text-purple-400">Scenario B</th>
+                <th class="p-3 font-bold">Comparison / Winner</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-neutral-100 dark:divide-neutral-800/60">
+              <!-- Compact summary rows (Visible by default) -->
+              <tr>
+                <td class="p-3 font-medium text-neutral-600 dark:text-neutral-400">Monthly EMI</td>
+                <td id="tbl-a-emi" class="p-3 font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">$2,052</td>
+                <td id="tbl-b-emi" class="p-3 font-bold text-purple-600 dark:text-purple-400 tabular-nums">$2,028</td>
+                <td id="tbl-diff-emi" class="p-3 font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">Scenario B saves $24/mo</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-medium text-neutral-600 dark:text-neutral-400">Total Interest</td>
+                <td id="tbl-a-interest" class="p-3 font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">$23,099</td>
+                <td id="tbl-b-interest" class="p-3 font-bold text-purple-600 dark:text-purple-400 tabular-nums">$21,658</td>
+                <td id="tbl-diff-interest" class="p-3 font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">Scenario B saves $1,441</td>
+              </tr>
+              <tr class="bg-neutral-50/50 dark:bg-neutral-950/40">
+                <td class="p-3 font-bold text-neutral-900 dark:text-neutral-100">Total Repayment</td>
+                <td id="tbl-a-payable" class="p-3 font-black text-neutral-900 dark:text-neutral-100 tabular-nums">$123,099</td>
+                <td id="tbl-b-payable" class="p-3 font-black text-purple-600 dark:text-purple-400 tabular-nums">$121,658</td>
+                <td id="tbl-diff-payable" class="p-3 font-black text-emerald-600 dark:text-emerald-400 tabular-nums">Scenario B saves $1,441</td>
+              </tr>
+
+              <!-- Detailed matrix rows (Hidden initially behind Show More) -->
+              <tr class="emi-extra-row hidden">
+                <td class="p-3 font-medium text-neutral-500">Loan Principal</td>
+                <td id="tbl-a-principal" class="p-3 font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">$100,000</td>
+                <td id="tbl-b-principal" class="p-3 font-bold text-purple-600 dark:text-purple-400 tabular-nums">$100,000</td>
+                <td id="tbl-diff-principal" class="p-3 font-medium text-neutral-600 dark:text-neutral-400">Same</td>
+              </tr>
+              <tr class="emi-extra-row hidden">
+                <td class="p-3 font-medium text-neutral-500">Interest Rate</td>
+                <td id="tbl-a-rate" class="p-3 font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">8.5%</td>
+                <td id="tbl-b-rate" class="p-3 font-bold text-purple-600 dark:text-purple-400 tabular-nums">8.0%</td>
+                <td id="tbl-diff-rate" class="p-3 font-medium text-neutral-600 dark:text-neutral-400">-0.5%</td>
+              </tr>
+              <tr class="emi-extra-row hidden">
+                <td class="p-3 font-medium text-neutral-500">Loan Tenure</td>
+                <td id="tbl-a-tenure" class="p-3 font-bold text-neutral-900 dark:text-neutral-100 tabular-nums">5 Years</td>
+                <td id="tbl-b-tenure" class="p-3 font-bold text-purple-600 dark:text-purple-400 tabular-nums">5 Years</td>
+                <td id="tbl-diff-tenure" class="p-3 font-medium text-neutral-600 dark:text-neutral-400">Same</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table Expansion Toggle -->
+        <div class="border-t border-neutral-200 dark:border-neutral-800 p-2.5 text-center bg-neutral-50/60 dark:bg-neutral-950/60">
+          <button
+            type="button"
+            id="emi-matrix-toggle"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition-colors shadow-2xs"
+          >
+            <span id="emi-matrix-toggle-text">↓ Show More (Principal, Rate, Tenure & Full Matrix)</span>
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<script is:inline>
+<script>
+  import { parseQueryParams, initShareButton, LOAN_EMI_SCHEMA } from '../../utils/share';
+  import { calculateEMI, compareLoans } from '../../lib/calculators/finance';
+
   (function() {
-    const amountInput = document.getElementById('emi-amount');
-    const rateInput = document.getElementById('emi-rate');
-    const tenureInput = document.getElementById('emi-tenure');
+    // Single View Elements
+    const singleView = document.getElementById('emi-single-view');
+    const compareView = document.getElementById('emi-compare-view');
+    const compareToggleBtn = document.getElementById('emi-compare-toggle') as HTMLButtonElement | null;
+    const compareToggleBadge = document.getElementById('compare-toggle-badge');
+
+    const amountInput = document.getElementById('emi-amount') as HTMLInputElement | null;
+    const rateInput = document.getElementById('emi-rate') as HTMLInputElement | null;
+    const tenureInput = document.getElementById('emi-tenure') as HTMLInputElement | null;
 
     const amountVal = document.getElementById('emi-amount-val');
     const rateVal = document.getElementById('emi-rate-val');
     const tenureVal = document.getElementById('emi-tenure-val');
+
+    const minHint = document.getElementById('emi-min-hint');
+    const maxHint = document.getElementById('emi-max-hint');
 
     const monthlyResult = document.getElementById('emi-monthly-result');
     const totalInterestEl = document.getElementById('emi-total-interest');
@@ -106,78 +541,777 @@
     const principalBar = document.getElementById('principal-bar');
     const interestBar = document.getElementById('interest-bar');
 
-    const CURRENCY_CONFIGS = {
+    // Explain elements
+    const expP = document.getElementById('exp-emi-p');
+    const expRateFormula = document.getElementById('exp-emi-rate-formula');
+    const expR = document.getElementById('exp-emi-r');
+    const expTenureFormula = document.getElementById('exp-emi-tenure-formula');
+    const expN = document.getElementById('exp-emi-n');
+    const expGrowth = document.getElementById('exp-emi-growth');
+    const expSubP = document.getElementById('exp-emi-sub-p');
+    const expSubR = document.getElementById('exp-emi-sub-r');
+    const expSubGrowth1 = document.getElementById('exp-emi-sub-growth1');
+    const expSubGrowth2 = document.getElementById('exp-emi-sub-growth2');
+    const expMonthlyVal = document.getElementById('exp-emi-monthly-val');
+    const expTotFormula = document.getElementById('exp-emi-tot-formula');
+    const expTotPayable = document.getElementById('exp-emi-tot-payable');
+    const expIntFormula = document.getElementById('exp-emi-int-formula');
+    const expTotInterest = document.getElementById('exp-emi-tot-interest');
+
+    // Scenario A Elements
+    const scenAAmountInp = document.getElementById('scenario-a-amount') as HTMLInputElement | null;
+    const scenARateInp = document.getElementById('scenario-a-rate') as HTMLInputElement | null;
+    const scenATenureInp = document.getElementById('scenario-a-tenure') as HTMLInputElement | null;
+    const scenAAmountVal = document.getElementById('scenario-a-amount-val');
+    const scenARateVal = document.getElementById('scenario-a-rate-val');
+    const scenATenureVal = document.getElementById('scenario-a-tenure-val');
+    const scenAMinHint = document.getElementById('scenario-a-min-hint');
+    const scenAMaxHint = document.getElementById('scenario-a-max-hint');
+    const scenAMonthly = document.getElementById('scenario-a-monthly');
+    const scenAInterest = document.getElementById('scenario-a-interest');
+    const scenAPayable = document.getElementById('scenario-a-payable');
+    const scenAPrincipalBar = document.getElementById('scenario-a-principal-bar');
+    const scenAInterestBar = document.getElementById('scenario-a-interest-bar');
+    const scenAResetBtn = document.getElementById('scenario-a-reset');
+
+    // Scenario B Elements
+    const scenBAmountInp = document.getElementById('scenario-b-amount') as HTMLInputElement | null;
+    const scenBRateInp = document.getElementById('scenario-b-rate') as HTMLInputElement | null;
+    const scenBTenureInp = document.getElementById('scenario-b-tenure') as HTMLInputElement | null;
+    const scenBAmountVal = document.getElementById('scenario-b-amount-val');
+    const scenBRateVal = document.getElementById('scenario-b-rate-val');
+    const scenBTenureVal = document.getElementById('scenario-b-tenure-val');
+    const scenBMinHint = document.getElementById('scenario-b-min-hint');
+    const scenBMaxHint = document.getElementById('scenario-b-max-hint');
+    const scenBMonthly = document.getElementById('scenario-b-monthly');
+    const scenBInterest = document.getElementById('scenario-b-interest');
+    const scenBPayable = document.getElementById('scenario-b-payable');
+    const scenBPrincipalBar = document.getElementById('scenario-b-principal-bar');
+    const scenBInterestBar = document.getElementById('scenario-b-interest-bar');
+    const scenBCopyBtn = document.getElementById('scenario-b-copy');
+    const scenBCopyText = document.getElementById('scenario-b-copy-text');
+    const scenBResetBtn = document.getElementById('scenario-b-reset');
+
+    // Comparison Summary Elements
+    const recBanner = document.getElementById('comparison-recommendation-banner');
+    const recIcon = document.getElementById('comparison-recommendation-icon');
+    const recTitle = document.getElementById('comparison-recommendation-title');
+    const recDetail = document.getElementById('comparison-recommendation-detail');
+    const heroSavingsEl = document.getElementById('comparison-hero-savings');
+    const emiDiffVal = document.getElementById('comparison-emi-diff-val');
+    const emiDiffNote = document.getElementById('comparison-emi-diff-note');
+    const interestDiffVal = document.getElementById('comparison-interest-diff-val');
+    const interestDiffNote = document.getElementById('comparison-interest-diff-note');
+    const payableDiffVal = document.getElementById('comparison-payable-diff-val');
+    const payableDiffNote = document.getElementById('comparison-payable-diff-note');
+
+    const matrixToggleBtn = document.getElementById('emi-matrix-toggle');
+    const matrixToggleText = document.getElementById('emi-matrix-toggle-text');
+
+    // Table Elements
+    const tblAPrincipal = document.getElementById('tbl-a-principal');
+    const tblBPrincipal = document.getElementById('tbl-b-principal');
+    const tblDiffPrincipal = document.getElementById('tbl-diff-principal');
+    const tblARate = document.getElementById('tbl-a-rate');
+    const tblBRate = document.getElementById('tbl-b-rate');
+    const tblDiffRate = document.getElementById('tbl-diff-rate');
+    const tblATenure = document.getElementById('tbl-a-tenure');
+    const tblBTenure = document.getElementById('tbl-b-tenure');
+    const tblDiffTenure = document.getElementById('tbl-diff-tenure');
+    const tblAEmi = document.getElementById('tbl-a-emi');
+    const tblBEmi = document.getElementById('tbl-b-emi');
+    const tblDiffEmi = document.getElementById('tbl-diff-emi');
+    const tblAInterest = document.getElementById('tbl-a-interest');
+    const tblBInterest = document.getElementById('tbl-b-interest');
+    const tblDiffInterest = document.getElementById('tbl-diff-interest');
+    const tblAPayable = document.getElementById('tbl-a-payable');
+    const tblBPayable = document.getElementById('tbl-b-payable');
+    const tblDiffPayable = document.getElementById('tbl-diff-payable');
+
+    let isComparisonMode = false;
+
+    const CURRENCY_CONFIGS: Record<string, { symbol: string; locale: string }> = {
       USD: { symbol: '$', locale: 'en-US' },
       INR: { symbol: '₹', locale: 'en-IN' },
       EUR: { symbol: '€', locale: 'en-IE' },
       GBP: { symbol: '£', locale: 'en-GB' }
     };
 
-    function getCurrency() {
+    function getCurrency(): string {
       return localStorage.getItem('ack_currency') || 'USD';
     }
 
-    function formatMoney(num) {
+    function formatIndianCompact(num: number): string {
+      if (num >= 10000000) {
+        const cr = (num / 10000000).toFixed(2).replace(/\.00$/, '');
+        return `${cr} Cr`;
+      }
+      if (num >= 100000) {
+        const l = (num / 100000).toFixed(2).replace(/\.00$/, '');
+        return `${l} Lakh`;
+      }
+      return '';
+    }
+
+    function formatMoney(num: number): string {
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
       const formatted = Math.round(num).toLocaleString(cfg.locale);
       return `${cfg.symbol}${formatted}`;
     }
 
-    function calculateEMI() {
+    function formatPreciseMoney(num: number): string {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      const formatted = num.toLocaleString(cfg.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return `${cfg.symbol}${formatted}`;
+    }
+
+    let lastCurrency = getCurrency();
+
+    function updateSliderConfigForInput(inp: HTMLInputElement | null, minEl: HTMLElement | null, maxEl: HTMLElement | null) {
+      const curr = getCurrency();
+      if (!inp) return;
+
+      if (curr === 'INR') {
+        inp.min = '50000';
+        inp.max = '20000000';
+        inp.step = '50000';
+        if (minEl) minEl.textContent = 'Min: ₹50,000 (50k)';
+        if (maxEl) maxEl.textContent = 'Max: ₹2,00,00,000 (2 Cr)';
+        
+        if (lastCurrency !== 'INR' && parseFloat(inp.value) <= 1000000) {
+          inp.value = '2500000';
+        }
+      } else {
+        inp.min = '10000';
+        inp.max = '1000000';
+        inp.step = '5000';
+        const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+        if (minEl) minEl.textContent = `Min: ${cfg.symbol}10,000`;
+        if (maxEl) maxEl.textContent = `Max: ${cfg.symbol}1,000,000`;
+        
+        if (lastCurrency === 'INR' && parseFloat(inp.value) > 1000000) {
+          inp.value = '100000';
+        }
+      }
+    }
+
+    function updateAllSlidersForCurrency() {
+      updateSliderConfigForInput(amountInput, minHint, maxHint);
+      updateSliderConfigForInput(scenAAmountInp, scenAMinHint, scenAMaxHint);
+      updateSliderConfigForInput(scenBAmountInp, scenBMinHint, scenBMaxHint);
+      lastCurrency = getCurrency();
+    }
+
+    function calculateSingleEMI() {
       if (!amountInput || !rateInput || !tenureInput) return;
 
-      const P = parseFloat(amountInput.value);
-      const annualRate = parseFloat(rateInput.value);
-      const years = parseFloat(tenureInput.value);
+      const P = parseFloat(amountInput.value) || 0;
+      const annualRate = parseFloat(rateInput.value) || 0;
+      const years = parseFloat(tenureInput.value) || 0;
 
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
 
-      if (amountVal) amountVal.textContent = Math.round(P).toLocaleString(cfg.locale);
+      let amountDisplay = Math.round(P).toLocaleString(cfg.locale);
+      if (curr === 'INR') {
+        const compact = formatIndianCompact(P);
+        if (compact) {
+          amountDisplay = `₹${amountDisplay} (${compact})`;
+        } else {
+          amountDisplay = `₹${amountDisplay}`;
+        }
+      }
+      if (amountVal) amountVal.textContent = amountDisplay;
       if (rateVal) rateVal.textContent = annualRate.toFixed(1) + '%';
       if (tenureVal) tenureVal.textContent = years + (years === 1 ? ' Year' : ' Years');
 
+      const res = calculateEMI(P, annualRate, years);
+
+      if (monthlyResult) monthlyResult.textContent = formatMoney(res.monthlyEmi);
+      if (totalInterestEl) totalInterestEl.textContent = formatMoney(res.totalInterest);
+      if (totalPayableEl) totalPayableEl.textContent = formatMoney(res.totalPayable);
+
+      if (principalPctEl) principalPctEl.textContent = res.principalPercent + '%';
+      if (interestPctEl) interestPctEl.textContent = res.interestPercent + '%';
+      if (principalBar) principalBar.style.width = res.principalPercent + '%';
+      if (interestBar) interestBar.style.width = res.interestPercent + '%';
+
+      // Update live Explain Calculation breakdown
       const r = annualRate / 12 / 100;
       const n = years * 12;
+      const growth = r === 0 ? 1 : Math.pow(1 + r, n);
 
-      const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-      const totalPayable = emi * n;
-      const totalInterest = totalPayable - P;
+      if (expP) expP.textContent = formatMoney(P);
+      if (expRateFormula) expRateFormula.textContent = `${annualRate.toFixed(1)}% ÷ 12 ÷ 100`;
+      if (expR) expR.textContent = r.toFixed(8).replace(/\.?0+$/, '') || '0';
+      if (expTenureFormula) expTenureFormula.textContent = `${years} × 12`;
+      if (expN) expN.textContent = `${n} months`;
 
-      if (monthlyResult) monthlyResult.textContent = formatMoney(emi);
-      if (totalInterestEl) totalInterestEl.textContent = formatMoney(totalInterest);
-      if (totalPayableEl) totalPayableEl.textContent = formatMoney(totalPayable);
+      const growthStr = growth.toFixed(4);
+      if (expGrowth) expGrowth.textContent = `(1 + ${r.toFixed(6)})^${n} ≈ ${growthStr}`;
+      if (expSubP) expSubP.textContent = Math.round(P).toLocaleString(cfg.locale);
+      if (expSubR) expSubR.textContent = r.toFixed(6);
+      if (expSubGrowth1) expSubGrowth1.textContent = growthStr;
+      if (expSubGrowth2) expSubGrowth2.textContent = growthStr;
+      if (expMonthlyVal) expMonthlyVal.textContent = `${formatPreciseMoney(res.monthlyEmi)} / month`;
 
-      const pPct = Math.round((P / totalPayable) * 100);
-      const iPct = 100 - pPct;
-
-      if (principalPctEl) principalPctEl.textContent = pPct + '%';
-      if (interestPctEl) interestPctEl.textContent = iPct + '%';
-      if (principalBar) principalBar.style.width = pPct + '%';
-      if (interestBar) interestBar.style.width = iPct + '%';
+      if (expTotFormula) expTotFormula.textContent = `${formatPreciseMoney(res.monthlyEmi)} × ${n}`;
+      if (expTotPayable) expTotPayable.textContent = formatPreciseMoney(res.totalPayable);
+      if (expIntFormula) expIntFormula.textContent = `${formatPreciseMoney(res.totalPayable)} − ${formatMoney(P)}`;
+      if (expTotInterest) expTotInterest.textContent = formatPreciseMoney(res.totalInterest);
     }
 
+    function calculateScenarioA() {
+      if (!scenAAmountInp || !scenARateInp || !scenATenureInp) return;
+
+      const P = parseFloat(scenAAmountInp.value) || 0;
+      const annualRate = parseFloat(scenARateInp.value) || 0;
+      const years = parseFloat(scenATenureInp.value) || 0;
+
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+
+      let amountDisplay = Math.round(P).toLocaleString(cfg.locale);
+      if (curr === 'INR') {
+        const compact = formatIndianCompact(P);
+        if (compact) {
+          amountDisplay = `₹${amountDisplay} (${compact})`;
+        } else {
+          amountDisplay = `₹${amountDisplay}`;
+        }
+      }
+      if (scenAAmountVal) scenAAmountVal.textContent = amountDisplay;
+      if (scenARateVal) scenARateVal.textContent = annualRate.toFixed(1) + '%';
+      if (scenATenureVal) scenATenureVal.textContent = years + (years === 1 ? ' Year' : ' Years');
+
+      const res = calculateEMI(P, annualRate, years);
+
+      if (scenAMonthly) scenAMonthly.textContent = formatMoney(res.monthlyEmi);
+      if (scenAInterest) scenAInterest.textContent = formatMoney(res.totalInterest);
+      if (scenAPayable) scenAPayable.textContent = formatMoney(res.totalPayable);
+
+      if (scenAPrincipalBar) scenAPrincipalBar.style.width = res.principalPercent + '%';
+      if (scenAInterestBar) scenAInterestBar.style.width = res.interestPercent + '%';
+    }
+
+    function calculateScenarioB() {
+      if (!scenBAmountInp || !scenBRateInp || !scenBTenureInp) return;
+
+      const P = parseFloat(scenBAmountInp.value) || 0;
+      const annualRate = parseFloat(scenBRateInp.value) || 0;
+      const years = parseFloat(scenBTenureInp.value) || 0;
+
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+
+      let amountDisplay = Math.round(P).toLocaleString(cfg.locale);
+      if (curr === 'INR') {
+        const compact = formatIndianCompact(P);
+        if (compact) {
+          amountDisplay = `₹${amountDisplay} (${compact})`;
+        } else {
+          amountDisplay = `₹${amountDisplay}`;
+        }
+      }
+      if (scenBAmountVal) scenBAmountVal.textContent = amountDisplay;
+      if (scenBRateVal) scenBRateVal.textContent = annualRate.toFixed(1) + '%';
+      if (scenBTenureVal) scenBTenureVal.textContent = years + (years === 1 ? ' Year' : ' Years');
+
+      const res = calculateEMI(P, annualRate, years);
+
+      if (scenBMonthly) scenBMonthly.textContent = formatMoney(res.monthlyEmi);
+      if (scenBInterest) scenBInterest.textContent = formatMoney(res.totalInterest);
+      if (scenBPayable) scenBPayable.textContent = formatMoney(res.totalPayable);
+
+      if (scenBPrincipalBar) scenBPrincipalBar.style.width = res.principalPercent + '%';
+      if (scenBInterestBar) scenBInterestBar.style.width = res.interestPercent + '%';
+    }
+
+    function updateComparisonSummary() {
+      if (!scenAAmountInp || !scenARateInp || !scenATenureInp ||
+          !scenBAmountInp || !scenBRateInp || !scenBTenureInp) return;
+
+      const loanA = {
+        principal: parseFloat(scenAAmountInp.value) || 0,
+        annualRate: parseFloat(scenARateInp.value) || 0,
+        tenureYears: parseFloat(scenATenureInp.value) || 0,
+      };
+
+      const loanB = {
+        principal: parseFloat(scenBAmountInp.value) || 0,
+        annualRate: parseFloat(scenBRateInp.value) || 0,
+        tenureYears: parseFloat(scenBTenureInp.value) || 0,
+      };
+
+      const comp = compareLoans(loanA, loanB);
+
+      // Recommendation Banner: Identifies overall lifetime cost winner
+      if (recBanner && recTitle && recDetail) {
+        if (comp.cheaperScenario === 'B') {
+          recBanner.className = 'p-5 sm:p-6 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/80 dark:bg-emerald-950/40 transition-colors space-y-3';
+          if (recIcon) recIcon.className = 'w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20';
+          recTitle.className = 'font-bold text-sm sm:text-base text-emerald-900 dark:text-emerald-200';
+          recDetail.className = 'text-xs sm:text-sm font-mono text-emerald-800 dark:text-emerald-300';
+          recTitle.textContent = 'Scenario B offers the lower lifetime borrowing cost.';
+          recDetail.textContent = `Scenario B reduces lifetime borrowing costs by ${formatMoney(comp.totalCostSavings)}.`;
+          if (heroSavingsEl) heroSavingsEl.textContent = `${formatMoney(comp.totalCostSavings)} SAVED`;
+        } else if (comp.cheaperScenario === 'A') {
+          recBanner.className = 'p-5 sm:p-6 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/80 dark:bg-emerald-950/40 transition-colors space-y-3';
+          if (recIcon) recIcon.className = 'w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20';
+          recTitle.className = 'font-bold text-sm sm:text-base text-emerald-900 dark:text-emerald-200';
+          recDetail.className = 'text-xs sm:text-sm font-mono text-emerald-800 dark:text-emerald-300';
+          recTitle.textContent = 'Scenario A offers the lower lifetime borrowing cost.';
+          recDetail.textContent = `Scenario A reduces lifetime borrowing costs by ${formatMoney(comp.totalCostSavings)}.`;
+          if (heroSavingsEl) heroSavingsEl.textContent = `${formatMoney(comp.totalCostSavings)} SAVED`;
+        } else {
+          recBanner.className = 'p-5 sm:p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/70 transition-colors space-y-3';
+          if (recIcon) recIcon.className = 'w-7 h-7 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 flex items-center justify-center shrink-0 border border-neutral-300 dark:border-neutral-700';
+          recTitle.className = 'font-bold text-sm sm:text-base text-neutral-900 dark:text-neutral-200';
+          recDetail.className = 'text-xs sm:text-sm font-mono text-neutral-600 dark:text-neutral-400';
+          recTitle.textContent = 'Both loan offers result in the same borrowing cost.';
+          recDetail.textContent = `Both options produce the exact same total repayment of ${formatMoney(comp.scenarioA.totalPayable)}.`;
+          if (heroSavingsEl) heroSavingsEl.textContent = 'Same Total Cost';
+        }
+      }
+
+      // Card 1: Monthly Cash Flow / Affordability
+      if (emiDiffVal && emiDiffNote) {
+        if (comp.monthlySavings < 0.5) {
+          emiDiffVal.textContent = 'Identical EMI';
+          emiDiffNote.textContent = 'Both scenarios require the exact same monthly payment.';
+        } else if (comp.monthlyCheaperScenario === 'B') {
+          emiDiffVal.textContent = `Scenario B: ${formatMoney(comp.monthlySavings)} lower / mo`;
+          emiDiffNote.textContent = `Scenario B requires ${formatMoney(comp.monthlySavings)} less per month for cash flow.`;
+        } else {
+          emiDiffVal.textContent = `Scenario A: ${formatMoney(comp.monthlySavings)} lower / mo`;
+          emiDiffNote.textContent = `Scenario A requires ${formatMoney(comp.monthlySavings)} less per month for cash flow.`;
+        }
+      }
+
+      // Card 2: Lifetime Interest Cost
+      if (interestDiffVal && interestDiffNote) {
+        if (comp.interestSavings < 0.5) {
+          interestDiffVal.textContent = 'Identical interest';
+          interestDiffNote.textContent = 'Both loan options charge the exact same lifetime interest.';
+        } else if (comp.totalInterestDiff > 0) {
+          interestDiffVal.textContent = `Scenario B saves ${formatMoney(comp.interestSavings)}`;
+          interestDiffNote.textContent = `Scenario B reduces total borrowing cost by ${formatMoney(comp.interestSavings)} in lifetime interest.`;
+        } else {
+          interestDiffVal.textContent = `Scenario A saves ${formatMoney(comp.interestSavings)}`;
+          interestDiffNote.textContent = `Scenario A reduces total borrowing cost by ${formatMoney(comp.interestSavings)} in lifetime interest.`;
+        }
+      }
+
+      // Card 3: Overall Lifetime Borrowing Cost
+      if (payableDiffVal && payableDiffNote) {
+        if (comp.totalCostSavings < 0.5) {
+          payableDiffVal.textContent = 'Identical total cost';
+          payableDiffNote.textContent = 'Both scenarios result in the same total repayment amount.';
+        } else if (comp.cheaperScenario === 'B') {
+          payableDiffVal.textContent = `Scenario B saves ${formatMoney(comp.totalCostSavings)} overall`;
+          payableDiffNote.textContent = `Scenario B has the lower total cost of borrowing.`;
+        } else {
+          payableDiffVal.textContent = `Scenario A saves ${formatMoney(comp.totalCostSavings)} overall`;
+          payableDiffNote.textContent = `Scenario A has the lower total cost of borrowing.`;
+        }
+      }
+
+      // Comparison Table
+      if (tblAPrincipal) tblAPrincipal.textContent = formatMoney(loanA.principal);
+      if (tblBPrincipal) tblBPrincipal.textContent = formatMoney(loanB.principal);
+      if (tblDiffPrincipal) {
+        const pDiff = loanA.principal - loanB.principal;
+        tblDiffPrincipal.textContent = pDiff === 0 ? 'Same' : (pDiff > 0 ? `Scenario B is ${formatMoney(Math.abs(pDiff))} lower` : `Scenario A is ${formatMoney(Math.abs(pDiff))} lower`);
+      }
+
+      if (tblARate) tblARate.textContent = loanA.annualRate.toFixed(1) + '%';
+      if (tblBRate) tblBRate.textContent = loanB.annualRate.toFixed(1) + '%';
+      if (tblDiffRate) {
+        const rDiff = loanA.annualRate - loanB.annualRate;
+        tblDiffRate.textContent = rDiff === 0 ? 'Same' : (rDiff > 0 ? `Scenario B is ${Math.abs(rDiff).toFixed(1)}% lower` : `Scenario A is ${Math.abs(rDiff).toFixed(1)}% lower`);
+      }
+
+      if (tblATenure) tblATenure.textContent = `${loanA.tenureYears} Years`;
+      if (tblBTenure) tblBTenure.textContent = `${loanB.tenureYears} Years`;
+      if (tblDiffTenure) {
+        const tDiff = loanA.tenureYears - loanB.tenureYears;
+        tblDiffTenure.textContent = tDiff === 0 ? 'Same' : (tDiff > 0 ? `Scenario B is ${Math.abs(tDiff)} yrs shorter` : `Scenario A is ${Math.abs(tDiff)} yrs shorter`);
+      }
+
+      if (tblAEmi) tblAEmi.textContent = formatMoney(comp.scenarioA.monthlyEmi);
+      if (tblBEmi) tblBEmi.textContent = formatMoney(comp.scenarioB.monthlyEmi);
+      if (tblDiffEmi) {
+        if (comp.monthlySavings < 0.5) {
+          tblDiffEmi.textContent = 'Same';
+        } else if (comp.monthlyCheaperScenario === 'B') {
+          tblDiffEmi.textContent = `Scenario B saves ${formatMoney(comp.monthlySavings)}/mo`;
+        } else {
+          tblDiffEmi.textContent = `Scenario A saves ${formatMoney(comp.monthlySavings)}/mo`;
+        }
+      }
+
+      if (tblAInterest) tblAInterest.textContent = formatMoney(comp.scenarioA.totalInterest);
+      if (tblBInterest) tblBInterest.textContent = formatMoney(comp.scenarioB.totalInterest);
+      if (tblDiffInterest) {
+        if (comp.interestSavings < 0.5) {
+          tblDiffInterest.textContent = 'Same';
+        } else if (comp.totalInterestDiff > 0) {
+          tblDiffInterest.textContent = `Scenario B saves ${formatMoney(comp.interestSavings)}`;
+        } else {
+          tblDiffInterest.textContent = `Scenario A saves ${formatMoney(comp.interestSavings)}`;
+        }
+      }
+
+      if (tblAPayable) tblAPayable.textContent = formatMoney(comp.scenarioA.totalPayable);
+      if (tblBPayable) tblBPayable.textContent = formatMoney(comp.scenarioB.totalPayable);
+      if (tblDiffPayable) {
+        if (comp.totalCostSavings < 0.5) {
+          tblDiffPayable.textContent = 'Same';
+        } else if (comp.cheaperScenario === 'B') {
+          tblDiffPayable.textContent = `Scenario B saves ${formatMoney(comp.totalCostSavings)}`;
+        } else {
+          tblDiffPayable.textContent = `Scenario A saves ${formatMoney(comp.totalCostSavings)}`;
+        }
+      }
+    }
+
+    function setComparisonMode(enabled: boolean, syncFromSingle = true) {
+      isComparisonMode = enabled;
+
+      if (compareToggleBtn) {
+        compareToggleBtn.setAttribute('aria-checked', enabled ? 'true' : 'false');
+        if (enabled) {
+          compareToggleBtn.classList.add('bg-neutral-900', 'text-white', 'dark:bg-purple-600', 'border-transparent');
+          compareToggleBtn.classList.remove('bg-neutral-100', 'text-black', 'dark:bg-neutral-800', 'dark:text-white', 'border-neutral-300', 'dark:border-neutral-700');
+        } else {
+          compareToggleBtn.classList.remove('bg-neutral-900', 'text-white', 'dark:bg-purple-600', 'border-transparent');
+          compareToggleBtn.classList.add('bg-neutral-100', 'text-black', 'dark:bg-neutral-800', 'dark:text-white', 'border-neutral-300', 'dark:border-neutral-700');
+        }
+      }
+
+      if (compareToggleBadge) {
+        if (enabled) {
+          compareToggleBadge.classList.remove('hidden');
+        } else {
+          compareToggleBadge.classList.add('hidden');
+        }
+      }
+
+      if (enabled) {
+        // Toggling ON: Preserve existing single calculator state and copy to Scenario A if requested
+        if (syncFromSingle) {
+          if (amountInput && scenAAmountInp) {
+            scenAAmountInp.value = amountInput.value;
+          }
+          if (rateInput && scenARateInp) {
+            scenARateInp.value = rateInput.value;
+          }
+          if (tenureInput && scenATenureInp) {
+            scenATenureInp.value = tenureInput.value;
+          }
+
+          // Initialize Scenario B with an offer variation (e.g. rate - 0.5%) if not already customized
+          if (scenBAmountInp && scenAAmountInp && !scenBAmountInp.dataset.modified) {
+            scenBAmountInp.value = scenAAmountInp.value;
+          }
+          if (scenBRateInp && scenARateInp && !scenBRateInp.dataset.modified) {
+            const defaultRate = Math.max(1, parseFloat(scenARateInp.value) - 0.5);
+            scenBRateInp.value = defaultRate.toFixed(1);
+          }
+          if (scenBTenureInp && scenATenureInp && !scenBTenureInp.dataset.modified) {
+            scenBTenureInp.value = scenATenureInp.value;
+          }
+        }
+
+        singleView?.classList.add('hidden');
+        compareView?.classList.remove('hidden');
+
+        // Move Share Result button to comparison recommendation hero
+        const shareBtnEl = document.getElementById('emi-share-btn');
+        const compareSlot = document.getElementById('emi-compare-share-slot');
+        if (shareBtnEl && compareSlot && shareBtnEl.parentElement !== compareSlot) {
+          compareSlot.appendChild(shareBtnEl);
+        }
+
+        calculateScenarioA();
+        calculateScenarioB();
+        updateComparisonSummary();
+      } else {
+        // Toggling OFF: Restore original single calculator state from Scenario A
+        if (scenAAmountInp && amountInput) {
+          amountInput.value = scenAAmountInp.value;
+        }
+        if (scenARateInp && rateInput) {
+          rateInput.value = scenARateInp.value;
+        }
+        if (scenATenureInp && tenureInput) {
+          tenureInput.value = scenATenureInp.value;
+        }
+
+        compareView?.classList.add('hidden');
+        singleView?.classList.remove('hidden');
+
+        // Move Share Result button back to single view result card
+        const shareBtnEl = document.getElementById('emi-share-btn');
+        const singleSlot = document.getElementById('emi-single-share-slot');
+        if (shareBtnEl && singleSlot && shareBtnEl.parentElement !== singleSlot) {
+          singleSlot.appendChild(shareBtnEl);
+        }
+
+        calculateSingleEMI();
+      }
+    }
+
+    // Toggle button event
+    compareToggleBtn?.addEventListener('click', () => {
+      setComparisonMode(!isComparisonMode);
+    });
+
+    // Reset Scenario A
+    scenAResetBtn?.addEventListener('click', () => {
+      const curr = getCurrency();
+      if (scenAAmountInp) {
+        scenAAmountInp.value = curr === 'INR' ? '2500000' : '100000';
+      }
+      if (scenARateInp) {
+        scenARateInp.value = '8.5';
+      }
+      if (scenATenureInp) {
+        scenATenureInp.value = '5';
+      }
+      calculateScenarioA();
+      updateComparisonSummary();
+    });
+
+    // Reset Scenario B
+    scenBResetBtn?.addEventListener('click', () => {
+      const curr = getCurrency();
+      if (scenBAmountInp) {
+        scenBAmountInp.value = curr === 'INR' ? '2500000' : '100000';
+        delete scenBAmountInp.dataset.modified;
+      }
+      if (scenBRateInp) {
+        scenBRateInp.value = '8.0';
+        delete scenBRateInp.dataset.modified;
+      }
+      if (scenBTenureInp) {
+        scenBTenureInp.value = '5';
+        delete scenBTenureInp.dataset.modified;
+      }
+      calculateScenarioB();
+      updateComparisonSummary();
+    });
+
+    // Copy Scenario A into Scenario B
+    scenBCopyBtn?.addEventListener('click', () => {
+      if (!scenAAmountInp || !scenARateInp || !scenATenureInp ||
+          !scenBAmountInp || !scenBRateInp || !scenBTenureInp) return;
+
+      scenBAmountInp.value = scenAAmountInp.value;
+      scenBRateInp.value = scenARateInp.value;
+      scenBTenureInp.value = scenATenureInp.value;
+
+      scenBAmountInp.dataset.modified = 'true';
+      scenBRateInp.dataset.modified = 'true';
+      scenBTenureInp.dataset.modified = 'true';
+
+      calculateScenarioB();
+      updateComparisonSummary();
+
+      if (scenBCopyText) {
+        const originalText = scenBCopyText.textContent;
+        scenBCopyText.textContent = 'Copied!';
+        setTimeout(() => {
+          if (scenBCopyText) scenBCopyText.textContent = originalText;
+        }, 1500);
+      }
+    });
+
+    // Input event listeners for Single Calculator
+    amountInput?.addEventListener('input', calculateSingleEMI);
+    rateInput?.addEventListener('input', calculateSingleEMI);
+    tenureInput?.addEventListener('input', calculateSingleEMI);
+
+    // Input event listeners for Scenario A
+    scenAAmountInp?.addEventListener('input', () => {
+      calculateScenarioA();
+      updateComparisonSummary();
+    });
+    scenARateInp?.addEventListener('input', () => {
+      calculateScenarioA();
+      updateComparisonSummary();
+    });
+    scenATenureInp?.addEventListener('input', () => {
+      calculateScenarioA();
+      updateComparisonSummary();
+    });
+
+    // Input event listeners for Scenario B
+    scenBAmountInp?.addEventListener('input', () => {
+      if (scenBAmountInp) scenBAmountInp.dataset.modified = 'true';
+      calculateScenarioB();
+      updateComparisonSummary();
+    });
+    scenBRateInp?.addEventListener('input', () => {
+      if (scenBRateInp) scenBRateInp.dataset.modified = 'true';
+      calculateScenarioB();
+      updateComparisonSummary();
+    });
+    scenBTenureInp?.addEventListener('input', () => {
+      if (scenBTenureInp) scenBTenureInp.dataset.modified = 'true';
+      calculateScenarioB();
+      updateComparisonSummary();
+    });
+
     // Initialize currency selects
-    const selects = document.querySelectorAll('.ack-currency-select');
+    const selects = document.querySelectorAll('.ack-currency-select') as NodeListOf<HTMLSelectElement>;
     selects.forEach(sel => {
       sel.value = getCurrency();
       sel.addEventListener('change', (e) => {
-        const val = e.target.value;
+        const val = (e.target as HTMLSelectElement).value;
         localStorage.setItem('ack_currency', val);
         window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
       });
     });
 
-    window.addEventListener('ack_currency_change', (e) => {
+    window.addEventListener('ack_currency_change', (e: any) => {
       selects.forEach(sel => sel.value = e.detail);
-      calculateEMI();
+      updateAllSlidersForCurrency();
+      calculateSingleEMI();
+      calculateScenarioA();
+      calculateScenarioB();
+      updateComparisonSummary();
     });
 
-    amountInput.addEventListener('input', calculateEMI);
-    rateInput.addEventListener('input', calculateEMI);
-    tenureInput.addEventListener('input', calculateEMI);
+    // Read and restore URL query parameters if present
+    function restoreStateFromUrl() {
+      const { values, hasParams } = parseQueryParams<{
+        currency?: string;
+        // Single mode params
+        amount?: number;
+        rate?: number;
+        years?: number;
+        // Comparison mode params
+        compare?: boolean;
+        amountA?: number;
+        rateA?: number;
+        yearsA?: number;
+        amountB?: number;
+        rateB?: number;
+        yearsB?: number;
+      }>(window.location.search, LOAN_EMI_SCHEMA);
 
-    calculateEMI();
+      if (values.currency) {
+        localStorage.setItem('ack_currency', values.currency);
+        selects.forEach(sel => sel.value = values.currency!);
+      }
+
+      updateAllSlidersForCurrency();
+
+      if (values.compare === true) {
+        // Restore Scenario A values if provided
+        if (scenAAmountInp && typeof values.amountA === 'number') {
+          scenAAmountInp.value = values.amountA.toString();
+        }
+        if (scenARateInp && typeof values.rateA === 'number') {
+          scenARateInp.value = values.rateA.toString();
+        }
+        if (scenATenureInp && typeof values.yearsA === 'number') {
+          scenATenureInp.value = values.yearsA.toString();
+        }
+
+        // Restore Scenario B values if provided
+        if (scenBAmountInp && typeof values.amountB === 'number') {
+          scenBAmountInp.value = values.amountB.toString();
+          scenBAmountInp.dataset.modified = 'true';
+        }
+        if (scenBRateInp && typeof values.rateB === 'number') {
+          scenBRateInp.value = values.rateB.toString();
+          scenBRateInp.dataset.modified = 'true';
+        }
+        if (scenBTenureInp && typeof values.yearsB === 'number') {
+          scenBTenureInp.value = values.yearsB.toString();
+          scenBTenureInp.dataset.modified = 'true';
+        }
+
+        // Synchronize single-calculator values with Scenario A for smooth toggling
+        if (amountInput && scenAAmountInp) amountInput.value = scenAAmountInp.value;
+        if (rateInput && scenARateInp) rateInput.value = scenARateInp.value;
+        if (tenureInput && scenATenureInp) tenureInput.value = scenATenureInp.value;
+
+        setComparisonMode(true, false);
+      } else {
+        if (amountInput && typeof values.amount === 'number') {
+          amountInput.value = values.amount.toString();
+        }
+        if (rateInput && typeof values.rate === 'number') {
+          rateInput.value = values.rate.toString();
+        }
+        if (tenureInput && typeof values.years === 'number') {
+          tenureInput.value = values.years.toString();
+        }
+
+        calculateSingleEMI();
+      }
+
+      return hasParams;
+    }
+
+    restoreStateFromUrl();
+
+    // Matrix Table Toggle for granular parameters
+    let isMatrixExpanded = false;
+    if (matrixToggleBtn) {
+      matrixToggleBtn.addEventListener('click', () => {
+        isMatrixExpanded = !isMatrixExpanded;
+        const extraRows = document.querySelectorAll('.emi-extra-row');
+        extraRows.forEach(row => {
+          if (isMatrixExpanded) {
+            row.classList.remove('hidden');
+          } else {
+            row.classList.add('hidden');
+          }
+        });
+        if (matrixToggleText) {
+          matrixToggleText.textContent = isMatrixExpanded
+            ? '↑ Show Compact Summary'
+            : '↓ Show More (Principal, Rate, Tenure & Full Matrix)';
+        }
+      });
+    }
+
+    // Initialize Share Result integration (automatically switches between single and comparison params)
+    const shareOptions = {
+      schema: LOAN_EMI_SCHEMA,
+      title: 'Loan & EMI Calculation',
+      getParams: () => {
+        if (isComparisonMode) {
+          return {
+            compare: true,
+            amountA: parseFloat(scenAAmountInp?.value || '100000'),
+            rateA: parseFloat(scenARateInp?.value || '8.5'),
+            yearsA: parseFloat(scenATenureInp?.value || '5'),
+            amountB: parseFloat(scenBAmountInp?.value || '100000'),
+            rateB: parseFloat(scenBRateInp?.value || '8.0'),
+            yearsB: parseFloat(scenBTenureInp?.value || '5'),
+            currency: getCurrency()
+          };
+        } else {
+          return {
+            amount: parseFloat(amountInput?.value || '100000'),
+            rate: parseFloat(rateInput?.value || '8.5'),
+            years: parseFloat(tenureInput?.value || '5'),
+            currency: getCurrency()
+          };
+        }
+      }
+    };
+
+    initShareButton({
+      ...shareOptions,
+      buttonId: 'emi-share-btn'
+    });
   })();
 </script>

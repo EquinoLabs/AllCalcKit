@@ -270,4 +270,45 @@ test.describe('E2E — Financial Calculators Functional Workflows', () => {
       await expect(page.locator('#curr-result')).toHaveValue('8,385.00');
     });
   });
+
+  // 7. Rent vs. Buy Decision Engine
+  test.describe('Rent vs. Buy Decision Engine (/finance/rent-vs-buy)', () => {
+    test('renders verdict hero, 3 summary cards, and manages table expansion state', async ({ page }) => {
+      await page.goto('/finance/rent-vs-buy');
+
+      // Hero banner elements
+      await expect(page.locator('#rvb-verdict-card')).toBeVisible();
+      await expect(page.locator('#rvb-badge')).toBeVisible();
+      await expect(page.locator('#rvb-headline')).toBeVisible();
+      await expect(page.locator('#rvb-subheadline')).toBeVisible();
+      await expect(page.locator('#rvb-share-btn')).toBeVisible();
+
+      // 3 Supporting Metric Cards
+      await expect(page.locator('#rvb-monthly-mortgage')).toBeVisible();
+      await expect(page.locator('#rvb-monthly-rent-display')).toBeVisible();
+      await expect(page.locator('#rvb-breakeven-pill')).toBeVisible();
+      await expect(page.locator('#rvb-net-rent')).toBeVisible();
+      await expect(page.locator('#rvb-tot-rent')).toBeVisible();
+      await expect(page.locator('#rvb-net-buy')).toBeVisible();
+      await expect(page.locator('#rvb-tot-buy-outflows')).toBeVisible();
+
+      // Table is collapsed by default
+      const tableWrapper = page.locator('#rvb-table-wrapper');
+      await expect(tableWrapper).toHaveClass(/hidden/);
+
+      // Toggle table to expand
+      await page.click('#rvb-table-toggle');
+      await expect(tableWrapper).not.toHaveClass(/hidden/);
+      await expect(page.locator('#rvb-table-body tr')).toHaveCount(30);
+
+      // Toggle table to collapse again
+      await page.click('#rvb-table-toggle');
+      await expect(tableWrapper).toHaveClass(/hidden/);
+
+      // Explain Calculation is collapsed by default
+      const details = page.locator('#rvb-explain-details');
+      await expect(details).toBeVisible();
+      await expect(details).not.toHaveAttribute('open', '');
+    });
+  });
 });

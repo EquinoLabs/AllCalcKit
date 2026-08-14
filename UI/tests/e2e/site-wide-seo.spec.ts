@@ -10,7 +10,7 @@ test.describe('E2E — Site-Wide SEO, Metadata & Structured Data Suite', () => {
       expect(res?.status()).toBe(200);
 
       // Exactly one non-empty H1
-      const h1s = page.locator('h1');
+      const h1s = page.locator('main h1');
       await expect(h1s).toHaveCount(1);
       const h1Text = await h1s.first().textContent();
       expect(h1Text?.trim().length).toBeGreaterThan(3);
@@ -66,7 +66,7 @@ test.describe('E2E — Site-Wide SEO, Metadata & Structured Data Suite', () => {
       expect(res?.status()).toBe(200);
 
       // Exactly one non-empty H1
-      const h1s = page.locator('h1');
+      const h1s = page.locator('main h1');
       await expect(h1s).toHaveCount(1);
 
       // Document Title

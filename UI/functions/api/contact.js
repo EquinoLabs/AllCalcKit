@@ -4,6 +4,15 @@ import { sendContactEmail } from '../../src/lib/email';
 
 export async function onRequestPost({ request, env }) {
   try {
+    const apiKey = env?.RESEND_API_KEY || (typeof process !== 'undefined' ? process.env?.RESEND_API_KEY : undefined);
+    if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
+      console.error('[Contact API Error]: RESEND_API_KEY environment variable is not configured.');
+      return new Response(
+        JSON.stringify({ success: false, error: 'Email service not configured. Please contact support@allcalckit.com directly.' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const contentType = request.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
       return new Response(

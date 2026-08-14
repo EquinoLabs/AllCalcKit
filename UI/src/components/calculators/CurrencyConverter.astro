@@ -101,6 +101,66 @@ const CURRENCIES = [
       <button type="button" data-pair="GBP,USD" class="preset-btn px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-black dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700 active:scale-95 transition-colors font-mono text-[11px] font-bold">GBP→USD</button>
     </div>
   </div>
+
+  <!-- Live Explain Calculation Walkthrough -->
+  <details id="curr-explain-details" class="group bg-neutral-50/70 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-5 transition-all [&_[data-icon]]:open:rotate-180 mt-6 shadow-xs">
+    <summary class="flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 cursor-pointer select-none">
+      <div class="flex items-center gap-2.5">
+        <span class="w-7 h-7 rounded-lg bg-emerald-500/10 dark:bg-emerald-400/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        </span>
+        <div>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block sm:inline-block sm:mr-2">Explain Calculation</span>
+          <span class="font-bold text-neutral-900 dark:text-neutral-100">Live Currency Conversion Steps</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 group-open:hidden">Show Steps</span>
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 hidden group-open:inline">Hide Steps</span>
+        <svg data-icon class="w-4 h-4 text-neutral-400 shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </summary>
+
+    <div class="mt-4 pt-4 border-t border-neutral-200/70 dark:border-neutral-800/80 space-y-4 text-xs font-mono">
+      <!-- Formula -->
+      <div class="space-y-1.5">
+        <div class="text-[10px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-bold">Exchange Rate Formula</div>
+        <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-emerald-300 font-bold overflow-x-auto text-xs sm:text-sm">
+          Converted Target = Base Amount × (Target Rate ÷ Base Rate)
+        </div>
+      </div>
+
+      <!-- Live Calculation Working -->
+      <div id="curr-explain-body" class="space-y-3">
+        <!-- Step 1: Active Rates -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 1 — Exchange Rate Parity</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-0.5 pt-0.5">
+            <div>Input Amount = <span id="exp-curr-amount" class="font-bold text-black dark:text-white">100.00 USD</span></div>
+            <div>Direct Rate = <span id="exp-curr-rate" class="font-bold text-black dark:text-white">1 USD = 0.9200 EUR</span></div>
+            <div>Inverse Rate = <span id="exp-curr-inv-rate" class="font-bold text-black dark:text-white">1 EUR = 1.0870 USD</span></div>
+          </div>
+        </div>
+
+        <!-- Step 2: Multiplication -->
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div class="text-[11px] font-bold text-neutral-900 dark:text-neutral-100">Step 2 — Converted Amount</div>
+          <div class="text-neutral-600 dark:text-neutral-400 space-y-1 pt-0.5">
+            <div class="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 overflow-x-auto text-[11px]">
+              <span id="exp-curr-sub-amt">100.00</span> × <span id="exp-curr-sub-rate">0.9200</span>
+            </div>
+            <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+              = <span id="exp-curr-final-val">92.00 EUR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
 </div>
 
 <script is:inline define:vars={{ initialCurrencies: CURRENCIES }}>
@@ -112,6 +172,14 @@ const CURRENCIES = [
     const rateInfo = document.getElementById('curr-rate-info');
     const swapBtn = document.getElementById('curr-swap-btn');
     const presetBtns = document.querySelectorAll('.preset-btn');
+
+    // Explain elements
+    const expAmount = document.getElementById('exp-curr-amount');
+    const expRate = document.getElementById('exp-curr-rate');
+    const expInvRate = document.getElementById('exp-curr-inv-rate');
+    const expSubAmt = document.getElementById('exp-curr-sub-amt');
+    const expSubRate = document.getElementById('exp-curr-sub-rate');
+    const expFinalVal = document.getElementById('exp-curr-final-val');
 
     let rates = {};
     initialCurrencies.forEach(c => rates[c.code] = c.rate);
@@ -134,26 +202,45 @@ const CURRENCIES = [
     function calcCurrency() {
       if (!amountInput || !fromSelect || !toSelect || !resultInput) return;
       const amt = parseFloat(amountInput.value);
-      if (isNaN(amt)) {
-        resultInput.value = '';
-        return;
-      }
-
       const fromCode = fromSelect.value;
       const toCode = toSelect.value;
 
       const rateFromUSD = rates[fromCode] || 1;
       const rateToUSD = rates[toCode] || 1;
+      const singleRate = rateToUSD / rateFromUSD;
+      const invRate = singleRate > 0 ? 1 / singleRate : 0;
+
+      if (isNaN(amt) || amt < 0) {
+        resultInput.value = '';
+        if (expAmount) expAmount.textContent = `-- ${fromCode}`;
+        if (expRate) expRate.textContent = `1 ${fromCode} = ${singleRate.toFixed(4)} ${toCode}`;
+        if (expInvRate) expInvRate.textContent = `1 ${toCode} = ${invRate.toFixed(4)} ${fromCode}`;
+        if (expSubAmt) expSubAmt.textContent = '0';
+        if (expSubRate) expSubRate.textContent = singleRate.toFixed(4);
+        if (expFinalVal) expFinalVal.textContent = `-- ${toCode}`;
+        return;
+      }
 
       const inUSD = amt / rateFromUSD;
       const converted = inUSD * rateToUSD;
 
-      const singleRate = rateToUSD / rateFromUSD;
+      const fromLocale = fromCode === 'INR' ? 'en-IN' : undefined;
+      const toLocale = toCode === 'INR' ? 'en-IN' : undefined;
 
-      resultInput.value = converted.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const formattedResult = converted.toLocaleString(toLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      resultInput.value = formattedResult;
+
       if (rateInfo) {
         rateInfo.textContent = `1 ${fromCode} = ${singleRate.toFixed(4)} ${toCode}`;
       }
+
+      // Update Live Explain Calculation
+      if (expAmount) expAmount.textContent = `${amt.toLocaleString(fromLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${fromCode}`;
+      if (expRate) expRate.textContent = `1 ${fromCode} = ${singleRate.toFixed(4)} ${toCode}`;
+      if (expInvRate) expInvRate.textContent = `1 ${toCode} = ${invRate.toFixed(4)} ${fromCode}`;
+      if (expSubAmt) expSubAmt.textContent = amt.toLocaleString(fromLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (expSubRate) expSubRate.textContent = singleRate.toFixed(4);
+      if (expFinalVal) expFinalVal.textContent = `${formattedResult} ${toCode}`;
     }
 
     amountInput.addEventListener('input', calcCurrency);

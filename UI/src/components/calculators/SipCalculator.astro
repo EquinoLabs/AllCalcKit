@@ -28,7 +28,11 @@
           <label for="sip-monthly" class="font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider">Monthly Investment</label>
           <span id="sip-monthly-val" class="font-mono font-bold text-black dark:text-white">5,000</span>
         </div>
-        <input id="sip-monthly" type="range" min="500" max="100000" step="500" value="5000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+        <input id="sip-monthly" type="range" min="500" max="200000" step="500" value="5000" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+        <div class="flex justify-between text-[10px] font-mono text-neutral-400 mt-1">
+          <span id="sip-min-hint">Min: ₹500</span>
+          <span id="sip-max-hint">Max: ₹2,00,000 (2 Lakhs)</span>
+        </div>
       </div>
 
       <div>
@@ -55,6 +59,7 @@
         <div id="sip-total-val" class="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">
           $0
         </div>
+        <div id="sip-compact-badge" class="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-300 mt-0.5"></div>
       </div>
 
       <div class="grid grid-cols-2 gap-4 py-4 border-y border-neutral-200 dark:border-neutral-800 my-4 text-xs font-mono">
@@ -92,7 +97,11 @@
     const rateVal = document.getElementById('sip-rate-val');
     const yearsVal = document.getElementById('sip-years-val');
 
+    const minHint = document.getElementById('sip-min-hint');
+    const maxHint = document.getElementById('sip-max-hint');
+
     const totalValEl = document.getElementById('sip-total-val');
+    const compactBadge = document.getElementById('sip-compact-badge');
     const investedEl = document.getElementById('sip-invested');
     const returnsEl = document.getElementById('sip-returns');
 
@@ -112,6 +121,18 @@
       return localStorage.getItem('ack_currency') || 'USD';
     }
 
+    function formatIndianCompact(num) {
+      if (num >= 10000000) {
+        const cr = (num / 10000000).toFixed(2).replace(/\.00$/, '');
+        return `≈ ₹${cr} Crores`;
+      }
+      if (num >= 100000) {
+        const l = (num / 100000).toFixed(2).replace(/\.00$/, '');
+        return `≈ ₹${l} Lakhs`;
+      }
+      return '';
+    }
+
     function formatMoney(num) {
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
@@ -119,29 +140,84 @@
       return `${cfg.symbol}${formatted}`;
     }
 
+    let lastCurrency = getCurrency();
+
+    function updateSliderForCurrency() {
+      const curr = getCurrency();
+      if (!monthlyInp) return;
+
+      if (curr === 'INR') {
+        monthlyInp.min = '500';
+        monthlyInp.max = '200000';
+        monthlyInp.step = '500';
+        if (minHint) minHint.textContent = 'Min: ₹500';
+        if (maxHint) maxHint.textContent = 'Max: ₹2,00,000 (2 Lakhs)';
+
+        if (lastCurrency !== 'INR' && parseFloat(monthlyInp.value) <= 1000) {
+          monthlyInp.value = '5000';
+        }
+      } else {
+        monthlyInp.min = '50';
+        monthlyInp.max = '10000';
+        monthlyInp.step = '50';
+        const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+        if (minHint) minHint.textContent = `Min: ${cfg.symbol}50`;
+        if (maxHint) maxHint.textContent = `Max: ${cfg.symbol}10,000`;
+
+        if (lastCurrency === 'INR' && parseFloat(monthlyInp.value) > 10000) {
+          monthlyInp.value = '500';
+        }
+      }
+      lastCurrency = curr;
+    }
+
     function calcSIP() {
       if (!monthlyInp || !rateInp || !yearsInp) return;
 
-      const P = parseFloat(monthlyInp.value);
-      const i = parseFloat(rateInp.value) / 12 / 100;
-      const n = parseFloat(yearsInp.value) * 12;
+      const P = parseFloat(monthlyInp.value) || 0;
+      const annualRate = parseFloat(rateInp.value) || 0;
+      const years = parseFloat(yearsInp.value) || 0;
+
+      const i = annualRate / 12 / 100;
+      const n = years * 12;
 
       const curr = getCurrency();
       const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
 
-      if (monthlyVal) monthlyVal.textContent = Math.round(P).toLocaleString(cfg.locale);
-      if (rateVal) rateVal.textContent = rateInp.value + '%';
-      if (yearsVal) yearsVal.textContent = yearsInp.value + (yearsInp.value === '1' ? ' Year' : ' Years');
+      let monthlyDisplay = Math.round(P).toLocaleString(cfg.locale);
+      if (curr === 'INR' && P >= 100000) {
+        const compact = (P / 100000).toFixed(1).replace(/\.0$/, '');
+        monthlyDisplay = `${monthlyDisplay} (${compact}L/mo)`;
+      }
+
+      if (monthlyVal) monthlyVal.textContent = monthlyDisplay;
+      if (rateVal) rateVal.textContent = annualRate + '%';
+      if (yearsVal) yearsVal.textContent = years + (years === 1 ? ' Year' : ' Years');
+
+      if (P <= 0 || years <= 0) {
+        if (totalValEl) totalValEl.textContent = `${cfg.symbol}0`;
+        if (investedEl) investedEl.textContent = `${cfg.symbol}0`;
+        if (returnsEl) returnsEl.textContent = `${cfg.symbol}0`;
+        if (compactBadge) compactBadge.textContent = '';
+        return;
+      }
 
       const totalInvested = P * n;
-      const totalValue = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+      const totalValue = i > 0 ? P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i) : totalInvested;
       const estReturns = totalValue - totalInvested;
 
       if (totalValEl) totalValEl.textContent = formatMoney(totalValue);
+      if (compactBadge) {
+        if (curr === 'INR') {
+          compactBadge.textContent = formatIndianCompact(totalValue);
+        } else {
+          compactBadge.textContent = '';
+        }
+      }
       if (investedEl) investedEl.textContent = formatMoney(totalInvested);
       if (returnsEl) returnsEl.textContent = formatMoney(estReturns);
 
-      const invPct = Math.round((totalInvested / totalValue) * 100);
+      const invPct = totalValue > 0 ? Math.round((totalInvested / totalValue) * 100) : 100;
       const retPct = 100 - invPct;
 
       if (invPctEl) invPctEl.textContent = invPct + '%';
@@ -150,6 +226,7 @@
       if (retBar) retBar.style.width = retPct + '%';
     }
 
+    // Initialize currency selects
     const selects = document.querySelectorAll('.ack-currency-select');
     selects.forEach(sel => {
       sel.value = getCurrency();
@@ -162,6 +239,7 @@
 
     window.addEventListener('ack_currency_change', (e) => {
       selects.forEach(sel => sel.value = e.detail);
+      updateSliderForCurrency();
       calcSIP();
     });
 
@@ -169,6 +247,7 @@
     rateInp.addEventListener('input', calcSIP);
     yearsInp.addEventListener('input', calcSIP);
 
+    updateSliderForCurrency();
     calcSIP();
   })();
 </script>

@@ -38,6 +38,8 @@ import { bmiContent } from './bmi';
 import { bmrContent } from './bmr';
 import { tdeeContent } from './tdee';
 import { waterIntakeContent } from './water-intake';
+import { rentVsBuyContent } from './rent-vs-buy';
+import { moneySplitContent } from './money-split';
 
 export * from './types';
 export { 
@@ -79,7 +81,9 @@ export {
   bmiContent,
   bmrContent,
   tdeeContent,
-  waterIntakeContent
+  waterIntakeContent,
+  rentVsBuyContent,
+  moneySplitContent
 };
 
 export const CALCULATOR_CONTENT: Record<string, CalculatorContent> = {
@@ -122,8 +126,11 @@ export const CALCULATOR_CONTENT: Record<string, CalculatorContent> = {
   bmr: bmrContent,
   tdee: tdeeContent,
   'water-intake': waterIntakeContent,
+  'rent-vs-buy': rentVsBuyContent,
+  'money-split': moneySplitContent,
 };
 
 export function getCalculatorContent(id: string): CalculatorContent | undefined {
   return CALCULATOR_CONTENT[id];
 }
+

@@ -1,14 +1,18 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateEMI,
+  compareLoans,
   calculateSIP,
   calculateCompoundInterest,
   calculateFD,
   calculateRD,
   calculateTaxGST,
+  calculateTaxGSTWithSplit,
   calculateDiscount,
   calculateTipSplit,
-  convertCurrency
+  convertCurrency,
+  formatIndianCurrency,
+  formatIndianCompact
 } from '../../src/lib/calculators/finance';
 
 describe('Financial Calculators Engine', () => {
@@ -46,6 +50,61 @@ describe('Financial Calculators Engine', () => {
       expect(calculateEMI(0, 5, 5).monthlyEmi).toBe(0);
       expect(calculateEMI(100000, 5, 0).monthlyEmi).toBe(0);
       expect(calculateEMI(-1000, 5, 5).monthlyEmi).toBe(0);
+    });
+  });
+
+  describe('Loan Comparison Mode (compareLoans)', () => {
+    it('correctly compares two loan offers with different interest rates', () => {
+      const loanA = { principal: 100000, annualRate: 8.5, tenureYears: 5 };
+      const loanB = { principal: 100000, annualRate: 7.5, tenureYears: 5 };
+      const comparison = compareLoans(loanA, loanB);
+
+      // Scenario A: ~$2051.65, Scenario B: ~$2003.79
+      expect(comparison.scenarioA.monthlyEmi).toBeCloseTo(2051.65, 1);
+      expect(comparison.scenarioB.monthlyEmi).toBeCloseTo(2003.79, 1);
+      expect(comparison.monthlySavings).toBeCloseTo(47.86, 1);
+      expect(comparison.cheaperScenario).toBe('B');
+      expect(comparison.monthlyCheaperScenario).toBe('B');
+      expect(comparison.totalInterestDiff).toBeGreaterThan(0);
+      expect(comparison.interestSavings).toBeCloseTo(2871.37, 0);
+    });
+
+    it('correctly identifies when Scenario A is cheaper due to shorter tenure', () => {
+      const loanA = { principal: 2500000, annualRate: 8.5, tenureYears: 15 };
+      const loanB = { principal: 2500000, annualRate: 8.5, tenureYears: 20 };
+      const comparison = compareLoans(loanA, loanB);
+
+      // Scenario A has higher monthly EMI but lower overall interest
+      expect(comparison.scenarioA.monthlyEmi).toBeGreaterThan(comparison.scenarioB.monthlyEmi);
+      expect(comparison.monthlyCheaperScenario).toBe('B');
+      expect(comparison.cheaperScenario).toBe('A'); // Overall total interest is significantly lower
+      expect(comparison.interestSavings).toBeGreaterThan(700000);
+    });
+
+    it('handles identical scenarios correctly', () => {
+      const loan = { principal: 100000, annualRate: 8.5, tenureYears: 5 };
+      const comparison = compareLoans(loan, loan);
+
+      expect(comparison.monthlyEmiDiff).toBe(0);
+      expect(comparison.totalInterestDiff).toBe(0);
+      expect(comparison.totalPayableDiff).toBe(0);
+      expect(comparison.cheaperScenario).toBe('identical');
+      expect(comparison.monthlyCheaperScenario).toBe('identical');
+      expect(comparison.monthlySavings).toBe(0);
+    });
+
+    it('ensures independent calculations where modifying loan A does not mutate loan B', () => {
+      const loanA = { principal: 100000, annualRate: 8.5, tenureYears: 5 };
+      const loanB = { principal: 200000, annualRate: 9.0, tenureYears: 10 };
+      const comp1 = compareLoans(loanA, loanB);
+
+      const modifiedLoanA = { ...loanA, principal: 150000 };
+      const comp2 = compareLoans(modifiedLoanA, loanB);
+
+      // Scenario B results must be completely unchanged
+      expect(comp2.scenarioB.monthlyEmi).toBe(comp1.scenarioB.monthlyEmi);
+      expect(comp2.scenarioB.totalPayable).toBe(comp1.scenarioB.totalPayable);
+      expect(comp2.scenarioA.monthlyEmi).not.toBe(comp1.scenarioA.monthlyEmi);
     });
   });
 
@@ -214,6 +273,50 @@ describe('Financial Calculators Engine', () => {
 
     it('handles zero amount safely', () => {
       expect(convertCurrency(0, 1.0, 0.92)).toBe(0);
+    });
+  });
+
+  describe('India-Specific Monetary Formatting & Regional Slabs', () => {
+    it('formats numbers in Indian numbering system (Lakhs and Crores)', () => {
+      expect(formatIndianCurrency(100000)).toBe('₹1,00,000');
+      expect(formatIndianCurrency(2500000)).toBe('₹25,00,000');
+      expect(formatIndianCurrency(10000000)).toBe('₹1,00,00,000');
+      expect(formatIndianCurrency(15000000, false)).toBe('1,50,00,000');
+    });
+
+    it('generates clean compact Indian labels (Lakhs / Crores / k)', () => {
+      expect(formatIndianCompact(5000)).toBe('5k');
+      expect(formatIndianCompact(100000)).toBe('1 Lakh');
+      expect(formatIndianCompact(2500000)).toBe('25 Lakh');
+      expect(formatIndianCompact(15000000)).toBe('1.5 Cr');
+      expect(formatIndianCompact(20000000)).toBe('2 Cr');
+    });
+
+    it('calculates Indian GST invoice split (CGST 9% + SGST 9% on 18% slab)', () => {
+      const res = calculateTaxGSTWithSplit(10000, 18, 'add');
+      expect(res.totalAmount).toBe(11800);
+      expect(res.netAmount).toBe(10000);
+      expect(res.taxAmount).toBe(1800);
+      expect(res.cgstRate).toBe(9);
+      expect(res.sgstRate).toBe(9);
+      expect(res.cgstAmount).toBe(900);
+      expect(res.sgstAmount).toBe(900);
+    });
+
+    it('calculates Indian home loan benchmark (₹25 Lakhs @ 8.5% for 20 years)', () => {
+      const res = calculateEMI(2500000, 8.5, 20);
+      // 25L at 8.5% for 20 years -> monthly EMI is ~₹21,695.58
+      expect(res.monthlyEmi).toBeCloseTo(21695.58, 1);
+      expect(res.totalPayable).toBeCloseTo(5206939.40, 0);
+      expect(res.totalInterest).toBeCloseTo(2706939.40, 0);
+    });
+
+    it('calculates Indian dining bill split (₹1,800 with 10% tip among 3 people)', () => {
+      const res = calculateTipSplit(1800, 10, 3);
+      expect(res.totalTip).toBe(180);
+      expect(res.totalBill).toBe(1980);
+      expect(res.perPersonTotal).toBe(660);
+      expect(res.tipPerPerson).toBe(60);
     });
   });
 });

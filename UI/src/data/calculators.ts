@@ -117,6 +117,22 @@ export const CALCULATORS: CalculatorMeta[] = [
       'View final discounted price and exact money saved.'
     ]
   },
+  {
+    id: 'rent-vs-buy', name: 'Rent vs Buy Calculator', category: 'Currency & Finance', categoryId: 'finance', description: 'Compare true long-term costs of renting vs buying a home with breakeven analysis', icon: 'home', popular: true, phase: 2, url: '/finance/rent-vs-buy', tags: ['rent vs buy', 'mortgage vs rent', 'home buying', 'real estate', 'breakeven', 'property'],
+    howToUse: [
+      'Enter Monthly Rent and target Home Purchase Price.',
+      'Adjust Down Payment %, Mortgage Interest Rate, Property Tax, and Maintenance assumptions.',
+      'Slide the Time Horizon (years) to see total net costs, overall savings, and your exact Breakeven Year.'
+    ]
+  },
+  {
+    id: 'money-split', name: 'Money Split', category: 'Currency & Finance', categoryId: 'finance', description: 'Split group expenses, track shared vacation or roommate bills, and calculate net balances', icon: 'receipt', popular: true, phase: 2, url: '/finance/money-split', tags: ['money split', 'splitwise', 'split expenses', 'group bill', 'shared expenses', 'roommates'],
+    howToUse: [
+      'Create a group and add participants.',
+      'Add shared expenses with Equal, Percentage, or Exact Amount split.',
+      'View real-time settlement balances and share group link or copy WhatsApp text summary.'
+    ]
+  },
 
   // 3. Health & Fitness
   {
