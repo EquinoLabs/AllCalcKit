@@ -18,6 +18,7 @@ import TaxGstCalculator from '../../components/calculators/TaxGstCalculator.astr
 import TipSplitCalculator from '../../components/calculators/TipSplitCalculator.astro';
 import DiscountCalculator from '../../components/calculators/DiscountCalculator.astro';
 import RentVsBuyCalculator from '../../components/calculators/RentVsBuyCalculator.astro';
+import MoneySplitCalculator from '../../components/calculators/MoneySplitCalculator.astro';
 
 import BmrCalculator from '../../components/calculators/BmrCalculator.astro';
 import TdeeCalculator from '../../components/calculators/TdeeCalculator.astro';
@@ -110,7 +111,7 @@ const volumeUnits = [
   { id: 'gal', name: 'Gallons (US)', ratio: 3.78541 },
   { id: 'floz', name: 'Fluid Ounces (fl oz)', ratio: 0.0295735 }
 ];
-const containerClass = (calc.id === 'loan-emi' || calc.id === 'rent-vs-buy') 
+const containerClass = (calc.id === 'loan-emi' || calc.id === 'rent-vs-buy' || calc.id === 'money-split') 
   ? 'max-w-7xl' 
   : (calc.id === 'percentage' ? 'max-w-6xl xl:max-w-[1240px]' : 'max-w-4xl');
 ---
@@ -176,6 +177,7 @@ const containerClass = (calc.id === 'loan-emi' || calc.id === 'rent-vs-buy')
       {calc.id === 'tip-split' && <TipSplitCalculator />}
       {calc.id === 'discount' && <DiscountCalculator />}
       {calc.id === 'rent-vs-buy' && <RentVsBuyCalculator />}
+      {calc.id === 'money-split' && <MoneySplitCalculator />}
 
       {calc.id === 'bmr' && <BmrCalculator />}
       {calc.id === 'tdee' && <TdeeCalculator />}
