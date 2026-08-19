@@ -1,0 +1,359 @@
+---
+/**
+ * Startup Runway & Monthly Burn Rate Calculator Component
+ * Calculates runway in months, default alive/dead status, and projected cash depletion.
+ */
+---
+
+<div class="space-y-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Input Form -->
+    <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/40 p-5 space-y-4 shadow-2xs">
+      <div class="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+        <span class="text-xs font-mono font-bold uppercase tracking-wider text-neutral-500">Capital & Burn Inputs</span>
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <span class="text-neutral-500">Currency:</span>
+          <select class="ack-currency-select bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded px-1.5 py-0.5 font-bold text-neutral-900 dark:text-white">
+            <option value="USD">USD ($)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Current Cash Balance -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="sr-cash" class="font-bold text-neutral-700 dark:text-neutral-300">Total Cash in Bank</label>
+          <span id="sr-cash-display" class="font-bold text-neutral-900 dark:text-white tabular-nums">$500,000</span>
+        </div>
+        <input id="sr-cash" type="number" value="500000" min="1000" step="10000" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl px-3.5 py-2 text-sm font-mono font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-blue-500" />
+      </div>
+
+      <!-- Monthly Operating Expenses -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="sr-expenses" class="font-bold text-neutral-700 dark:text-neutral-300">Monthly Expenses (Gross Burn)</label>
+          <span id="sr-expenses-display" class="font-bold text-rose-600 dark:text-rose-400 tabular-nums">$40,000/mo</span>
+        </div>
+        <input id="sr-expenses" type="number" value="40000" min="0" step="1000" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl px-3.5 py-2 text-sm font-mono font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-blue-500" />
+      </div>
+
+      <!-- Monthly Revenue -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="sr-revenue" class="font-bold text-neutral-700 dark:text-neutral-300">Monthly Revenue</label>
+          <span id="sr-revenue-display" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$10,000/mo</span>
+        </div>
+        <input id="sr-revenue" type="number" value="10000" min="0" step="1000" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl px-3.5 py-2 text-sm font-mono font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-blue-500" />
+      </div>
+
+      <!-- MoM Growth Rates -->
+      <div class="grid grid-cols-2 gap-3 pt-2 border-t border-neutral-200 dark:border-neutral-800 text-xs font-mono">
+        <div>
+          <label for="sr-rev-growth" class="block font-bold text-neutral-600 dark:text-neutral-400 mb-1">Revenue Growth (% MoM)</label>
+          <input id="sr-rev-growth" type="number" value="5" min="-20" max="100" step="0.5" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg px-2.5 py-1.5 font-bold text-neutral-900 dark:text-white" />
+        </div>
+        <div>
+          <label for="sr-exp-growth" class="block font-bold text-neutral-600 dark:text-neutral-400 mb-1">Expense Growth (% MoM)</label>
+          <input id="sr-exp-growth" type="number" value="2" min="-20" max="50" step="0.5" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg px-2.5 py-1.5 font-bold text-neutral-900 dark:text-white" />
+        </div>
+      </div>
+
+      <!-- Runway Depletion Milestones -->
+      <div class="p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-700/60 space-y-2.5 text-xs font-mono">
+        <div class="flex items-center justify-between text-[11px] font-bold text-neutral-700 dark:text-neutral-300">
+          <span class="uppercase tracking-wider">Cash Trajectory Milestones</span>
+          <span id="sr-ms-status" class="text-neutral-500">Month-by-Month</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+          <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+            <span class="text-neutral-500 block">6-Month Bal</span>
+            <span id="sr-ms-m6" class="font-bold text-neutral-900 dark:text-white tabular-nums">$320k</span>
+          </div>
+          <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+            <span class="text-neutral-500 block">12-Month Bal</span>
+            <span id="sr-ms-m12" class="font-bold text-neutral-900 dark:text-white tabular-nums">$140k</span>
+          </div>
+          <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+            <span class="text-neutral-500 block">Zero Cash</span>
+            <span id="sr-ms-zero" class="font-bold text-rose-600 dark:text-rose-400 tabular-nums">Month 17</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Runway Status Card -->
+    <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <span class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">Estimated Runway</span>
+          <span id="sr-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">16.7 Months</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="sr-runway-val" class="text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white tabular-nums">16.7</span>
+          <span class="text-sm font-mono text-neutral-500">Months</span>
+        </div>
+        <div id="sr-alive-pill" class="text-xs font-mono font-bold text-neutral-600 dark:text-neutral-400 mt-1">
+          Zero cash projected in Month 17.
+        </div>
+      </div>
+
+      <!-- Key Burn Metrics -->
+      <div class="grid grid-cols-2 gap-3 py-3 border-y border-neutral-200 dark:border-neutral-800 text-xs font-mono">
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80">
+          <span class="text-[10px] text-neutral-500 block font-semibold">Net Monthly Burn</span>
+          <span id="sr-net-burn" class="font-bold text-rose-600 dark:text-rose-400 tabular-nums text-sm sm:text-base">-$30,000/mo</span>
+        </div>
+        <div class="p-3 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80">
+          <span class="text-[10px] text-neutral-500 block font-semibold">Annualized Burn Rate</span>
+          <span id="sr-annual-burn" class="font-bold text-neutral-900 dark:text-white tabular-nums text-sm sm:text-base">-$360,000/yr</span>
+        </div>
+      </div>
+
+      <!-- Action Footer with CSV Export -->
+      <div class="flex items-center justify-between pt-2 border-t border-neutral-200 dark:border-neutral-800 flex-wrap gap-2">
+        <span class="text-[11px] font-mono text-neutral-500">Full Dynamic Cash Flow Forecast</span>
+        <button id="sr-export-csv" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white text-xs font-mono font-semibold transition-colors cursor-pointer shadow-2xs">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Export Forecast (CSV)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const cashInp = document.getElementById('sr-cash');
+    const expInp = document.getElementById('sr-expenses');
+    const revInp = document.getElementById('sr-revenue');
+    const revGrowthInp = document.getElementById('sr-rev-growth');
+    const expGrowthInp = document.getElementById('sr-exp-growth');
+
+    const cashDisp = document.getElementById('sr-cash-display');
+    const expDisp = document.getElementById('sr-expenses-display');
+    const revDisp = document.getElementById('sr-revenue-display');
+
+    const runwayVal = document.getElementById('sr-runway-val');
+    const statusBadge = document.getElementById('sr-status-badge');
+    const alivePill = document.getElementById('sr-alive-pill');
+    const netBurnEl = document.getElementById('sr-net-burn');
+    const annualBurnEl = document.getElementById('sr-annual-burn');
+    const exportBtn = document.getElementById('sr-export-csv');
+
+    const msM6El = document.getElementById('sr-ms-m6');
+    const msM12El = document.getElementById('sr-ms-m12');
+    const msZeroEl = document.getElementById('sr-ms-zero');
+
+    const CURRENCY_CONFIGS = {
+      USD: { symbol: '$', locale: 'en-US' },
+      INR: { symbol: '₹', locale: 'en-IN' },
+      EUR: { symbol: '€', locale: 'en-IE' },
+      GBP: { symbol: '£', locale: 'en-GB' }
+    };
+
+    function getCurrency() {
+      return localStorage.getItem('ack_currency') || 'USD';
+    }
+
+    function formatMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      return `${cfg.symbol}${Math.round(num).toLocaleString(cfg.locale)}`;
+    }
+
+    function calcRunway() {
+      const cash = parseFloat(cashInp?.value || '500000');
+      const expenses = parseFloat(expInp?.value || '40000');
+      const revenue = parseFloat(revInp?.value || '10000');
+      const revGrowth = parseFloat(revGrowthInp?.value || '5') / 100;
+      const expGrowth = parseFloat(expGrowthInp?.value || '2') / 100;
+
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+
+      if (cashDisp) cashDisp.textContent = formatMoney(cash);
+      if (expDisp) expDisp.textContent = `${formatMoney(expenses)}/mo`;
+      if (revDisp) revDisp.textContent = `${formatMoney(revenue)}/mo`;
+
+      const initialNetBurn = Math.max(0, expenses - revenue);
+      if (netBurnEl) netBurnEl.textContent = `-${formatMoney(initialNetBurn)}/mo`;
+      if (annualBurnEl) annualBurnEl.textContent = `-${formatMoney(initialNetBurn * 12)}/yr`;
+
+      let currentCash = cash;
+      let curRev = revenue;
+      let curExp = expenses;
+      let zeroMonth = null;
+      let isDefaultAlive = false;
+
+      let balM6 = cash;
+      let balM12 = cash;
+
+      for (let m = 1; m <= 120; m++) {
+        if (m > 1) {
+          curRev *= (1 + revGrowth);
+          curExp *= (1 + expGrowth);
+        }
+        const netBurn = curExp - curRev;
+        currentCash -= netBurn;
+
+        if (m === 6) balM6 = currentCash;
+        if (m === 12) balM12 = currentCash;
+
+        if (currentCash <= 0 && zeroMonth === null) {
+          zeroMonth = m;
+        }
+        if (curRev >= curExp && !isDefaultAlive) {
+          isDefaultAlive = true;
+        }
+      }
+
+      if (msM6El) msM6El.textContent = formatMoney(Math.max(0, balM6));
+      if (msM12El) msM12El.textContent = formatMoney(Math.max(0, balM12));
+
+      if (isDefaultAlive && zeroMonth === null) {
+        if (runwayVal) runwayVal.textContent = '∞';
+        if (statusBadge) {
+          statusBadge.textContent = 'Default Alive';
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+        }
+        if (alivePill) alivePill.textContent = 'Revenue growth outpaces burn rate. Profitable before depletion.';
+        if (msZeroEl) {
+          msZeroEl.textContent = 'Default Alive';
+          msZeroEl.className = 'font-bold text-emerald-600 dark:text-emerald-400 tabular-nums';
+        }
+      } else {
+        const runwayMonths = zeroMonth !== null ? zeroMonth : Math.round(cash / Math.max(1, initialNetBurn));
+        if (runwayVal) runwayVal.textContent = runwayMonths.toString();
+        if (statusBadge) {
+          const isDanger = runwayMonths < 6;
+          statusBadge.textContent = `${runwayMonths} Months`;
+          statusBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${isDanger ? 'bg-rose-500/10 text-rose-600 border-rose-500/20' : 'bg-amber-500/10 text-amber-600 border-amber-500/20'} border`;
+        }
+        if (alivePill) alivePill.textContent = `Cash expected to reach zero in Month ${runwayMonths}.`;
+        if (msZeroEl) {
+          msZeroEl.textContent = `Month ${runwayMonths}`;
+          msZeroEl.className = 'font-bold text-rose-600 dark:text-rose-400 tabular-nums';
+        }
+      }
+    }
+
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        const cash = parseFloat(cashInp?.value || '500000');
+        const expenses = parseFloat(expInp?.value || '40000');
+        const revenue = parseFloat(revInp?.value || '10000');
+        const revGrowth = parseFloat(revGrowthInp?.value || '5') / 100;
+        const expGrowth = parseFloat(expGrowthInp?.value || '2') / 100;
+
+        const initialNetBurn = expenses - revenue;
+
+        // Determine dynamic projection duration
+        let testCash = cash;
+        let testRev = revenue;
+        let testExp = expenses;
+        let zeroM = null;
+        let defaultAlive = false;
+
+        for (let m = 1; m <= 120; m++) {
+          if (m > 1) {
+            testRev *= (1 + revGrowth);
+            testExp *= (1 + expGrowth);
+          }
+          testCash -= (testExp - testRev);
+          if (testCash <= 0 && zeroM === null) zeroM = m;
+          if (testRev >= testExp && !defaultAlive) defaultAlive = true;
+        }
+
+        // If default alive, project 120 months (10 years). If cash depleted, project up to zeroM + 6 months to show deficit.
+        const maxMonths = (defaultAlive && zeroM === null) ? 120 : Math.min(120, (zeroM || 24) + 6);
+
+        const summaryLines = [
+          `# ==============================================================================`,
+          `# STARTUP RUNWAY & CASH FLOW FORECAST REPORT`,
+          `# ==============================================================================`,
+          `# Starting Cash Balance: $${cash.toLocaleString()}`,
+          `# Initial Monthly Gross Burn (Expenses): $${expenses.toLocaleString()}/mo`,
+          `# Initial Monthly Revenue: $${revenue.toLocaleString()}/mo`,
+          `# Initial Net Monthly Burn: -$${Math.max(0, initialNetBurn).toLocaleString()}/mo`,
+          `# Revenue MoM Growth Rate: ${(revGrowth * 100).toFixed(1)}%`,
+          `# Expense MoM Growth Rate: ${(expGrowth * 100).toFixed(1)}%`,
+          `# Operational Status: ${(defaultAlive && zeroM === null) ? 'Default Alive (Profitable before cash depletion)' : `Cash Depletion in Month ${zeroM || 'N/A'}`}`,
+          `# Forecast Scope: ${maxMonths} Months ${(defaultAlive && zeroM === null) ? '(10-Year Long-Term Projection)' : '(Depletion + Deficit Window)'}`,
+          `# Generated By: All Calc Kit (https://allcalckit.com)`,
+          `# ==============================================================================`,
+          ``
+        ];
+
+        const headers = ['Month', 'Year', 'Monthly Revenue', 'Monthly Expenses', 'Net Monthly Cash Flow', 'Ending Cash Balance', 'Financial Health Status'];
+        const rows = [];
+        let curCash = cash;
+        let curRev = revenue;
+        let curExp = expenses;
+
+        for (let m = 1; m <= maxMonths; m++) {
+          if (m > 1) {
+            curRev *= (1 + revGrowth);
+            curExp *= (1 + expGrowth);
+          }
+          const netCashFlow = curRev - curExp; // positive when profitable, negative when burning
+          curCash += netCashFlow;
+
+          let status = 'Funded';
+          if (curCash < 0) {
+            status = 'Cash Deficit / Insolvent';
+          } else if (curRev >= curExp) {
+            status = 'Cash Flow Profitable (Default Alive)';
+          }
+
+          const yr = Math.ceil(m / 12);
+          rows.push([
+            `Month ${m}`,
+            `Year ${yr}`,
+            curRev.toFixed(2),
+            curExp.toFixed(2),
+            netCashFlow.toFixed(2),
+            curCash.toFixed(2),
+            status
+          ]);
+        }
+
+        const headerLine = headers.join(',');
+        const rowLines = rows.map(r => r.join(','));
+        const csvContent = [...summaryLines, headerLine, ...rowLines].join('\r\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Startup_Runway_Forecast_${maxMonths}Months_${(defaultAlive && zeroM === null) ? 'DefaultAlive' : `ZeroMonth${zeroM}`}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+    }
+
+    const selects = document.querySelectorAll('.ack-currency-select');
+    selects.forEach(sel => {
+      sel.value = getCurrency();
+      sel.addEventListener('change', (e) => {
+        const val = e.target.value;
+        localStorage.setItem('ack_currency', val);
+        window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
+      });
+    });
+
+    window.addEventListener('ack_currency_change', (e) => {
+      selects.forEach(sel => sel.value = e.detail);
+      calcRunway();
+    });
+
+    [cashInp, expInp, revInp, revGrowthInp, expGrowthInp].forEach(el => {
+      el?.addEventListener('input', calcRunway);
+    });
+
+    calcRunway();
+  })();
+</script>

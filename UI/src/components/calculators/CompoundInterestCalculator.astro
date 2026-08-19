@@ -46,12 +46,45 @@
             <option value="365">Daily (n=365)</option>
           </select>
         </div>
+
+        <!-- Compounding Milestones Progress -->
+        <div class="p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-700/60 space-y-2.5 text-xs font-mono">
+          <div class="flex items-center justify-between text-[11px] font-bold text-neutral-700 dark:text-neutral-300">
+            <span class="uppercase tracking-wider">Compounding Milestones</span>
+            <span id="ci-milestone-total" class="text-neutral-500">5-Year Growth</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+            <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+              <span class="text-neutral-500 block">Year 1</span>
+              <span id="ci-ms-yr1" class="font-bold text-neutral-900 dark:text-white tabular-nums">$10.7k</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+              <span class="text-neutral-500 block">Mid-Point</span>
+              <span id="ci-ms-mid" class="font-bold text-neutral-900 dark:text-white tabular-nums">$12.2k</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+              <span class="text-neutral-500 block">Final Balance</span>
+              <span id="ci-ms-end" class="font-bold text-blue-600 dark:text-blue-400 tabular-nums">$14.9k</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="bg-neutral-50 dark:bg-neutral-950 rounded-xl p-5 border border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
       <div>
-        <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold mb-1">Final Future Balance</div>
+        <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+          <div class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">Final Future Balance</div>
+          <button
+            id="ci-export-csv-btn"
+            type="button"
+            title="Download Year-by-Year Compounding Schedule as CSV"
+            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[11px] font-mono font-medium transition-all shadow-2xs cursor-pointer"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>CSV</span>
+          </button>
+        </div>
         <div id="ci-balance-val" class="text-3xl sm:text-4xl font-black text-blue-600 dark:text-blue-400 tabular-nums">$0</div>
         <div id="ci-compact-badge" class="text-xs font-mono font-bold text-blue-700 dark:text-blue-300 mt-0.5"></div>
       </div>
@@ -64,6 +97,39 @@
         <div>
           <span class="text-neutral-600 dark:text-neutral-400 block font-semibold">Total Interest</span>
           <span id="ci-interest-val" class="font-bold text-blue-600 dark:text-blue-400 tabular-nums">$0</span>
+        </div>
+      </div>
+
+      <!-- Interactive SVG Donut Breakdown -->
+      <div class="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center gap-4 shadow-2xs mb-3">
+        <div class="relative w-24 h-24 shrink-0 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-label="Principal vs Compound Interest Donut Chart">
+            <circle cx="50" cy="50" r="38" class="stroke-neutral-100 dark:stroke-neutral-800" stroke-width="11" fill="none" />
+            <circle id="ci-donut-principal" cx="50" cy="50" r="38" class="stroke-black dark:stroke-neutral-300 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="167.13 238.76" stroke-dashoffset="0" fill="none" />
+            <circle id="ci-donut-interest" cx="50" cy="50" r="38" class="stroke-blue-600 dark:stroke-blue-400 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="71.63 238.76" stroke-dashoffset="-167.13" fill="none" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+            <span id="ci-donut-ratio" class="text-xs font-mono font-black text-neutral-900 dark:text-white tabular-nums">70%</span>
+            <span class="text-[8px] font-mono text-neutral-500 uppercase tracking-tighter">Principal</span>
+          </div>
+        </div>
+
+        <div class="flex-1 w-full space-y-1.5 text-xs font-mono">
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-black dark:bg-neutral-300 shrink-0"></span>
+              <span class="text-neutral-600 dark:text-neutral-400 text-[11px]">Principal</span>
+            </div>
+            <span id="ci-prin-pct" class="font-bold text-neutral-900 dark:text-white tabular-nums text-[11px]">70%</span>
+          </div>
+
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 shrink-0"></span>
+              <span class="text-neutral-600 dark:text-neutral-400 text-[11px]">Interest Gain</span>
+            </div>
+            <span id="ci-int-pct" class="font-bold text-blue-600 dark:text-blue-400 tabular-nums text-[11px]">30%</span>
+          </div>
         </div>
       </div>
 
@@ -163,6 +229,97 @@
       }
       if (prinEl) prinEl.textContent = formatMoney(P);
       if (intEl) intEl.textContent = formatMoney(interest);
+
+      const pPct = A > 0 ? Math.round((P / A) * 100) : 100;
+      const iPct = 100 - pPct;
+
+      const pPctEl = document.getElementById('ci-prin-pct');
+      const iPctEl = document.getElementById('ci-int-pct');
+      if (pPctEl) pPctEl.textContent = pPct + '%';
+      if (iPctEl) iPctEl.textContent = iPct + '%';
+
+      // SVG Donut Chart Update
+      const donutPrin = document.getElementById('ci-donut-principal');
+      const donutInt = document.getElementById('ci-donut-interest');
+      const donutRatio = document.getElementById('ci-donut-ratio');
+      if (donutPrin && donutInt) {
+        const C = 238.761;
+        const pLen = ((pPct / 100) * C).toFixed(2);
+        const iLen = ((iPct / 100) * C).toFixed(2);
+        donutPrin.setAttribute('stroke-dasharray', `${pLen} ${C}`);
+        donutPrin.setAttribute('stroke-dashoffset', '0');
+        donutInt.setAttribute('stroke-dasharray', `${iLen} ${C}`);
+        donutInt.setAttribute('stroke-dashoffset', `-${pLen}`);
+      }
+      if (donutRatio) donutRatio.textContent = pPct + '%';
+
+      // Update Compounding Milestones
+      const milestoneTotalEl = document.getElementById('ci-milestone-total');
+      const msYr1El = document.getElementById('ci-ms-yr1');
+      const msMidEl = document.getElementById('ci-ms-mid');
+      const msEndEl = document.getElementById('ci-ms-end');
+
+      if (milestoneTotalEl) milestoneTotalEl.textContent = `${t}-Year Growth`;
+
+      function getFutureBalance(years) {
+        if (years <= 0) return P;
+        return P * Math.pow(1 + (r / n), n * years);
+      }
+
+      const yr1Val = getFutureBalance(Math.min(1, t));
+      const midVal = getFutureBalance(t / 2);
+      const endVal = A;
+
+      if (msYr1El) msYr1El.textContent = formatMoney(yr1Val);
+      if (msMidEl) msMidEl.textContent = formatMoney(midVal);
+      if (msEndEl) msEndEl.textContent = formatMoney(endVal);
+    }
+
+    // CSV Compounding Schedule Export Handler
+    const ciExportCsvBtn = document.getElementById('ci-export-csv-btn');
+    if (ciExportCsvBtn) {
+      ciExportCsvBtn.addEventListener('click', () => {
+        const P = parseFloat(pInp?.value || '10000');
+        const annualRate = parseFloat(rInp?.value || '7');
+        const years = parseFloat(tInp?.value || '5');
+        const n = parseFloat(fInp?.value || '12');
+
+        if (P <= 0 || years <= 0) return;
+
+        const r = annualRate / 100;
+        const totalYears = Math.ceil(years);
+
+        const headers = ['Year', 'Beginning Balance', 'Interest Earned This Year', 'Ending Balance', 'Total Accumulated Interest'];
+        const rows = [];
+        let prevBal = P;
+
+        for (let y = 1; y <= totalYears; y++) {
+          const currentBal = P * Math.pow(1 + (r / n), n * y);
+          const interestThisYr = currentBal - prevBal;
+          const totalInterest = currentBal - P;
+          rows.push([
+            `Year ${y}`,
+            prevBal.toFixed(2),
+            interestThisYr.toFixed(2),
+            currentBal.toFixed(2),
+            totalInterest.toFixed(2)
+          ]);
+          prevBal = currentBal;
+        }
+
+        const headerLine = headers.join(',');
+        const rowLines = rows.map(r => r.join(','));
+        const csvContent = [headerLine, ...rowLines].join('\r\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Compound_Interest_Schedule_${Math.round(P)}_${annualRate}pct_${years}Years.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
     }
 
     const selects = document.querySelectorAll('.ack-currency-select');

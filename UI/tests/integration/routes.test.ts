@@ -3,8 +3,8 @@ import { CALCULATORS, CATEGORIES } from '../../src/data/calculators';
 import { CALCULATOR_CONTENT } from '../../src/data/calculator-content';
 
 describe('Integration — Routing & Calculator Registry', () => {
-  it('contains exactly 41 calculators in the master catalog', () => {
-    expect(CALCULATORS).toHaveLength(41);
+  it('contains exactly 45 calculators in the master catalog', () => {
+    expect(CALCULATORS).toHaveLength(45);
   });
 
   it('contains exactly 8 top-level categories', () => {
@@ -22,7 +22,7 @@ describe('Integration — Routing & Calculator Registry', () => {
   it('every calculator has unique ID and URL', () => {
     const ids = CALCULATORS.map(c => c.id);
     const urls = CALCULATORS.map(c => c.url);
-    expect(new Set(ids).size).toBe(41);
-    expect(new Set(urls).size).toBe(41);
+    expect(new Set(ids).size).toBe(45);
+    expect(new Set(urls).size).toBe(45);
   });
 });

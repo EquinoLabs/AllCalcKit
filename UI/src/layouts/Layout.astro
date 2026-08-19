@@ -17,7 +17,7 @@ const DEFAULT_KEYWORDS = "Converter, Calculator, all in one calculator, online c
 
 const {
   title = "All Calc Kit — All in One Calculator & Online Converter Tools",
-  description = "Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 40+ free utilities.",
+  description = "Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 45+ free utilities.",
   keywords = DEFAULT_KEYWORDS,
   canonicalUrl = "https://allcalckit.com/",
   ogImage = "https://allcalckit.com/AllCalcKit_Favicon.png",
@@ -176,7 +176,7 @@ const RELATED_TOOLS = [
           <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-auto md:w-64 justify-between">
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <span class="hidden sm:inline">Search 40+ tools…</span>
+              <span class="hidden sm:inline">Search 45+ tools…</span>
               <span class="sm:hidden">Search</span>
             </div>
             <kbd class="hidden md:inline font-mono text-[11px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
@@ -278,6 +278,8 @@ const RELATED_TOOLS = [
             <a href="/terms" class="hover:text-black dark:hover:text-white transition-colors">Terms</a>
             <span>•</span>
             <a href="/contact" class="hover:text-black dark:hover:text-white transition-colors">Contact</a>
+            <span>•</span>
+            <button id="footer-pwa-install-btn" type="button" class="hover:text-black dark:hover:text-white transition-colors cursor-pointer">Install App</button>
           </div>
         </div>
       </div>
@@ -330,10 +332,22 @@ const RELATED_TOOLS = [
           <a href="/#complete-directory" class="mobile-nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold text-neutral-800 dark:text-neutral-200 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-all shadow-xs group">
             <div class="flex items-center gap-2.5">
               <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-              <span>All 40+ Tools Directory</span>
+              <span>All 45+ Tools Directory</span>
             </div>
             <span class="text-neutral-400 group-hover:text-black dark:group-hover:text-white group-hover:translate-x-0.5 transition-transform">→</span>
           </a>
+
+          <!-- PWA Install Action -->
+          <div class="pt-1 space-y-1">
+            <button id="pwa-install-btn" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 transition-all shadow-2xs text-left cursor-pointer">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span id="pwa-install-label">Install App</span>
+              </div>
+              <span class="text-[10px] font-mono font-bold bg-emerald-600 text-white px-1.5 py-0.5 rounded-full">Offline</span>
+            </button>
+            <p class="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono px-1">Instant launch & works 100% offline.</p>
+          </div>
         </div>
       </div>
 
@@ -344,7 +358,7 @@ const RELATED_TOOLS = [
           <button id="mobile-sidebar-search-btn" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all shadow-xs text-left">
             <div class="flex items-center gap-2.5">
               <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <span class="font-normal text-neutral-500 dark:text-neutral-400">Search 40+ calculators…</span>
+              <span class="font-normal text-neutral-500 dark:text-neutral-400">Search 45+ calculators…</span>
             </div>
             <svg class="w-3.5 h-3.5 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
@@ -368,6 +382,32 @@ const RELATED_TOOLS = [
         </div>
       </div>
     </aside>
+
+    <!-- iOS Safari PWA Install Modal -->
+    <div id="ios-install-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4">
+      <div class="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-6 shadow-2xl space-y-4 text-center">
+        <div class="w-12 h-12 rounded-2xl mx-auto overflow-hidden shadow-xs border border-neutral-200 dark:border-neutral-800">
+          <img src="/AllCalcKit_Favicon.png" alt="All Calc Kit" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <h3 class="font-bold text-base text-neutral-900 dark:text-white">Install All Calc Kit</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-1">Get 1-tap instant offline access from your home screen.</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-left space-y-2 text-xs font-mono">
+          <div class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[11px] font-bold shrink-0">1</span>
+            <span>Tap the <strong>Share</strong> icon at bottom of Safari.</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[11px] font-bold shrink-0">2</span>
+            <span>Scroll & choose <strong>Add to Home Screen</strong>.</span>
+          </div>
+        </div>
+        <button id="close-ios-install-btn" type="button" class="w-full py-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black font-semibold text-xs transition-opacity hover:opacity-90 cursor-pointer">
+          Got it
+        </button>
+      </div>
+    </div>
 
     <!-- Command Palette Modal -->
     <div id="search-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-start justify-center pt-16 sm:pt-24 px-4 transition-opacity">
@@ -399,6 +439,23 @@ const RELATED_TOOLS = [
       }
       #mobile-menu-btn.is-open #hamburger-line-3 {
         transform: translateY(-6px) rotate(-45deg);
+      }
+
+      /* Clean Single-Page Print-to-PDF Formatting */
+      @media print {
+        header, footer, nav, #search-modal, #ios-install-modal, #mobile-sidebar, #mobile-sidebar-backdrop, button:not([data-printable]), .no-print {
+          display: none !important;
+        }
+        body {
+          background: #ffffff !important;
+          color: #000000 !important;
+          font-size: 11pt !important;
+        }
+        .max-w-7xl, .max-w-4xl, .max-w-3xl {
+          max-width: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
       }
     </style>
 
@@ -520,44 +577,127 @@ const RELATED_TOOLS = [
         }
       });
 
-      function renderResults(list) {
+      function renderResults(list, query = '') {
         if (!searchResults) return;
         if (list.length === 0) {
           searchResults.innerHTML = `<div class="p-6 text-center text-xs text-neutral-500 font-mono">No calculators match your query.</div>`;
           return;
         }
-        searchResults.innerHTML = list.map(item => `
+
+        let pinnedIds = [];
+        try {
+          const raw = localStorage.getItem('ack_pinned_tools');
+          pinnedIds = raw ? JSON.parse(raw) : [];
+        } catch (_) {}
+
+        let displayList = list;
+        if (!query && Array.isArray(pinnedIds) && pinnedIds.length > 0) {
+          const pinned = list.filter((c) => pinnedIds.includes(c.id));
+          const others = list.filter((c) => !pinnedIds.includes(c.id));
+          displayList = [...pinned, ...others];
+        }
+
+        searchResults.innerHTML = displayList.map(item => {
+          const isPinned = Array.isArray(pinnedIds) && pinnedIds.includes(item.id);
+          return `
           <a href="${item.url}" class="flex items-center justify-between p-2.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors group">
             <div class="flex items-center gap-3 min-w-0">
               <div class="w-8 h-8 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 flex items-center justify-center font-mono text-xs font-bold border border-neutral-200 dark:border-neutral-700 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors shrink-0">
                 ${item.name[0]}
               </div>
               <div class="min-w-0">
-                <div class="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">${item.name}</div>
+                <div class="text-sm font-semibold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate flex items-center gap-1.5">
+                  <span>${item.name}</span>
+                  ${isPinned ? '<span class="text-amber-400 text-xs">★</span>' : ''}
+                </div>
                 <div class="text-xs text-neutral-500 dark:text-neutral-400 truncate">${item.description}</div>
               </div>
             </div>
             <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border border-neutral-200 dark:border-neutral-700 shrink-0 ml-2">${item.category}</span>
           </a>
-        `).join('');
+        `;
+        }).join('');
       }
 
       if (searchInput) {
         searchInput.addEventListener('input', (e) => {
           const query = e.target.value.toLowerCase().trim();
           if (!query) {
-            renderResults(CALCULATORS);
+            renderResults(CALCULATORS, '');
             return;
           }
           const filtered = CALCULATORS.filter(c => 
             c.name.toLowerCase().includes(query) || 
             c.description.toLowerCase().includes(query) || 
-            c.category.toLowerCase().includes(query) ||
+            c.category.toLowerCase().includes(query) || 
             c.tags.some(t => t.toLowerCase().includes(query))
           );
-          renderResults(filtered);
+          renderResults(filtered, query);
         });
       }
+
+      // PWA Device-Adaptive Install Handler
+      let deferredInstallPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        updateInstallLabels();
+      });
+
+      function isIosDevice() {
+        return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+      }
+
+      function updateInstallLabels() {
+        const pwaLabel = document.getElementById('pwa-install-label');
+        const homePwaLabel = document.getElementById('homepage-pwa-label');
+        const isMobile = /android|iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        const labelText = isMobile ? 'Install App' : 'Install Desktop App';
+        if (pwaLabel) pwaLabel.textContent = labelText;
+        if (homePwaLabel) homePwaLabel.textContent = isMobile ? 'Install All Calc Kit App' : 'Install Desktop App';
+      }
+
+      function triggerPwaInstall() {
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          deferredInstallPrompt.userChoice.then(() => {
+            deferredInstallPrompt = null;
+          });
+        } else if (isIosDevice()) {
+          const iosModal = document.getElementById('ios-install-modal');
+          if (iosModal) {
+            iosModal.classList.remove('hidden');
+            iosModal.classList.add('flex');
+          }
+        } else {
+          alert('To install All Calc Kit, click the Install App button in your browser address bar or menu (Chrome / Edge / Safari).');
+        }
+      }
+
+      const pwaInstallBtn = document.getElementById('pwa-install-btn');
+      const footerPwaBtn = document.getElementById('footer-pwa-install-btn');
+      const homePwaBtn = document.getElementById('homepage-pwa-install-btn');
+      const closeIosBtn = document.getElementById('close-ios-install-btn');
+      const iosModal = document.getElementById('ios-install-modal');
+
+      if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', triggerPwaInstall);
+      if (footerPwaBtn) footerPwaBtn.addEventListener('click', triggerPwaInstall);
+      if (homePwaBtn) homePwaBtn.addEventListener('click', triggerPwaInstall);
+      if (closeIosBtn && iosModal) {
+        closeIosBtn.addEventListener('click', () => {
+          iosModal.classList.add('hidden');
+          iosModal.classList.remove('flex');
+        });
+      }
+      if (iosModal) {
+        iosModal.addEventListener('click', (e) => {
+          if (e.target === iosModal) {
+            iosModal.classList.add('hidden');
+            iosModal.classList.remove('flex');
+          }
+        });
+      }
+      updateInstallLabels();
     </script>
 
     <!-- PWA Service Worker Registration -->

@@ -225,9 +225,9 @@ import ShareResult from '../ShareResult.astro';
     </div>
   </div>
 
-  <!-- Year-by-Year Financial Progression Table -->
+  <!-- Year-by-Year Financial Progression & Multi-Year Horizon Comparison -->
   <div class="mt-5 sm:mt-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-2xs overflow-hidden">
-    <div class="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-4">
+    <div class="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-4 flex-wrap">
       <div class="flex items-center gap-2.5">
         <span class="w-7 h-7 rounded-lg bg-blue-500/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,9 +235,28 @@ import ShareResult from '../ShareResult.astro';
           </svg>
         </span>
         <div>
-          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">Yearly Breakdown</span>
-          <span class="font-bold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100">Year-by-Year Financial Progression (1–30 Years)</span>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">Horizon Comparison</span>
+          <span class="font-bold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100">Multi-Year Financial Progression & Milestone Bars</span>
         </div>
+      </div>
+      <button
+        id="rvb-export-csv-btn"
+        type="button"
+        title="Download 30-Year Rent vs Buy Schedule as CSV"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white text-xs font-mono font-semibold transition-all shadow-2xs cursor-pointer"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Export CSV</span>
+      </button>
+    </div>
+
+    <!-- Multi-Year Horizon Comparison Bars (5, 10, 15, 20, 25, 30 Years) -->
+    <div class="p-4 sm:p-5 bg-neutral-50/50 dark:bg-neutral-950/40 border-b border-neutral-200/80 dark:border-neutral-800/80 space-y-3">
+      <div class="text-[11px] font-mono font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+        Net Wealth Advantage by Holding Period
+      </div>
+      <div id="rvb-horizon-bars" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-center font-mono text-xs">
+        <!-- Dynamically rendered milestone cards -->
       </div>
     </div>
 
@@ -749,6 +768,8 @@ import ShareResult from '../ShareResult.astro';
       lastTimeHorizonYears = timeHorizonYears;
       lastBreakevenYear = breakevenYear;
 
+      renderHorizonBars(yearlyComparison);
+
       // Render Table Rows only if currently expanded
       if (isTableExpanded) {
         renderTableRows();
@@ -918,6 +939,71 @@ import ShareResult from '../ShareResult.astro';
         `;
       });
       tableBody.innerHTML = tableHtml;
+    }
+
+    function renderHorizonBars(progression) {
+      const barsContainer = document.getElementById('rvb-horizon-bars');
+      if (!barsContainer) return;
+
+      const milestones = [5, 10, 15, 20, 25, 30];
+      const selectedYear = parseInt(horizonInp?.value || '15');
+      let html = '';
+
+      milestones.forEach(yr => {
+        const pt = progression.find(p => p.year === yr) || progression[progression.length - 1];
+        if (!pt) return;
+
+        const isBuy = pt.betterOption === 'buy';
+        const isSelected = yr === selectedYear;
+
+        html += `
+          <div class="p-2.5 rounded-xl border ${isSelected ? 'bg-white dark:bg-neutral-900 border-emerald-500 ring-2 ring-emerald-500/20 shadow-md' : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 shadow-2xs'} flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-1 mb-1">
+              <span class="font-bold text-[11px] text-neutral-800 dark:text-neutral-200">Year ${yr}</span>
+              <span class="text-[9px] font-bold px-1.5 py-0.2 rounded-full ${isBuy ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400'}">${isBuy ? 'Buy' : 'Rent'}</span>
+            </div>
+            <div class="text-[11px] font-black ${isBuy ? 'text-emerald-600 dark:text-emerald-400' : 'text-blue-600 dark:text-blue-400'} tabular-nums">
+              +${formatMoney(pt.difference)}
+            </div>
+            <div class="text-[9px] text-neutral-400 font-mono mt-0.5">${isBuy ? 'Wealth Gain' : 'Rent Cheaper'}</div>
+          </div>
+        `;
+      });
+      barsContainer.innerHTML = html;
+    }
+
+    // CSV Rent vs Buy Export Handler
+    const rvbExportCsvBtn = document.getElementById('rvb-export-csv-btn');
+    if (rvbExportCsvBtn) {
+      rvbExportCsvBtn.addEventListener('click', () => {
+        const currentInputs = getInputs();
+        const res = calculateRentVsBuy(currentInputs);
+
+        const headers = ['Year', 'Cumulative Rent Paid', 'Renter Net Unrecoverable Cost', 'Cumulative Buyer Outflows', 'Future Home Valuation', 'Buyer Net Cost / Wealth Gain', 'Better Financial Choice', 'Net Wealth Advantage'];
+        const rows = res.progression.map(pt => [
+          `Year ${pt.year}`,
+          pt.totalRentPaid.toFixed(2),
+          pt.netCostRent.toFixed(2),
+          pt.totalBuyerOutflows.toFixed(2),
+          pt.futureHomeValue.toFixed(2),
+          pt.netCostBuy.toFixed(2),
+          pt.betterOption === 'buy' ? 'Buying' : 'Renting',
+          pt.difference.toFixed(2)
+        ]);
+
+        const headerLine = headers.join(',');
+        const rowLines = rows.map(r => r.join(','));
+        const csvContent = [headerLine, ...rowLines].join('\r\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Rent_vs_Buy_30Year_Analysis_${currentInputs.horizonYears}Years.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
     }
 
     restoreStateFromUrl();

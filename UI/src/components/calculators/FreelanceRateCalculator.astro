@@ -1,0 +1,356 @@
+---
+/**
+ * Freelance Hourly Rate <-> Salary Calculator Component
+ * Calculates sustainable freelance hourly & daily rates from target annual salary.
+ */
+---
+
+<div class="space-y-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Input Form -->
+    <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/40 p-5 space-y-4 shadow-2xs">
+      <div class="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+        <span class="text-xs font-mono font-bold uppercase tracking-wider text-neutral-500">Income & Schedule Goals</span>
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <span class="text-neutral-500">Currency:</span>
+          <select class="ack-currency-select bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded px-1.5 py-0.5 font-bold text-neutral-900 dark:text-white">
+            <option value="USD">USD ($)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Target Annual Take-Home Salary -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="fl-salary" class="font-bold text-neutral-700 dark:text-neutral-300">Target Annual Take-Home</label>
+          <span id="fl-salary-display" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$100,000</span>
+        </div>
+        <input id="fl-salary" type="number" value="100000" min="1000" step="5000" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl px-3.5 py-2 text-sm font-mono font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-500" />
+      </div>
+
+      <!-- Billable Hours Per Week -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="fl-hours" class="font-bold text-neutral-700 dark:text-neutral-300">Billable Hours / Week</label>
+          <span id="fl-hours-display" class="font-bold text-neutral-900 dark:text-white tabular-nums">25 hrs/wk</span>
+        </div>
+        <input id="fl-hours" type="range" min="5" max="50" step="1" value="25" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+        <p class="text-[10px] font-mono text-neutral-500 mt-1">Typical freelancers bill 20–30 hours/week (rest is admin/marketing).</p>
+      </div>
+
+      <!-- Vacation Weeks -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="fl-vacation" class="font-bold text-neutral-700 dark:text-neutral-300">Time Off & Holidays</label>
+          <span id="fl-vacation-display" class="font-bold text-neutral-900 dark:text-white tabular-nums">4 weeks</span>
+        </div>
+        <input id="fl-vacation" type="range" min="0" max="12" step="1" value="4" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-emerald-600" />
+      </div>
+
+      <!-- Annual Business Expenses -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="fl-expenses" class="font-bold text-neutral-700 dark:text-neutral-300">Annual Business Expenses</label>
+          <span id="fl-expenses-display" class="font-bold text-neutral-900 dark:text-white tabular-nums">$5,000</span>
+        </div>
+        <input id="fl-expenses" type="number" value="5000" min="0" step="500" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl px-3.5 py-2 text-sm font-mono font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-emerald-500" />
+      </div>
+
+      <!-- Advanced Buffers: Tax & Profit -->
+      <div class="grid grid-cols-2 gap-3 pt-2 border-t border-neutral-200 dark:border-neutral-800 text-xs font-mono">
+        <div>
+          <label for="fl-tax" class="block font-bold text-neutral-600 dark:text-neutral-400 mb-1">Tax Buffer (%)</label>
+          <input id="fl-tax" type="number" value="25" min="0" max="60" step="1" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg px-2.5 py-1.5 font-bold text-neutral-900 dark:text-white" />
+        </div>
+        <div>
+          <label for="fl-profit" class="block font-bold text-neutral-600 dark:text-neutral-400 mb-1">Profit Buffer (%)</label>
+          <input id="fl-profit" type="number" value="15" min="0" max="50" step="1" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg px-2.5 py-1.5 font-bold text-neutral-900 dark:text-white" />
+        </div>
+      </div>
+
+      <!-- Working Capacity Milestones -->
+      <div class="p-3.5 rounded-xl bg-neutral-100/80 dark:bg-neutral-800/40 border border-neutral-200/80 dark:border-neutral-700/60 space-y-2.5 text-xs font-mono">
+        <div class="flex items-center justify-between text-[11px] font-bold text-neutral-700 dark:text-neutral-300">
+          <span class="uppercase tracking-wider">Annual Schedule Capacity</span>
+          <span id="fl-cap-weeks" class="text-neutral-500">48 Working Weeks</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+          <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+            <span class="text-neutral-500 block">Billable/Yr</span>
+            <span id="fl-cap-hours" class="font-bold text-neutral-900 dark:text-white tabular-nums">1,200 hrs</span>
+          </div>
+          <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+            <span class="text-neutral-500 block">Gross Need</span>
+            <span id="fl-cap-gross" class="font-bold text-neutral-900 dark:text-white tabular-nums">$161k</span>
+          </div>
+          <div class="p-2 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs">
+            <span class="text-neutral-500 block">Min. Day</span>
+            <span id="fl-cap-day" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$1,073</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Rates Card & Visual Breakdown -->
+    <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+          <span class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">Recommended Minimum Rate</span>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Sustainable</span>
+            <button
+              id="fl-export-csv-btn"
+              type="button"
+              title="Download Freelance Pricing Matrix as CSV"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[11px] font-mono font-medium transition-all shadow-2xs cursor-pointer"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>CSV</span>
+            </button>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="fl-rate-val" class="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">$134.17</span>
+          <span class="text-sm font-mono text-neutral-500">/ hour</span>
+        </div>
+        <div id="fl-compact-badge" class="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-300 mt-0.5"></div>
+      </div>
+
+      <!-- Rate Tier Metrics -->
+      <div class="grid grid-cols-3 gap-2 py-3 border-y border-neutral-200 dark:border-neutral-800 text-xs font-mono">
+        <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80">
+          <span class="text-[10px] text-neutral-500 block font-semibold">Daily Rate</span>
+          <span id="fl-daily-val" class="font-bold text-neutral-900 dark:text-white tabular-nums">$1,073</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80">
+          <span class="text-[10px] text-neutral-500 block font-semibold">Weekly Target</span>
+          <span id="fl-weekly-val" class="font-bold text-neutral-900 dark:text-white tabular-nums">$3,354</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80">
+          <span class="text-[10px] text-neutral-500 block font-semibold">Monthly Invoicing</span>
+          <span id="fl-monthly-val" class="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">$13,417</span>
+        </div>
+      </div>
+
+      <!-- Interactive SVG Donut Breakdown -->
+      <div class="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center gap-4 shadow-2xs">
+        <div class="relative w-24 h-24 shrink-0 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-label="Income Breakdown Donut Chart">
+            <circle cx="50" cy="50" r="38" class="stroke-neutral-100 dark:stroke-neutral-800" stroke-width="11" fill="none" />
+            <circle id="fl-donut-salary" cx="50" cy="50" r="38" class="stroke-emerald-500 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="148 238.76" stroke-dashoffset="0" fill="none" />
+            <circle id="fl-donut-taxes" cx="50" cy="50" r="38" class="stroke-rose-500 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="60 238.76" stroke-dashoffset="-148" fill="none" />
+            <circle id="fl-donut-expenses" cx="50" cy="50" r="38" class="stroke-amber-500 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="30 238.76" stroke-dashoffset="-208" fill="none" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+            <span id="fl-donut-ratio" class="text-xs font-mono font-black text-neutral-900 dark:text-white tabular-nums">62%</span>
+            <span class="text-[8px] font-mono text-neutral-500 uppercase tracking-tighter">Take-Home</span>
+          </div>
+        </div>
+
+        <div class="flex-1 w-full space-y-1 text-[11px] font-mono">
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span class="text-neutral-600 dark:text-neutral-400">Take-Home Pay</span>
+            </div>
+            <span id="fl-legend-salary" class="font-bold text-neutral-900 dark:text-white tabular-nums">$100k</span>
+          </div>
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span>
+              <span class="text-neutral-600 dark:text-neutral-400">Tax & Overhead Buffer</span>
+            </div>
+            <span id="fl-legend-tax" class="font-bold text-rose-600 dark:text-rose-400 tabular-nums">25%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[11px] font-mono text-neutral-500 leading-relaxed">
+        Billable Hours/Year: <span id="fl-billable-hours" class="font-bold text-neutral-900 dark:text-neutral-100">1,200 hrs</span> (<span id="fl-work-weeks">48 weeks</span>).
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const salaryInp = document.getElementById('fl-salary');
+    const hoursInp = document.getElementById('fl-hours');
+    const vacationInp = document.getElementById('fl-vacation');
+    const expensesInp = document.getElementById('fl-expenses');
+    const taxInp = document.getElementById('fl-tax');
+    const profitInp = document.getElementById('fl-profit');
+
+    const salaryDisp = document.getElementById('fl-salary-display');
+    const hoursDisp = document.getElementById('fl-hours-display');
+    const vacationDisp = document.getElementById('fl-vacation-display');
+    const expensesDisp = document.getElementById('fl-expenses-display');
+
+    const rateVal = document.getElementById('fl-rate-val');
+    const dailyVal = document.getElementById('fl-daily-val');
+    const weeklyVal = document.getElementById('fl-weekly-val');
+    const monthlyVal = document.getElementById('fl-monthly-val');
+    const billableHoursEl = document.getElementById('fl-billable-hours');
+    const workWeeksEl = document.getElementById('fl-work-weeks');
+
+    const CURRENCY_CONFIGS = {
+      USD: { symbol: '$', locale: 'en-US' },
+      INR: { symbol: '₹', locale: 'en-IN' },
+      EUR: { symbol: '€', locale: 'en-IE' },
+      GBP: { symbol: '£', locale: 'en-GB' }
+    };
+
+    function getCurrency() {
+      return localStorage.getItem('ack_currency') || 'USD';
+    }
+
+    function formatMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      return `${cfg.symbol}${Math.round(num).toLocaleString(cfg.locale)}`;
+    }
+
+    function calcFreelance() {
+      const targetSalary = parseFloat(salaryInp?.value || '100000');
+      const billableHoursPerWeek = parseFloat(hoursInp?.value || '25');
+      const vacationWeeks = parseFloat(vacationInp?.value || '4');
+      const annualExpenses = parseFloat(expensesInp?.value || '5000');
+      const taxBuffer = parseFloat(taxInp?.value || '25');
+      const profitBuffer = parseFloat(profitInp?.value || '15');
+
+      const workingWeeks = Math.max(1, 52 - vacationWeeks);
+      const totalBillableHours = workingWeeks * Math.max(1, billableHoursPerWeek);
+
+      const baseNeed = targetSalary + annualExpenses;
+      const withProfit = baseNeed * (1 + profitBuffer / 100);
+      const grossAnnual = withProfit / Math.max(0.01, 1 - (taxBuffer / 100));
+
+      const hourly = grossAnnual / totalBillableHours;
+      const daily = hourly * 8;
+      const weekly = hourly * billableHoursPerWeek;
+      const monthly = grossAnnual / 12;
+
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+
+      if (salaryDisp) salaryDisp.textContent = `${cfg.symbol}${Math.round(targetSalary).toLocaleString(cfg.locale)}`;
+      if (hoursDisp) hoursDisp.textContent = `${billableHoursPerWeek} hrs/wk`;
+      if (vacationDisp) vacationDisp.textContent = `${vacationWeeks} weeks`;
+      if (expensesDisp) expensesDisp.textContent = `${cfg.symbol}${Math.round(annualExpenses).toLocaleString(cfg.locale)}`;
+
+      if (rateVal) rateVal.textContent = `${cfg.symbol}${hourly.toFixed(2)}`;
+      if (dailyVal) dailyVal.textContent = formatMoney(daily);
+      if (weeklyVal) weeklyVal.textContent = formatMoney(weekly);
+      if (monthlyVal) monthlyVal.textContent = formatMoney(monthly);
+
+      if (billableHoursEl) billableHoursEl.textContent = `${totalBillableHours.toLocaleString()} hrs`;
+      if (workWeeksEl) workWeeksEl.textContent = `${workingWeeks} weeks`;
+
+      // Update Capacity Milestones
+      const capWeeksEl = document.getElementById('fl-cap-weeks');
+      const capHoursEl = document.getElementById('fl-cap-hours');
+      const capGrossEl = document.getElementById('fl-cap-gross');
+      const capDayEl = document.getElementById('fl-cap-day');
+
+      if (capWeeksEl) capWeeksEl.textContent = `${workingWeeks} Working Weeks`;
+      if (capHoursEl) capHoursEl.textContent = `${totalBillableHours.toLocaleString()} hrs`;
+      if (capGrossEl) capGrossEl.textContent = formatMoney(grossAnnual);
+      if (capDayEl) capDayEl.textContent = formatMoney(daily);
+
+      // Update Legend Salary & Taxes
+      const legendSalaryEl = document.getElementById('fl-legend-salary');
+      const legendTaxEl = document.getElementById('fl-legend-tax');
+      if (legendSalaryEl) legendSalaryEl.textContent = formatMoney(targetSalary);
+      if (legendTaxEl) legendTaxEl.textContent = `${taxBuffer}%`;
+
+      // Update SVG Donut Chart
+      const salaryRatio = grossAnnual > 0 ? (targetSalary / grossAnnual) : 0.6;
+      const taxRatio = grossAnnual > 0 ? ((grossAnnual - targetSalary) / grossAnnual) : 0.4;
+
+      const donutSalary = document.getElementById('fl-donut-salary');
+      const donutTaxes = document.getElementById('fl-donut-taxes');
+      const donutRatio = document.getElementById('fl-donut-ratio');
+
+      if (donutSalary && donutTaxes) {
+        const C = 238.761;
+        const salLen = (salaryRatio * C).toFixed(2);
+        const taxLen = (taxRatio * C).toFixed(2);
+        donutSalary.setAttribute('stroke-dasharray', `${salLen} ${C}`);
+        donutSalary.setAttribute('stroke-dashoffset', '0');
+        donutTaxes.setAttribute('stroke-dasharray', `${taxLen} ${C}`);
+        donutTaxes.setAttribute('stroke-dashoffset', `-${salLen}`);
+      }
+      if (donutRatio) donutRatio.textContent = `${Math.round(salaryRatio * 100)}%`;
+    }
+
+    // CSV Rate Matrix Export Handler
+    const flExportCsvBtn = document.getElementById('fl-export-csv-btn');
+    if (flExportCsvBtn) {
+      flExportCsvBtn.addEventListener('click', () => {
+        const targetSalary = parseFloat(salaryInp?.value || '100000');
+        const billableHoursPerWeek = parseFloat(hoursInp?.value || '25');
+        const vacationWeeks = parseFloat(vacationInp?.value || '4');
+        const annualExpenses = parseFloat(expensesInp?.value || '5000');
+        const taxBuffer = parseFloat(taxInp?.value || '25');
+        const profitBuffer = parseFloat(profitInp?.value || '15');
+
+        const workingWeeks = Math.max(1, 52 - vacationWeeks);
+        const totalBillableHours = workingWeeks * Math.max(1, billableHoursPerWeek);
+        const baseNeed = targetSalary + annualExpenses;
+        const withProfit = baseNeed * (1 + profitBuffer / 100);
+        const grossAnnual = withProfit / Math.max(0.01, 1 - (taxBuffer / 100));
+        const hourly = grossAnnual / totalBillableHours;
+
+        const headers = ['Rate Tier / Parameter', 'Amount / Value', 'Frequency / Unit', 'Description'];
+        const rows = [
+          ['Target Annual Salary', targetSalary.toFixed(2), 'Per Year (Net)', 'Desired personal take-home pay'],
+          ['Annual Business Expenses', annualExpenses.toFixed(2), 'Per Year', 'Software, hardware & operations'],
+          ['Gross Annual Revenue Needed', grossAnnual.toFixed(2), 'Per Year (Gross)', 'Total billing required before tax'],
+          ['Recommended Minimum Hourly Rate', hourly.toFixed(2), 'Per Hour', 'Minimum rate for 100% sustainability'],
+          ['Daily Rate (8h)', (hourly * 8).toFixed(2), 'Per Day', 'Standard day rate billing'],
+          ['Weekly Invoicing Target', (hourly * billableHoursPerWeek).toFixed(2), 'Per Week', `${billableHoursPerWeek} billable hours/week`],
+          ['Monthly Invoicing Target', (grossAnnual / 12).toFixed(2), 'Per Month', 'Average monthly invoice volume'],
+          ['Annual Working Weeks', workingWeeks.toString(), 'Weeks/Year', `52 weeks − ${vacationWeeks} weeks off`],
+          ['Annual Billable Capacity', totalBillableHours.toString(), 'Hours/Year', `${workingWeeks} weeks × ${billableHoursPerWeek} hrs/wk`]
+        ];
+
+        const headerLine = headers.join(',');
+        const rowLines = rows.map(r => r.join(','));
+        const csvContent = [headerLine, ...rowLines].join('\r\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Freelance_Rate_Matrix_${Math.round(targetSalary)}_Salary.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+    }
+
+    const selects = document.querySelectorAll('.ack-currency-select');
+    selects.forEach(sel => {
+      sel.value = getCurrency();
+      sel.addEventListener('change', (e) => {
+        const val = e.target.value;
+        localStorage.setItem('ack_currency', val);
+        window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
+      });
+    });
+
+    window.addEventListener('ack_currency_change', (e) => {
+      selects.forEach(sel => sel.value = e.detail);
+      calcFreelance();
+    });
+
+    [salaryInp, hoursInp, vacationInp, expensesInp, taxInp, profitInp].forEach(el => {
+      el?.addEventListener('input', calcFreelance);
+    });
+
+    calcFreelance();
+  })();
+</script>

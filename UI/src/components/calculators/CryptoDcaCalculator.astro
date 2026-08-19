@@ -1,0 +1,329 @@
+---
+/**
+ * Crypto & Investment DCA (Dollar-Cost Averaging) Calculator Component
+ * Calculates total capital invested, future portfolio wealth, and ROI % for recurring DCA investments.
+ */
+---
+
+<div class="space-y-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Input Form -->
+    <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/40 p-5 space-y-4 shadow-2xs">
+      <div class="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+        <span class="text-xs font-mono font-bold uppercase tracking-wider text-neutral-500">DCA Strategy Setup</span>
+        <div class="flex items-center gap-1.5 text-xs font-mono">
+          <span class="text-neutral-500">Currency:</span>
+          <select class="ack-currency-select bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded px-1.5 py-0.5 font-bold text-neutral-900 dark:text-white">
+            <option value="USD">USD ($)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Recurring Amount -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="dca-amount" class="font-bold text-neutral-700 dark:text-neutral-300">Recurring Buy Amount</label>
+          <span id="dca-amount-display" class="font-bold text-neutral-900 dark:text-white tabular-nums">$100</span>
+        </div>
+        <input id="dca-amount" type="number" value="100" min="1" step="10" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl px-3.5 py-2 text-sm font-mono font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-purple-500" />
+      </div>
+
+      <!-- Purchase Frequency -->
+      <div>
+        <label class="block text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 mb-1.5">Purchase Frequency</label>
+        <div class="grid grid-cols-4 gap-2">
+          <button type="button" data-freq="daily" class="dca-freq-btn py-2 px-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 hover:border-purple-500 transition-colors">Daily</button>
+          <button type="button" data-freq="weekly" class="dca-freq-btn py-2 px-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 hover:border-purple-500 transition-colors">Weekly</button>
+          <button type="button" data-freq="biweekly" class="dca-freq-btn py-2 px-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300 hover:border-purple-500 transition-colors">Bi-Weekly</button>
+          <button type="button" data-freq="monthly" class="dca-freq-btn active py-2 px-2 rounded-xl border border-purple-500 bg-purple-50 dark:bg-purple-950/40 text-xs font-mono font-bold text-purple-600 dark:text-purple-400">Monthly</button>
+        </div>
+      </div>
+
+      <!-- Investment Duration (Months) -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="dca-duration" class="font-bold text-neutral-700 dark:text-neutral-300">Investment Horizon</label>
+          <span id="dca-duration-display" class="font-bold text-neutral-900 dark:text-white tabular-nums">24 Months (2 Yrs)</span>
+        </div>
+        <input id="dca-duration" type="range" min="3" max="120" step="3" value="24" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-600" />
+      </div>
+
+      <!-- Expected Annual Growth Rate (%) -->
+      <div>
+        <div class="flex justify-between items-center mb-1 text-xs font-mono">
+          <label for="dca-rate" class="font-bold text-neutral-700 dark:text-neutral-300">Expected Annual Growth Rate (%)</label>
+          <span id="dca-rate-display" class="font-bold text-purple-600 dark:text-purple-400 tabular-nums">25%</span>
+        </div>
+        <input id="dca-rate" type="range" min="1" max="150" step="1" value="25" class="w-full h-2.5 bg-neutral-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-purple-600" />
+      </div>
+
+      <!-- Plain English DCA Explanation Card -->
+      <div class="p-3 rounded-xl bg-purple-500/5 dark:bg-purple-500/10 border border-purple-500/20 text-xs font-mono space-y-1">
+        <div class="flex items-center gap-1.5 font-bold text-purple-700 dark:text-purple-300 text-[11px]">
+          <span>💡 What is Dollar-Cost Averaging (DCA)?</span>
+        </div>
+        <p class="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          Instead of investing a lump sum all at once, you invest a fixed amount regularly (e.g. $100 every month). When the price drops, you automatically buy more crypto; when it rises, you buy less. This smooths out volatility and removes emotional stress.
+        </p>
+      </div>
+    </div>
+
+    <!-- Output Card & Visual Breakdown -->
+    <div class="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-2xs">
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1 flex-wrap">
+          <span class="text-xs font-mono text-neutral-700 dark:text-neutral-400 uppercase tracking-wider font-bold">Estimated Portfolio Value</span>
+          <div class="flex items-center gap-2">
+            <span id="dca-roi-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">+28.4% ROI</span>
+            <button
+              id="dca-export-csv-btn"
+              type="button"
+              title="Download DCA Purchase & Portfolio Schedule as CSV"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 text-[11px] font-mono font-medium transition-all shadow-2xs cursor-pointer"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>CSV</span>
+            </button>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="dca-future-val" class="text-3xl sm:text-4xl font-black text-purple-600 dark:text-purple-400 tabular-nums">$3,082</span>
+        </div>
+        <div id="dca-compact-badge" class="text-xs font-mono font-bold text-purple-700 dark:text-purple-300 mt-0.5"></div>
+      </div>
+
+      <!-- Metrics Breakdown Grid -->
+      <div class="grid grid-cols-2 gap-3 py-3 border-y border-neutral-200 dark:border-neutral-800 text-xs font-mono">
+        <div>
+          <span class="text-neutral-500 block font-semibold">Total Invested Capital</span>
+          <span id="dca-invested-val" class="font-bold text-neutral-900 dark:text-white tabular-nums text-sm sm:text-base">$2,400</span>
+        </div>
+        <div>
+          <span class="text-neutral-500 block font-semibold">Total Profit (Gains)</span>
+          <span id="dca-profit-val" class="font-bold text-purple-600 dark:text-purple-400 tabular-nums text-sm sm:text-base">+$682</span>
+        </div>
+      </div>
+
+      <!-- Interactive SVG Donut Breakdown -->
+      <div class="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center gap-4 shadow-2xs">
+        <div class="relative w-24 h-24 shrink-0 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-label="Invested vs Profit Breakdown">
+            <circle cx="50" cy="50" r="38" class="stroke-neutral-100 dark:stroke-neutral-800" stroke-width="11" fill="none" />
+            <circle id="dca-donut-invested" cx="50" cy="50" r="38" class="stroke-black dark:stroke-neutral-300 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="186 238.76" stroke-dashoffset="0" fill="none" />
+            <circle id="dca-donut-profit" cx="50" cy="50" r="38" class="stroke-purple-500 transition-all duration-500 ease-out" stroke-width="11" stroke-dasharray="52 238.76" stroke-dashoffset="-186" fill="none" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+            <span id="dca-donut-ratio" class="text-xs font-mono font-black text-neutral-900 dark:text-white tabular-nums">78%</span>
+            <span class="text-[8px] font-mono text-neutral-500 uppercase tracking-tighter">Principal</span>
+          </div>
+        </div>
+
+        <div class="flex-1 w-full space-y-1.5 text-[11px] font-mono">
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-black dark:bg-neutral-300 shrink-0"></span>
+              <span class="text-neutral-600 dark:text-neutral-400">Invested Capital</span>
+            </div>
+            <span id="dca-inv-pct" class="font-bold text-neutral-900 dark:text-white tabular-nums">78%</span>
+          </div>
+          <div class="flex items-center justify-between p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-purple-500 shrink-0"></span>
+              <span class="text-neutral-600 dark:text-neutral-400">Total Profit</span>
+            </div>
+            <span id="dca-gain-pct" class="font-bold text-purple-600 dark:text-purple-400 tabular-nums">22%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-[11px] font-mono text-neutral-500 leading-relaxed">
+        Total purchases: <span id="dca-purchase-count" class="font-bold text-neutral-900 dark:text-neutral-100">24 recurring buys</span> over the holding period.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    let currentFreq = 'monthly';
+    const amountInp = document.getElementById('dca-amount');
+    const durationInp = document.getElementById('dca-duration');
+    const rateInp = document.getElementById('dca-rate');
+
+    const amountDisp = document.getElementById('dca-amount-display');
+    const durationDisp = document.getElementById('dca-duration-display');
+    const rateDisp = document.getElementById('dca-rate-display');
+
+    const futureValEl = document.getElementById('dca-future-val');
+    const investedValEl = document.getElementById('dca-invested-val');
+    const profitValEl = document.getElementById('dca-profit-val');
+    const roiBadge = document.getElementById('dca-roi-badge');
+    const purchaseCountEl = document.getElementById('dca-purchase-count');
+
+    const CURRENCY_CONFIGS = {
+      USD: { symbol: '$', locale: 'en-US' },
+      INR: { symbol: '₹', locale: 'en-IN' },
+      EUR: { symbol: '€', locale: 'en-IE' },
+      GBP: { symbol: '£', locale: 'en-GB' }
+    };
+
+    function getCurrency() {
+      return localStorage.getItem('ack_currency') || 'USD';
+    }
+
+    function formatMoney(num) {
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+      return `${cfg.symbol}${Math.round(num).toLocaleString(cfg.locale)}`;
+    }
+
+    function calcDca() {
+      const amount = parseFloat(amountInp?.value || '100');
+      const months = parseFloat(durationInp?.value || '24');
+      const rate = parseFloat(rateInp?.value || '25');
+
+      const curr = getCurrency();
+      const cfg = CURRENCY_CONFIGS[curr] || CURRENCY_CONFIGS.USD;
+
+      if (amountDisp) amountDisp.textContent = `${cfg.symbol}${Math.round(amount).toLocaleString(cfg.locale)}`;
+      if (durationDisp) {
+        const yrs = (months / 12).toFixed(1).replace(/\.0$/, '');
+        durationDisp.textContent = `${months} Months (${yrs} Yrs)`;
+      }
+      if (rateDisp) rateDisp.textContent = `${rate}%`;
+
+      let intervalsPerMonth = 1;
+      if (currentFreq === 'daily') intervalsPerMonth = 30;
+      else if (currentFreq === 'weekly') intervalsPerMonth = 4.333;
+      else if (currentFreq === 'biweekly') intervalsPerMonth = 2.166;
+      else intervalsPerMonth = 1;
+
+      const totalPurchases = Math.round(months * intervalsPerMonth);
+      const totalInvested = amount * totalPurchases;
+      const ratePerPeriod = (rate / 100) / (12 * intervalsPerMonth);
+
+      let futureVal = 0;
+      if (ratePerPeriod === 0) {
+        futureVal = totalInvested;
+      } else {
+        futureVal = amount * ((Math.pow(1 + ratePerPeriod, totalPurchases) - 1) / ratePerPeriod) * (1 + ratePerPeriod);
+      }
+
+      const profit = futureVal - totalInvested;
+      const roi = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
+
+      if (futureValEl) futureValEl.textContent = formatMoney(futureVal);
+      if (investedValEl) investedValEl.textContent = formatMoney(totalInvested);
+      if (profitValEl) profitValEl.textContent = `+${formatMoney(profit)}`;
+      if (roiBadge) roiBadge.textContent = `+${roi.toFixed(1)}% ROI`;
+      if (purchaseCountEl) purchaseCountEl.textContent = `${totalPurchases} recurring buys`;
+
+      const invRatio = futureVal > 0 ? Math.round((totalInvested / futureVal) * 100) : 100;
+      const gainRatio = 100 - invRatio;
+
+      const invPctEl = document.getElementById('dca-inv-pct');
+      const gainPctEl = document.getElementById('dca-gain-pct');
+      if (invPctEl) invPctEl.textContent = `${invRatio}%`;
+      if (gainPctEl) gainPctEl.textContent = `${gainRatio}%`;
+
+      // Update SVG Donut
+      const donutInv = document.getElementById('dca-donut-invested');
+      const donutProfit = document.getElementById('dca-donut-profit');
+      const donutRatio = document.getElementById('dca-donut-ratio');
+      if (donutInv && donutProfit) {
+        const C = 238.761;
+        const invLen = ((invRatio / 100) * C).toFixed(2);
+        const gainLen = ((gainRatio / 100) * C).toFixed(2);
+        donutInv.setAttribute('stroke-dasharray', `${invLen} ${C}`);
+        donutInv.setAttribute('stroke-dashoffset', '0');
+        donutProfit.setAttribute('stroke-dasharray', `${gainLen} ${C}`);
+        donutProfit.setAttribute('stroke-dashoffset', `-${invLen}`);
+      }
+      if (donutRatio) donutRatio.textContent = `${invRatio}%`;
+    }
+
+    const freqBtns = document.querySelectorAll('.dca-freq-btn');
+    freqBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        freqBtns.forEach(b => {
+          b.classList.remove('border-purple-500', 'bg-purple-50', 'dark:bg-purple-950/40', 'text-purple-600', 'dark:text-purple-400');
+          b.classList.add('border-neutral-200', 'dark:border-neutral-800', 'bg-white', 'dark:bg-neutral-900', 'text-neutral-700', 'dark:text-neutral-300');
+        });
+        btn.classList.remove('border-neutral-200', 'dark:border-neutral-800', 'bg-white', 'dark:bg-neutral-900', 'text-neutral-700', 'dark:text-neutral-300');
+        btn.classList.add('border-purple-500', 'bg-purple-50', 'dark:bg-purple-950/40', 'text-purple-600', 'dark:text-purple-400');
+        currentFreq = btn.getAttribute('data-freq') || 'monthly';
+        calcDca();
+      });
+    });
+
+    const dcaExportCsvBtn = document.getElementById('dca-export-csv-btn');
+    if (dcaExportCsvBtn) {
+      dcaExportCsvBtn.addEventListener('click', () => {
+        const amount = parseFloat(amountInp?.value || '100');
+        const months = parseFloat(durationInp?.value || '24');
+        const rate = parseFloat(rateInp?.value || '25');
+
+        let intervalsPerMonth = 1;
+        if (currentFreq === 'daily') intervalsPerMonth = 30;
+        else if (currentFreq === 'weekly') intervalsPerMonth = 4.333;
+        else if (currentFreq === 'biweekly') intervalsPerMonth = 2.166;
+        else intervalsPerMonth = 1;
+
+        const totalPurchases = Math.round(months * intervalsPerMonth);
+        const ratePerPeriod = (rate / 100) / (12 * intervalsPerMonth);
+
+        const headers = ['Interval #', 'Recurring Deposit', 'Cumulative Invested', 'Estimated Portfolio Value', 'Total Unrealized Profit'];
+        const rows = [];
+
+        for (let p = 1; p <= totalPurchases; p++) {
+          const invested = amount * p;
+          const futureVal = ratePerPeriod === 0
+            ? invested
+            : amount * ((Math.pow(1 + ratePerPeriod, p) - 1) / ratePerPeriod) * (1 + ratePerPeriod);
+          const profit = futureVal - invested;
+          rows.push([
+            `Buy #${p} (${currentFreq})`,
+            amount.toFixed(2),
+            invested.toFixed(2),
+            futureVal.toFixed(2),
+            profit.toFixed(2)
+          ]);
+        }
+
+        const headerLine = headers.join(',');
+        const rowLines = rows.map(r => r.join(','));
+        const csvContent = [headerLine, ...rowLines].join('\r\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Crypto_DCA_Schedule_${Math.round(amount)}_${currentFreq}_${months}Months.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+    }
+
+    const selects = document.querySelectorAll('.ack-currency-select');
+    selects.forEach(sel => {
+      sel.value = getCurrency();
+      sel.addEventListener('change', (e) => {
+        const val = e.target.value;
+        localStorage.setItem('ack_currency', val);
+        window.dispatchEvent(new CustomEvent('ack_currency_change', { detail: val }));
+      });
+    });
+
+    window.addEventListener('ack_currency_change', (e) => {
+      selects.forEach(sel => sel.value = e.detail);
+      calcDca();
+    });
+
+    [amountInp, durationInp, rateInp].forEach(el => el?.addEventListener('input', calcDca));
+    calcDca();
+  })();
+</script>

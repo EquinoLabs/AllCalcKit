@@ -91,7 +91,7 @@ const faqSchema = {
 
 <Layout 
   title="All Calc Kit — All in One Calculator & Online Converter Tools" 
-  description="Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 40+ free utilities."
+  description="Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 45+ free utilities."
   canonicalUrl="https://allcalckit.com/" 
   showQuickTools={true}
   jsonLd={faqSchema}
@@ -130,7 +130,7 @@ const faqSchema = {
       <!-- Quick Stats Bar -->
       <div class="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-neutral-200 dark:border-neutral-800/80 max-w-3xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
         <div class="p-2">
-          <div class="text-xl sm:text-2xl font-black font-mono text-black dark:text-white">40+</div>
+          <div class="text-xl sm:text-2xl font-black font-mono text-black dark:text-white">45+</div>
           <div class="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-400 font-mono font-medium">Precision Tools</div>
         </div>
         <div class="p-2">
@@ -163,11 +163,24 @@ const faqSchema = {
   <!-- Main Content Area -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-14 sm:space-y-20">
     
+    <!-- DYNAMIC PINNED TOOLS TRAY (Rendered via client-side storage) -->
+    <div id="pinned-tools-section" class="hidden p-5 sm:p-6 rounded-2xl bg-amber-500/[0.04] dark:bg-amber-500/[0.03] border border-amber-500/20 dark:border-amber-500/20 shadow-xs">
+      <div class="flex items-center justify-between gap-2 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-500 text-sm">⭐</span>
+          <h2 class="font-bold text-sm sm:text-base text-neutral-900 dark:text-white">Your Pinned Tools</h2>
+        </div>
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">1-Click Quick Access</span>
+      </div>
+      <div id="pinned-tools-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      </div>
+    </div>
+
     <!-- SECTION 1: COMPLETE DIRECTORY GRID -->
     <div id="complete-directory">
       <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
         <span class="text-xs font-mono text-neutral-700 dark:text-purple-400 font-bold uppercase tracking-wider">All Tools Directory</span>
-        <h2 class="text-2xl sm:text-3xl font-bold text-black dark:text-white tracking-tight mt-1 mb-2">All 40+ Converter & Calculator Tools.</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold text-black dark:text-white tracking-tight mt-1 mb-2">All 45+ Converter & Calculator Tools.</h2>
         <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400">Select any category or tool below to calculate instantly.</p>
       </div>
 
@@ -256,6 +269,67 @@ const faqSchema = {
         <EmiCalculator />
         <BmiCalculator />
         <FuelCostCalculator />
+      </div>
+    </div>
+
+    <!-- DEDICATED PWA INSTALL APP BANNER SECTION -->
+    <div class="pt-10 border-t border-neutral-200 dark:border-neutral-800">
+      <div class="bg-gradient-to-br from-neutral-50 via-emerald-50/20 to-neutral-100 dark:from-neutral-950 dark:via-neutral-900/60 dark:to-neutral-950 rounded-3xl p-6 sm:p-10 border border-neutral-200 dark:border-neutral-800 shadow-lg text-center relative overflow-hidden">
+        <div class="max-w-3xl mx-auto space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/20">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Install on iOS, Android & Desktop</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-black dark:text-white">
+            Use All Calc Kit Anytime, Anywhere — 100% Offline.
+          </h2>
+
+          <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 max-w-xl mx-auto leading-relaxed font-medium">
+            Add All Calc Kit directly to your home screen or desktop taskbar. Zero app store downloads, zero memory bloat, and instant access to all 45+ calculators even without an internet connection.
+          </p>
+
+          <!-- 3 Benefits Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 text-left">
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs space-y-1">
+              <div class="font-bold text-xs text-neutral-900 dark:text-white flex items-center gap-1.5 font-mono">
+                <span>📶 Works Offline</span>
+              </div>
+              <p class="text-[11px] text-neutral-500 dark:text-neutral-400 font-mono">
+                All 45+ math engines cache locally in your browser storage.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs space-y-1">
+              <div class="font-bold text-xs text-neutral-900 dark:text-white flex items-center gap-1.5 font-mono">
+                <span>⚡ Sub-5ms Launch</span>
+              </div>
+              <p class="text-[11px] text-neutral-500 dark:text-neutral-400 font-mono">
+                Opens instantly like a native app with zero loading delays.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs space-y-1">
+              <div class="font-bold text-xs text-neutral-900 dark:text-white flex items-center gap-1.5 font-mono">
+                <span>🔒 Zero Ads & Logins</span>
+              </div>
+              <p class="text-[11px] text-neutral-500 dark:text-neutral-400 font-mono">
+                100% free and private forever with zero trackers or subscriptions.
+              </p>
+            </div>
+          </div>
+
+          <!-- Install Action Trigger Button -->
+          <div class="pt-3 flex justify-center">
+            <button
+              id="homepage-pwa-install-btn"
+              type="button"
+              class="px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-mono font-bold text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-98 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span id="homepage-pwa-label">Install All Calc Kit App</span>
+              <span class="text-[10px] bg-emerald-800/60 px-2 py-0.5 rounded-full text-emerald-200">Free PWA</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -391,7 +465,7 @@ const faqSchema = {
 
   </div>
 
-  <script is:inline>
+  <script is:inline define:vars={{ CALCULATORS }}>
     const heroCmdBtn = document.getElementById('hero-cmd-btn');
     if (heroCmdBtn) {
       heroCmdBtn.addEventListener('click', () => {
@@ -404,6 +478,39 @@ const faqSchema = {
         }
       });
     }
+
+    // Dynamic Pinned Tools Tray Renderer
+    function renderPinnedTools() {
+      const section = document.getElementById('pinned-tools-section');
+      const grid = document.getElementById('pinned-tools-grid');
+      if (!section || !grid) return;
+      try {
+        const raw = localStorage.getItem('ack_pinned_tools');
+        const pinnedIds = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(pinnedIds) || pinnedIds.length === 0) {
+          section.classList.add('hidden');
+          return;
+        }
+        const matched = CALCULATORS.filter(c => pinnedIds.includes(c.id));
+        if (matched.length === 0) {
+          section.classList.add('hidden');
+          return;
+        }
+        grid.innerHTML = matched.map(calc => `
+          <a href="${calc.url}" class="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-amber-400 dark:hover:border-amber-500/50 hover:shadow-xs transition-all flex flex-col justify-between group">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-mono font-bold text-neutral-500 dark:text-neutral-400 uppercase truncate">${calc.category}</span>
+              <span class="text-amber-400 text-xs">★</span>
+            </div>
+            <div class="font-bold text-xs text-neutral-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors truncate">${calc.name}</div>
+          </a>
+        `).join('');
+        section.classList.remove('hidden');
+      } catch (_) {}
+    }
+
+    renderPinnedTools();
+    window.addEventListener('ack_pinned_change', renderPinnedTools);
   </script>
 </Layout>
 

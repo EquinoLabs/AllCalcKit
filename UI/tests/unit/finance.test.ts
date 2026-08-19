@@ -12,7 +12,11 @@ import {
   calculateTipSplit,
   convertCurrency,
   formatIndianCurrency,
-  formatIndianCompact
+  formatIndianCompact,
+  calculateFreelanceRate,
+  calculateStartupRunway,
+  calculateDca,
+  calculateInflation
 } from '../../src/lib/calculators/finance';
 
 describe('Financial Calculators Engine', () => {
@@ -317,6 +321,78 @@ describe('Financial Calculators Engine', () => {
       expect(res.totalBill).toBe(1980);
       expect(res.perPersonTotal).toBe(660);
       expect(res.tipPerPerson).toBe(60);
+    });
+  });
+
+  describe('Freelance Hourly Rate Calculator', () => {
+    it('calculates sustainable hourly rate from target salary ($100k)', () => {
+      const res = calculateFreelanceRate({
+        targetAnnualSalary: 100000,
+        billableHoursPerWeek: 25,
+        vacationWeeks: 4,
+        annualExpenses: 5000,
+        profitMarginPercent: 15,
+        taxBufferPercent: 25
+      });
+      expect(res.totalWorkingWeeks).toBe(48);
+      expect(res.totalBillableHoursPerYear).toBe(1200);
+      expect(res.hourlyRate).toBeGreaterThan(120);
+      expect(res.effectiveAnnualGross).toBeGreaterThan(150000);
+    });
+  });
+
+  describe('Startup Runway & Burn Rate Estimator', () => {
+    it('calculates runway months for standard burn profile', () => {
+      const res = calculateStartupRunway({
+        cashBalance: 300000,
+        monthlyRevenue: 10000,
+        monthlyRevenueGrowthPercent: 0,
+        monthlyExpenses: 40000,
+        monthlyExpenseGrowthPercent: 0
+      });
+      expect(res.initialNetBurn).toBe(30000);
+      expect(res.runwayMonths).toBe(10);
+      expect(res.zeroCashMonth).toBe(10);
+      expect(res.isDefaultAlive).toBe(false);
+    });
+
+    it('identifies default alive startup when revenue outpaces expenses', () => {
+      const res = calculateStartupRunway({
+        cashBalance: 500000,
+        monthlyRevenue: 40000,
+        monthlyRevenueGrowthPercent: 10,
+        monthlyExpenses: 50000,
+        monthlyExpenseGrowthPercent: 2
+      });
+      expect(res.isDefaultAlive).toBe(true);
+    });
+  });
+
+  describe('Crypto & Investment DCA Calculator', () => {
+    it('calculates DCA accumulation over 24 months ($200/mo @ 15% return)', () => {
+      const res = calculateDca({
+        recurringAmount: 200,
+        frequency: 'monthly',
+        durationMonths: 24,
+        averageAnnualGrowthPercent: 15
+      });
+      expect(res.totalInvested).toBe(4800);
+      expect(res.estimatedFutureValue).toBeGreaterThan(4800);
+      expect(res.totalProfit).toBeGreaterThan(0);
+      expect(res.roiPercent).toBeGreaterThan(10);
+    });
+  });
+
+  describe('Inflation & Purchasing Power Calculator', () => {
+    it('calculates future equivalent cost and purchasing power erosion over 10 years @ 3.5%', () => {
+      const res = calculateInflation({
+        startingAmount: 1000,
+        years: 10,
+        averageInflationRatePercent: 3.5
+      });
+      expect(res.futureEquivalentCost).toBeCloseTo(1410.60, 1);
+      expect(res.purchasingPowerLossPercent).toBeCloseTo(29.1, 1);
+      expect(res.cumulativeInflationPercent).toBeCloseTo(41.1, 1);
     });
   });
 });

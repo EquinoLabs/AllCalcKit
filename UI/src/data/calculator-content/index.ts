@@ -40,6 +40,10 @@ import { tdeeContent } from './tdee';
 import { waterIntakeContent } from './water-intake';
 import { rentVsBuyContent } from './rent-vs-buy';
 import { moneySplitContent } from './money-split';
+import { freelanceRateContent } from './freelance-rate';
+import { startupRunwayContent } from './startup-runway';
+import { cryptoDcaContent } from './crypto-dca';
+import { inflationCalculatorContent } from './inflation-calculator';
 
 export * from './types';
 export { 
@@ -83,7 +87,11 @@ export {
   tdeeContent,
   waterIntakeContent,
   rentVsBuyContent,
-  moneySplitContent
+  moneySplitContent,
+  freelanceRateContent,
+  startupRunwayContent,
+  cryptoDcaContent,
+  inflationCalculatorContent
 };
 
 export const CALCULATOR_CONTENT: Record<string, CalculatorContent> = {
@@ -128,6 +136,10 @@ export const CALCULATOR_CONTENT: Record<string, CalculatorContent> = {
   'water-intake': waterIntakeContent,
   'rent-vs-buy': rentVsBuyContent,
   'money-split': moneySplitContent,
+  'freelance-rate': freelanceRateContent,
+  'startup-runway': startupRunwayContent,
+  'crypto-dca': cryptoDcaContent,
+  'inflation-calculator': inflationCalculatorContent,
 };
 
 export function getCalculatorContent(id: string): CalculatorContent | undefined {

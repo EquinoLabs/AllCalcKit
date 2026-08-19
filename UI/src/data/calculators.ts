@@ -133,6 +133,38 @@ export const CALCULATORS: CalculatorMeta[] = [
       'View real-time settlement balances and share group link or copy WhatsApp text summary.'
     ]
   },
+  {
+    id: 'freelance-rate', name: 'Freelance Rate Calculator', category: 'Currency & Finance', categoryId: 'finance', description: 'Convert desired annual salary into sustainable freelance hourly & daily billing rates', icon: 'briefcase', popular: true, phase: 2, url: '/finance/freelance-rate', tags: ['freelance', 'hourly rate', 'salary to hourly', 'contractor', 'consulting rate', 'freelancer'],
+    howToUse: [
+      'Enter your Target Annual Take-Home Salary and Billable Hours per week.',
+      'Adjust vacation weeks, business expenses, tax buffer, and profit margin.',
+      'View recommended minimum hourly rate, daily rate, and monthly invoicing targets.'
+    ]
+  },
+  {
+    id: 'startup-runway', name: 'Startup Runway Calculator', category: 'Currency & Finance', categoryId: 'finance', description: 'Calculate startup cash runway in months, net burn rate, and default alive profitability date', icon: 'rocket', popular: true, phase: 2, url: '/finance/startup-runway', tags: ['startup runway', 'burn rate', 'cash runway', 'default alive', 'founders', 'venture'],
+    howToUse: [
+      'Enter Current Cash Balance in bank, Monthly Expenses (gross burn), and Monthly Revenue.',
+      'Adjust expected Month-over-Month (MoM) revenue and expense growth rates.',
+      'View total runway months, zero cash date, and download 24-month cash flow forecast CSV.'
+    ]
+  },
+  {
+    id: 'crypto-dca', name: 'Crypto & DCA Calculator', category: 'Currency & Finance', categoryId: 'finance', description: 'Simulate Dollar-Cost Averaging returns for Bitcoin, Crypto, and Index Funds', icon: 'coins', popular: true, phase: 2, url: '/finance/crypto-dca', tags: ['dca', 'dollar cost averaging', 'crypto dca', 'bitcoin dca', 'investment return', 'recurring investment'],
+    howToUse: [
+      'Enter Recurring Buy Amount and choose Frequency (Daily, Weekly, Bi-weekly, Monthly).',
+      'Select Investment Horizon in months and expected Annual Growth Rate (%).',
+      'View estimated portfolio wealth, total invested capital, total profit, and ROI %.'
+    ]
+  },
+  {
+    id: 'inflation-calculator', name: 'Inflation & Purchasing Power', category: 'Currency & Finance', categoryId: 'finance', description: 'Calculate future equivalent cost and purchasing power erosion over time', icon: 'trending-up', popular: true, phase: 2, url: '/finance/inflation-calculator', tags: ['inflation', 'purchasing power', 'cpi', 'cost of living', 'future value', 'money value'],
+    howToUse: [
+      'Enter Initial Monetary Amount and Time Horizon in years.',
+      'Select or type expected Average Annual Inflation Rate (%).',
+      'View future equivalent cost, purchasing power loss percentage, and real money value.'
+    ]
+  },
 
   // 3. Health & Fitness
   {

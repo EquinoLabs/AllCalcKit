@@ -568,3 +568,250 @@ export function calculateRentVsBuy(params: RentVsBuyParams): RentVsBuyResult {
   };
 }
 
+// ---------------------------------------------------------
+// 1. Freelance Hourly Rate <-> Salary Calculator
+// ---------------------------------------------------------
+
+export interface FreelanceRateInput {
+  targetAnnualSalary: number;
+  billableHoursPerWeek: number;
+  vacationWeeks: number;
+  annualExpenses: number;
+  profitMarginPercent: number;
+  taxBufferPercent: number;
+}
+
+export interface FreelanceRateResult {
+  hourlyRate: number;
+  dailyRate: number;
+  weeklyRate: number;
+  monthlyGross: number;
+  effectiveAnnualGross: number;
+  totalWorkingWeeks: number;
+  totalBillableHoursPerYear: number;
+  netTakeHomeEstimate: number;
+}
+
+export function calculateFreelanceRate(input: FreelanceRateInput): FreelanceRateResult {
+  const {
+    targetAnnualSalary = 100000,
+    billableHoursPerWeek = 25,
+    vacationWeeks = 4,
+    annualExpenses = 5000,
+    profitMarginPercent = 15,
+    taxBufferPercent = 25
+  } = input;
+
+  const totalWorkingWeeks = Math.max(1, 52 - vacationWeeks);
+  const totalBillableHoursPerYear = totalWorkingWeeks * Math.max(1, billableHoursPerWeek);
+
+  // Salary needed + Expenses
+  const baseOperatingNeed = targetAnnualSalary + annualExpenses;
+  // Add Profit Buffer
+  const withProfit = baseOperatingNeed * (1 + profitMarginPercent / 100);
+  // Add Self-employment/Income Tax Buffer
+  const grossAnnualRequired = withProfit / Math.max(0.01, 1 - (taxBufferPercent / 100));
+
+  const hourlyRate = Math.max(0, grossAnnualRequired / totalBillableHoursPerYear);
+  const dailyRate = hourlyRate * 8;
+  const weeklyRate = hourlyRate * billableHoursPerWeek;
+  const monthlyGross = grossAnnualRequired / 12;
+  const netTakeHomeEstimate = targetAnnualSalary;
+
+  return {
+    hourlyRate: Math.round(hourlyRate * 100) / 100,
+    dailyRate: Math.round(dailyRate * 100) / 100,
+    weeklyRate: Math.round(weeklyRate * 100) / 100,
+    monthlyGross: Math.round(monthlyGross * 100) / 100,
+    effectiveAnnualGross: Math.round(grossAnnualRequired * 100) / 100,
+    totalWorkingWeeks,
+    totalBillableHoursPerYear,
+    netTakeHomeEstimate: Math.round(netTakeHomeEstimate * 100) / 100,
+  };
+}
+
+// ---------------------------------------------------------
+// 2. Startup Runway & Monthly Burn Rate Estimator
+// ---------------------------------------------------------
+
+export interface StartupRunwayInput {
+  cashBalance: number;
+  monthlyRevenue: number;
+  monthlyRevenueGrowthPercent: number;
+  monthlyExpenses: number;
+  monthlyExpenseGrowthPercent: number;
+}
+
+export interface RunwayMonthProjection {
+  month: number;
+  revenue: number;
+  expenses: number;
+  netBurn: number;
+  cashRemaining: number;
+}
+
+export interface StartupRunwayResult {
+  initialNetBurn: number;
+  runwayMonths: number;
+  zeroCashMonth: number | null;
+  isDefaultAlive: boolean;
+  projections: RunwayMonthProjection[];
+}
+
+export function calculateStartupRunway(input: StartupRunwayInput): StartupRunwayResult {
+  const {
+    cashBalance = 500000,
+    monthlyRevenue = 20000,
+    monthlyRevenueGrowthPercent = 5,
+    monthlyExpenses = 50000,
+    monthlyExpenseGrowthPercent = 2
+  } = input;
+
+  const initialNetBurn = Math.max(0, monthlyExpenses - monthlyRevenue);
+  let currentCash = cashBalance;
+  let currentRev = monthlyRevenue;
+  let currentExp = monthlyExpenses;
+  let zeroCashMonth: number | null = null;
+  let isDefaultAlive = false;
+
+  const projections: RunwayMonthProjection[] = [];
+  const maxMonths = 60; // 5 year maximum horizon
+
+  for (let m = 1; m <= maxMonths; m++) {
+    if (m > 1) {
+      currentRev = currentRev * (1 + monthlyRevenueGrowthPercent / 100);
+      currentExp = currentExp * (1 + monthlyExpenseGrowthPercent / 100);
+    }
+    const netBurn = currentExp - currentRev;
+    currentCash -= netBurn;
+
+    projections.push({
+      month: m,
+      revenue: Math.round(currentRev),
+      expenses: Math.round(currentExp),
+      netBurn: Math.round(netBurn),
+      cashRemaining: Math.round(currentCash)
+    });
+
+    if (currentCash <= 0 && zeroCashMonth === null) {
+      zeroCashMonth = m;
+    }
+
+    if (currentRev >= currentExp && !isDefaultAlive) {
+      isDefaultAlive = true;
+    }
+  }
+
+  const runwayMonths = zeroCashMonth !== null ? zeroCashMonth : (isDefaultAlive ? 60 : Math.round(cashBalance / Math.max(1, initialNetBurn)));
+
+  return {
+    initialNetBurn: Math.round(initialNetBurn),
+    runwayMonths,
+    zeroCashMonth,
+    isDefaultAlive: isDefaultAlive || (monthlyRevenue >= monthlyExpenses),
+    projections: projections.slice(0, Math.min(36, projections.length))
+  };
+}
+
+// ---------------------------------------------------------
+// 3. Crypto & Investment DCA Calculator
+// ---------------------------------------------------------
+
+export interface DcaInput {
+  recurringAmount: number;
+  frequency: 'daily' | 'weekly' | 'biweekly' | 'monthly';
+  durationMonths: number;
+  averageAnnualGrowthPercent: number;
+}
+
+export interface DcaResult {
+  totalInvested: number;
+  estimatedFutureValue: number;
+  totalProfit: number;
+  roiPercent: number;
+  totalPurchases: number;
+}
+
+export function calculateDca(input: DcaInput): DcaResult {
+  const {
+    recurringAmount = 100,
+    frequency = 'monthly',
+    durationMonths = 24,
+    averageAnnualGrowthPercent = 20
+  } = input;
+
+  let intervalsPerMonth = 1;
+  if (frequency === 'daily') intervalsPerMonth = 30;
+  else if (frequency === 'weekly') intervalsPerMonth = 4.333;
+  else if (frequency === 'biweekly') intervalsPerMonth = 2.166;
+  else intervalsPerMonth = 1;
+
+  const totalPurchases = Math.round(durationMonths * intervalsPerMonth);
+  const totalInvested = recurringAmount * totalPurchases;
+
+  // Compounding per period
+  const totalPeriods = totalPurchases;
+  const ratePerPeriod = (averageAnnualGrowthPercent / 100) / (12 * intervalsPerMonth);
+
+  let futureValue = 0;
+  if (ratePerPeriod === 0) {
+    futureValue = totalInvested;
+  } else {
+    futureValue = recurringAmount * ((Math.pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod) * (1 + ratePerPeriod);
+  }
+
+  const totalProfit = futureValue - totalInvested;
+  const roiPercent = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
+
+  return {
+    totalInvested: Math.round(totalInvested),
+    estimatedFutureValue: Math.round(futureValue),
+    totalProfit: Math.round(totalProfit),
+    roiPercent: Math.round(roiPercent * 10) / 10,
+    totalPurchases
+  };
+}
+
+// ---------------------------------------------------------
+// 4. Inflation & Purchasing Power Calculator
+// ---------------------------------------------------------
+
+export interface InflationInput {
+  startingAmount: number;
+  years: number;
+  averageInflationRatePercent?: number;
+}
+
+export interface InflationResult {
+  futureEquivalentCost: number;
+  purchasingPowerLossPercent: number;
+  todayPurchasingValueOfFutureMoney: number;
+  cumulativeInflationPercent: number;
+}
+
+export function calculateInflation(input: InflationInput): InflationResult {
+  const {
+    startingAmount = 1000,
+    years = 10,
+    averageInflationRatePercent = 3.5
+  } = input;
+
+  const r = (averageInflationRatePercent || 3.5) / 100;
+  const factor = Math.pow(1 + r, years);
+
+  // What $startingAmount today will cost in X years
+  const futureEquivalentCost = startingAmount * factor;
+  // What $startingAmount in X years is worth in today's dollars
+  const todayPurchasingValueOfFutureMoney = startingAmount / factor;
+  const cumulativeInflationPercent = (factor - 1) * 100;
+  const purchasingPowerLossPercent = (1 - (1 / factor)) * 100;
+
+  return {
+    futureEquivalentCost: Math.round(futureEquivalentCost * 100) / 100,
+    purchasingPowerLossPercent: Math.round(purchasingPowerLossPercent * 10) / 10,
+    todayPurchasingValueOfFutureMoney: Math.round(todayPurchasingValueOfFutureMoney * 100) / 100,
+    cumulativeInflationPercent: Math.round(cumulativeInflationPercent * 10) / 10
+  };
+}
+
+
