@@ -17,10 +17,10 @@ const DEFAULT_KEYWORDS = "Converter, Calculator, all in one calculator, online c
 
 const {
   title = "All Calc Kit — All in One Calculator & Online Converter Tools",
-  description = "Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 35+ free utilities.",
+  description = "Free all in one calculator & online converter tools suite. Real time forex currency converter, loan emi calculator, unit converter online, BMI tracker, & 40+ free utilities.",
   keywords = DEFAULT_KEYWORDS,
   canonicalUrl = "https://allcalckit.com/",
-  ogImage = "https://allcalckit.com/logo-header-footer.png",
+  ogImage = "https://allcalckit.com/AllCalcKit_Favicon.png",
   ogType = "website",
   showQuickTools = false,
   isErrorPage = false,
@@ -90,12 +90,12 @@ const RELATED_TOOLS = [
     <meta name="theme-color" content="#09090b" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="CalcKit" />
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png?v=20260819" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260819" />
+    <link rel="shortcut icon" href="/favicon.ico?v=20260819" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=20260819" />
+    <meta name="apple-mobile-web-app-title" content="All Calc Kit" />
+    <link rel="manifest" href="/site.webmanifest?v=20260819" />
     <link rel="canonical" href={canonicalUrl} />
     <meta name="generator" content={Astro.generator} />
 
@@ -156,7 +156,7 @@ const RELATED_TOOLS = [
         <!-- Logo -->
         <a href="/" class="flex items-center gap-2.5 group">
           <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center bg-white border border-neutral-200 dark:border-neutral-800">
-            <img src="/logo-header-footer.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+            <img src="/AllCalcKit_Favicon.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
           </div>
           <div class="flex items-center gap-2">
             <span class="font-bold tracking-tight text-base sm:text-lg group-hover:opacity-80 transition-opacity">All Calc Kit</span>
@@ -176,7 +176,7 @@ const RELATED_TOOLS = [
           <button id="open-search-btn" type="button" aria-label="Search all calculators (Ctrl+K)" class="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all w-auto md:w-64 justify-between">
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <span class="hidden sm:inline">Search 35+ tools…</span>
+              <span class="hidden sm:inline">Search 40+ tools…</span>
               <span class="sm:hidden">Search</span>
             </div>
             <kbd class="hidden md:inline font-mono text-[11px] px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">⌘K</kbd>
@@ -186,18 +186,29 @@ const RELATED_TOOLS = [
         <!-- Right Action Cluster -->
         <div class="flex items-center gap-2 sm:gap-3">
 
-          <!-- Theme Toggle -->
-          <button id="theme-toggle" type="button" aria-label="Toggle light or dark theme" class="p-2 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
-            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-          </button>
-
           <!-- Quick Tools CTA button (Only visible on Homepage) -->
           {showQuickTools && (
             <a href="#quick-converters" class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity shadow-sm">
               Quick Tools
             </a>
           )}
+
+          <!-- Desktop Theme Toggle -->
+          <button id="theme-toggle" type="button" aria-label="Toggle light or dark theme" class="hidden lg:flex items-center justify-center p-2 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
+            <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+
+          <!-- Mobile/Tablet Hamburger Menu Button with Animated Cross (X) Transition -->
+          <button id="mobile-menu-btn" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-sidebar" class="flex lg:hidden flex-col items-center justify-center w-9 h-9 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors focus:outline-none relative z-50">
+            <span class="sr-only">Toggle Menu</span>
+            <div class="w-4.5 h-3.5 flex flex-col justify-between items-center relative">
+              <span id="hamburger-line-1" class="w-4.5 h-0.5 bg-current rounded-full transition-all duration-300 transform origin-center"></span>
+              <span id="hamburger-line-2" class="w-4.5 h-0.5 bg-current rounded-full transition-all duration-300"></span>
+              <span id="hamburger-line-3" class="w-4.5 h-0.5 bg-current rounded-full transition-all duration-300 transform origin-center"></span>
+            </div>
+          </button>
+
         </div>
       </div>
     </header>
@@ -214,7 +225,7 @@ const RELATED_TOOLS = [
           <div class="col-span-2">
             <div class="flex items-center gap-2 mb-3">
               <div class="w-6 h-6 rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-800">
-                <img src="/logo-header-footer.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+                <img src="/AllCalcKit_Favicon.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
               </div>
               <span class="font-bold text-base tracking-tight">All Calc Kit</span>
               <span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">v1.0</span>
@@ -272,6 +283,92 @@ const RELATED_TOOLS = [
       </div>
     </footer>
 
+    <!-- Mobile Sidebar Drawer & Backdrop -->
+    <div id="mobile-sidebar-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" aria-hidden="true"></div>
+
+    <aside id="mobile-sidebar" class="fixed top-0 right-0 bottom-0 z-50 w-[78vw] sm:w-80 max-w-xs bg-white dark:bg-neutral-950 border-l border-neutral-200 dark:border-neutral-800 shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300 ease-out" role="dialog" aria-modal="true" aria-label="Mobile Navigation Menu">
+      <!-- Top Drawer Section -->
+      <div class="p-5 flex flex-col flex-1 overflow-y-auto">
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between pb-4 mb-4 border-b border-neutral-200 dark:border-neutral-800">
+          <a href="/" class="flex items-center gap-2.5 group mobile-nav-link">
+            <div class="w-7 h-7 rounded-lg overflow-hidden shadow-xs border border-neutral-200 dark:border-neutral-800 flex items-center justify-center bg-white">
+              <img src="/AllCalcKit_Favicon.png" alt="All Calc Kit Logo" class="w-full h-full object-cover" />
+            </div>
+            <span class="font-bold tracking-tight text-base text-black dark:text-white">All Calc Kit</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-300 dark:border-neutral-700">v1.0</span>
+          </a>
+          <button id="mobile-sidebar-close-btn" type="button" aria-label="Close navigation menu" class="p-1.5 rounded-full text-neutral-500 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Main Navigation Links -->
+        <div class="space-y-1 mb-6">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 px-3.5 py-1 block">Navigation</span>
+          <a href="/about" class="mobile-nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white transition-colors">
+            <svg class="w-4 h-4 text-neutral-500 dark:text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>About</span>
+          </a>
+          <a href="/contact" class="mobile-nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white transition-colors">
+            <svg class="w-4 h-4 text-neutral-500 dark:text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span>Contact</span>
+          </a>
+          <a href="/privacy" class="mobile-nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white transition-colors">
+            <svg class="w-4 h-4 text-neutral-500 dark:text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span>Privacy</span>
+          </a>
+          <a href="/terms" class="mobile-nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white transition-colors">
+            <svg class="w-4 h-4 text-neutral-500 dark:text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Terms</span>
+          </a>
+        </div>
+
+        <!-- Quick Tools Section with generous spacing -->
+        <div class="pt-5 border-t border-neutral-200 dark:border-neutral-800 space-y-2">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 px-3.5 py-1 block">Quick Tools</span>
+          <a href="/#complete-directory" class="mobile-nav-link flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold text-neutral-800 dark:text-neutral-200 bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-all shadow-xs group">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span>All 40+ Tools Directory</span>
+            </div>
+            <span class="text-neutral-400 group-hover:text-black dark:group-hover:text-white group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom Drawer Section: Search, Theme Toggle & Status -->
+      <div class="p-5 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/50 space-y-4">
+        <!-- Search Trigger Button (No desktop shortcut badges) -->
+        <div>
+          <button id="mobile-sidebar-search-btn" type="button" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-white transition-all shadow-xs text-left">
+            <div class="flex items-center gap-2.5">
+              <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <span class="font-normal text-neutral-500 dark:text-neutral-400">Search 40+ calculators…</span>
+            </div>
+            <svg class="w-3.5 h-3.5 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <!-- Theme Switcher Row -->
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Theme</span>
+          <button id="mobile-theme-toggle" type="button" aria-label="Toggle light or dark theme" class="flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs font-semibold text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors shadow-xs">
+            <svg class="w-3.5 h-3.5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg class="w-3.5 h-3.5 block dark:hidden text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <span class="dark:hidden font-mono text-[11px]">Dark Mode</span>
+            <span class="hidden dark:inline font-mono text-[11px]">Light Mode</span>
+          </button>
+        </div>
+
+        <!-- Operational Status Indicator -->
+        <div class="flex items-center gap-2 pt-1 border-t border-neutral-200/60 dark:border-neutral-800/60">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">All Systems Operational</span>
+        </div>
+      </div>
+    </aside>
+
     <!-- Command Palette Modal -->
     <div id="search-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-start justify-center pt-16 sm:pt-24 px-4 transition-opacity">
       <div class="w-full max-w-xl bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col transform transition-all scale-98">
@@ -292,15 +389,86 @@ const RELATED_TOOLS = [
       </div>
     </div>
 
+    <style is:global>
+      #mobile-menu-btn.is-open #hamburger-line-1 {
+        transform: translateY(6px) rotate(45deg);
+      }
+      #mobile-menu-btn.is-open #hamburger-line-2 {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      #mobile-menu-btn.is-open #hamburger-line-3 {
+        transform: translateY(-6px) rotate(-45deg);
+      }
+    </style>
+
     <!-- Scripts -->
     <script is:inline define:vars={{ CALCULATORS }}>
       const themeToggleBtn = document.getElementById('theme-toggle');
-      if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-          const isDark = document.documentElement.classList.toggle('dark');
-          localStorage.setItem('ack_theme', isDark ? 'dark' : 'light');
-        });
+      const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+
+      function handleThemeToggle() {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('ack_theme', isDark ? 'dark' : 'light');
       }
+
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', handleThemeToggle);
+      }
+      if (mobileThemeToggleBtn) {
+        mobileThemeToggleBtn.addEventListener('click', handleThemeToggle);
+      }
+
+      // Mobile Sidebar Controller
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileSidebarCloseBtn = document.getElementById('mobile-sidebar-close-btn');
+      const mobileSidebar = document.getElementById('mobile-sidebar');
+      const mobileSidebarBackdrop = document.getElementById('mobile-sidebar-backdrop');
+      const mobileSidebarSearchBtn = document.getElementById('mobile-sidebar-search-btn');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+      function openMobileSidebar() {
+        if (!mobileSidebar || !mobileSidebarBackdrop) return;
+        mobileSidebar.classList.remove('translate-x-full');
+        mobileSidebar.classList.add('translate-x-0');
+        mobileSidebarBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+        mobileSidebarBackdrop.classList.add('opacity-100', 'pointer-events-auto');
+        if (mobileMenuBtn) {
+          mobileMenuBtn.classList.add('is-open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        }
+        document.body.classList.add('overflow-hidden');
+      }
+
+      function closeMobileSidebar() {
+        if (!mobileSidebar || !mobileSidebarBackdrop) return;
+        mobileSidebar.classList.remove('translate-x-0');
+        mobileSidebar.classList.add('translate-x-full');
+        mobileSidebarBackdrop.classList.remove('opacity-100', 'pointer-events-auto');
+        mobileSidebarBackdrop.classList.add('opacity-0', 'pointer-events-none');
+        if (mobileMenuBtn) {
+          mobileMenuBtn.classList.remove('is-open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+        document.body.classList.remove('overflow-hidden');
+      }
+
+      function toggleMobileSidebar() {
+        const isOpen = mobileMenuBtn?.classList.contains('is-open');
+        if (isOpen) {
+          closeMobileSidebar();
+        } else {
+          openMobileSidebar();
+        }
+      }
+
+      if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+      if (mobileSidebarCloseBtn) mobileSidebarCloseBtn.addEventListener('click', closeMobileSidebar);
+      if (mobileSidebarBackdrop) mobileSidebarBackdrop.addEventListener('click', closeMobileSidebar);
+
+      mobileNavLinks.forEach((link) => {
+        link.addEventListener('click', closeMobileSidebar);
+      });
 
       const modal = document.getElementById('search-modal');
       const searchInput = document.getElementById('search-input');
@@ -327,6 +495,12 @@ const RELATED_TOOLS = [
 
       if (openBtnDesktop) openBtnDesktop.addEventListener('click', openModal);
       if (openBtnMobile) openBtnMobile.addEventListener('click', openModal);
+      if (mobileSidebarSearchBtn) {
+        mobileSidebarSearchBtn.addEventListener('click', () => {
+          closeMobileSidebar();
+          setTimeout(openModal, 150);
+        });
+      }
 
       if (modal) {
         modal.addEventListener('click', (e) => {
@@ -340,7 +514,10 @@ const RELATED_TOOLS = [
           if (modal?.classList.contains('hidden')) openModal();
           else closeModal();
         }
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+          closeModal();
+          closeMobileSidebar();
+        }
       });
 
       function renderResults(list) {

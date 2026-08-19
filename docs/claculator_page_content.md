@@ -1475,7 +1475,7 @@ The goal is reusable rendering with calculator-specific data.
 
 # 36. Initial Content Migration
 
-Do NOT try to manually redesign all 35+ pages at once.
+Do NOT try to manually redesign all 40+ pages at once.
 
 Implement the system first.
 

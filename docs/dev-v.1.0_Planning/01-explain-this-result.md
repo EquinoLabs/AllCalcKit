@@ -13,7 +13,7 @@ not dynamic based on user input.
    this directly helps SEO/discoverability.
 
 ## Scope for this pass
-Do NOT attempt all 35+ tools at once. Start with the 5 most-trafficked tools (check
+Do NOT attempt all 40+ tools at once. Start with the 5 most-trafficked tools (check
 Google Analytics for the actual top 5 by pageviews before starting — do not guess).
 Likely candidates based on the "popular" flag already in the site's calculator data:
 Currency Converter, Loan/EMI Calculator, BMI Calculator, Percentage Calculator,
